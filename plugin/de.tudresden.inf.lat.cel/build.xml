@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="de.tudresden.inf.lat.cel" default="dist" basedir=".">
+
+<!--
+ *
+ * Copyright 2009 Julian Mendez
+ *
+ *
+ * This file is part of CEL Plug-in.
+ *
+ * CEL Plug-in is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CEL Plug-in is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with CEL Plug-in.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+-->
+
+	<property file="build.number" />
+
+	<!--property name="version_id" value="0.0.1.0" /-->
+	<property name="dist.path" value="${basedir}/dist" />
+
+	<property name="_src.doc.path" value="src/doc" />
+	<property name="_src.main.path" value="src/main" />
+	<property name="_src.test.path" value="src/test" />
+	<property name="_src.conf.path" value="src/conf" />
+	<property name="_src.img.path" value="src/img" />
+	<property name="_manifest.path" value="src/manifest/MANIFEST.MF" />
+	<property name="_src.appdata.path" value="src/data" />
+	<property name="_jarlib.path" value="../jars/lib" />
+	<property name="_lib.path" value="lib" />
+	<property name="_app.path" value="${dist.path}/app" />
+	<property name="_javadoc.path" value="${dist.path}/javadoc" />
+	<property name="_main.bin.path" value="${dist.path}/bin" />
+	<property name="_prjlib.path" value="${dist.path}/lib" />
+	<property name="_bundle.path" value="${dist.path}/bundle" />
+	<property name="_test.bin.path" value="${dist.path}/test" />
+	<property name="_test.report.path" value="${dist.path}/report" />
+	<property name="_zipfile.path" value="${basedir}/../${ant.project.name}-${version_id}.${build.number}.zip" />
+	<property name="_debuglevel" value="lines,vars,source" />
+
+	<path id="libs.path">
+	      <fileset dir="${_jarlib.path}" />
+	      <fileset dir="${_lib.path}" />
+	</path>
+
+	<patternset id="testclasses.patternset">
+		<include name="**/*Test.java" />
+	</patternset>
+
+	<target name="clean">
+		<delete dir="${dist.path}" />
+	</target>
+
+	<target name="build">
+		<mkdir dir="${_main.bin.path}" />
+		<javac srcdir="${_src.main.path}" destdir="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" />
+		<mkdir dir="${_test.bin.path}" />
+		<javac srcdir="${_src.test.path}" destdir="${_test.bin.path}" classpath="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" />
+	</target>
+	
+	<target name="conf">
+		<copy todir="${_main.bin.path}">
+			<fileset dir="${_src.conf.path}" />
+			<fileset dir="${_src.img.path}" />
+		</copy>
+	</target>
+
+	<target name="test" depends="build">
+		<mkdir dir="${_test.report.path}" />
+		<junit printsummary="on" haltonfailure="yes" fork="yes">
+			<classpath>
+				<pathelement path="${_main.bin.path}" />
+				<pathelement path="${_test.bin.path}" />
+				<fileset dir="${_jarlib.path}" />
+			</classpath>
+			<formatter type="plain" usefile="on" />
+			<batchtest fork="yes" todir="${_test.report.path}">
+				<fileset dir="${_src.test.path}">
+					<patternset refid="testclasses.patternset" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="javadoc">
+		<mkdir dir="${_javadoc.path}" />
+		<javadoc packagenames="*" sourcepath="${_src.doc.path}:${_src.main.path}" destdir="${_javadoc.path}" version="true" use="true" windowtitle="${ant.project.name}" overview="${_src.doc.path}/overview.html" classpathref="libs.path" access="package" />
+	</target>
+
+	<target name="jar" depends="build">
+		<mkdir dir="${_prjlib.path}" />
+		<jar destfile="${_prjlib.path}/${ant.project.name}-${version_id}.jar" basedir="${_main.bin.path}" manifest="${_manifest.path}" />
+	</target>
+
+	<target name="bundle" depends="build">
+		<mkdir dir="${_bundle.path}" />
+		<jar destfile="${_bundle.path}/${ant.project.name}.jar" manifest="${_manifest.path}">
+			<fileset dir="${_main.bin.path}"/>
+			<fileset dir="${basedir}">
+				<include name="${_lib.path}/**.jar"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="zip">
+		<delete file="${_zipfile.path}" />
+		<zip destfile="${_zipfile.path}" basedir="${basedir}" />
+	</target>
+
+	<target name="dist" depends="clean, build, conf, javadoc, jar, bundle" >
+		<buildnumber />
+	</target>
+
+</project>
+
