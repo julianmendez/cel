@@ -22,8 +22,10 @@
 package de.tudresden.inf.lat.cel.translation;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.semanticweb.owl.inference.OWLReasonerException;
 import org.semanticweb.owl.model.OWLClass;
@@ -51,7 +53,7 @@ import de.tudresden.inf.lat.jsexp.SexpFactory;
  */
 public class CelReasonerInterface {
 
-	// private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger.getAnonymousLogger();
 
 	private static final String nothing = "Nothing";
 	private static final String thing = "Thing";
@@ -123,7 +125,7 @@ public class CelReasonerInterface {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyGetDomains));
 		message.add(getTranslator().translate(property));
-		Sexp response = send(message);
+		Sexp response = sendAndConvert(message);
 		try {
 			ret = getParser().parseSetOfSetOfDescriptions(response,
 					getOWLOntologyManager().getOWLDataFactory());
@@ -144,9 +146,30 @@ public class CelReasonerInterface {
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
-		Sexp response = send(message);
+		Sexp response = sendAndConvert(message);
 		ret = getParser().parseSetOfClasses(response,
 				getOWLOntologyManager().getOWLDataFactory());
+		return ret;
+	}
+
+	/**
+	 * Converts a NIL into a (), and a (NIL) into a (()).
+	 * 
+	 * @param expr
+	 * @return the () list if NIL is found, and (()) if (NIL) is found.
+	 */
+	protected Sexp convertNil(Sexp expr) {
+		Sexp nilExpr = SexpFactory.newAtomicSexp(LispKeyword.lispNil);
+		Sexp listOfNilExpr = SexpFactory.newNonAtomicSexp();
+		listOfNilExpr.add(nilExpr);
+
+		Sexp ret = expr;
+		if (ret.toString().equalsIgnoreCase(nilExpr.toString())) {
+			ret = SexpFactory.newNonAtomicSexp();
+		} else if (ret.toString().equalsIgnoreCase(listOfNilExpr.toString())) {
+			ret = SexpFactory.newNonAtomicSexp();
+			ret.add(SexpFactory.newNonAtomicSexp());
+		}
 		return ret;
 	}
 
@@ -164,7 +187,7 @@ public class CelReasonerInterface {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory
 				.newAtomicSexp(CelOwlApiKeyword.keyGetInconsistentClasses));
-		Sexp expr = send(message);
+		Sexp expr = sendAndConvert(message);
 		if (expr.toString().equalsIgnoreCase(LispKeyword.lispNil)) {
 			expr = SexpFactory.newNonAtomicSexp();
 		}
@@ -185,7 +208,7 @@ public class CelReasonerInterface {
 			throw new CelReasonerException(e);
 		}
 		message.add(getTranslator().translate(arg));
-		Sexp expr = send(message);
+		Sexp expr = sendAndConvert(message);
 		if (expr.toString().equalsIgnoreCase(LispKeyword.lispNil)) {
 			expr = SexpFactory.newNonAtomicSexp();
 		}
@@ -221,7 +244,7 @@ public class CelReasonerInterface {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyGetRanges));
 		message.add(getTranslator().translate(property));
-		Sexp response = send(message);
+		Sexp response = sendAndConvert(message);
 		try {
 			ret = getParser().parseSetOfDescriptions(response,
 					getOWLOntologyManager().getOWLDataFactory());
@@ -238,7 +261,7 @@ public class CelReasonerInterface {
 				.newAtomicSexp(CelOwlApiKeyword.keyGetRelatedIndividuals));
 		message.add(getTranslator().translate(individual));
 		message.add(getTranslator().translate(property));
-		Sexp response = send(message);
+		Sexp response = sendAndConvert(message);
 		Set<OWLIndividual> ret = getParser().parseSetOfIndividuals(response,
 				getOWLOntologyManager().getOWLDataFactory());
 		return ret;
@@ -253,7 +276,7 @@ public class CelReasonerInterface {
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
-		Sexp response = send(message);
+		Sexp response = sendAndConvert(message);
 		Set<OWLObjectProperty> ret = getParser().parseSetOfProperties(response,
 				getOWLOntologyManager().getOWLDataFactory());
 		return ret;
@@ -268,7 +291,7 @@ public class CelReasonerInterface {
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
-		Sexp response = send(message);
+		Sexp response = sendAndConvert(message);
 		Set<Set<OWLClass>> ret = getParser().parseSetOfSetOfClasses(response,
 				getOWLOntologyManager().getOWLDataFactory());
 		return ret;
@@ -280,7 +303,7 @@ public class CelReasonerInterface {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory.newAtomicSexp(command));
 		message.add(getTranslator().translate(property));
-		Sexp response = send(message);
+		Sexp response = sendAndConvert(message);
 		Set<Set<OWLObjectProperty>> ret = getParser()
 				.parseSetOfSetOfProperties(response,
 						getOWLOntologyManager().getOWLDataFactory());
@@ -321,9 +344,16 @@ public class CelReasonerInterface {
 		return this.translator;
 	}
 
-	public Set<Set<OWLClass>> getTypes(OWLIndividual individual, boolean arg1)
-			throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
+	public Set<Set<OWLClass>> getTypes(OWLIndividual individual, boolean direct)
+			throws CelReasonerException {
+		Sexp message = SexpFactory.newNonAtomicSexp();
+		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyGetTypes));
+		message.add(getTranslator().translate(individual));
+		message.add(getTranslator().translate(direct));
+		Sexp response = sendAndConvert(message);
+		Set<Set<OWLClass>> ret = getParser().parseSetOfSetOfClasses(response,
+				getOWLOntologyManager().getOWLDataFactory());
+		return ret;
 	}
 
 	public boolean hasObjectPropertyRelationship(OWLIndividual individual0,
@@ -342,9 +372,16 @@ public class CelReasonerInterface {
 	}
 
 	public boolean hasTypes(OWLIndividual individual,
-			OWLDescription description, boolean arg2)
-			throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
+			OWLDescription description, boolean direct)
+			throws CelReasonerException {
+		boolean found = false;
+		Set<Set<OWLClass>> typeSet = getTypes(individual, direct);
+		for (Iterator<Set<OWLClass>> it = typeSet.iterator(); !found
+				&& it.hasNext();) {
+			Set<OWLClass> currentSet = it.next();
+			found = found || currentSet.contains(description);
+		}
+		return found;
 	}
 
 	/**
@@ -544,6 +581,10 @@ public class CelReasonerInterface {
 			throw new CelReasonerException(e);
 		}
 		return ret;
+	}
+
+	protected Sexp sendAndConvert(Sexp message) throws CelReasonerException {
+		return convertNil(send(message));
 	}
 
 	protected Sexp send(Sexp message, String title) throws CelReasonerException {
