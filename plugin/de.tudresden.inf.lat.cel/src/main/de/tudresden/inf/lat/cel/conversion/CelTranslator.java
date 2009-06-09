@@ -178,7 +178,8 @@ public class CelTranslator {
 			throws CelTranslatorException {
 		List<OWLObjectPropertyExpression> propertyList = axiom
 				.getPropertyChain();
-		Sexp translatedList = SexpFactory.newAtomicSexp(CelKeyword.keyCompose);
+		Sexp translatedList = SexpFactory.newNonAtomicSexp();
+		translatedList.add(SexpFactory.newAtomicSexp(CelKeyword.keyCompose));
 		for (OWLObjectPropertyExpression expr : propertyList) {
 			translatedList.add(translate(expr));
 		}
