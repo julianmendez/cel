@@ -477,7 +477,7 @@ public class CelReasonerInterface {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		try {
 			message.add(SexpFactory
-					.newAtomicSexp(CelOwlApiKeyword.keyClearOntologies));
+					.newAtomicSexp(CelOwlApiKeyword.keyIsEquivalentClass));
 			message.add(getTranslator().translate(description0));
 			message.add(getTranslator().translate(description1));
 		} catch (CelTranslatorException e) {
