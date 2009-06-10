@@ -43,6 +43,9 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 		return ret;
 	}
 
+	public void dispose() throws Exception {
+	}
+
 	/**
 	 * This function is invoked when protege starts its execution. The logger
 	 * and logging level is defined here.
@@ -52,9 +55,6 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 	public void initialise() throws Exception {
 		//Logger.getAnonymousLogger().getParent().setLevel(Level.FINE);
 		Logger.getAnonymousLogger().getParent().setLevel(Level.INFO);
-	}
-
-	public void dispose() throws Exception {
 	}
 
 	/**

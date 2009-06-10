@@ -39,70 +39,62 @@ import java.util.logging.Logger;
  */
 class CelProcessThread extends Thread {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
-
 	/** Location inside the bundle. */
 	private static String bundleLocation = "native";
-
-	/** Commands to maximize the priority. */
-	private static final String nicePrefix = "nice -n 0";
 
 	/** Command to start CEL. */
 	private static String celCommandLine = "cel -owlapiServer localhost";
 
-	/** Suffix to indicate logging mode. */
-	private static String loggingSuffix = "logging";
+	/** Compiled image of CEL binary. */
+	private static final String celImage = "cel.dxl";
 
 	/** Main file of CEL binary. */
 	private static final String celMain = "cel";
 
-	/** Compiled image of CEL binary. */
-	private static final String celImage = "cel.dxl";
+	/** Linux library for Allegro Common Lisp. */
+	private static final String lispLibrary = "libacli817.so";
 
 	/** License for CEL binary. */
 	private static final String lispLicense = "cel.lic";
 
-	/** Linux library for Allegro Common Lisp. */
-	private static final String lispLibrary = "libacli817.so";
+	private static final Logger logger = Logger.getAnonymousLogger();
+
+	/** Suffix to indicate logging mode. */
+	private static String loggingSuffix = "logging";
+
+	/** Commands to maximize the priority. */
+	private static final String nicePrefix = "nice -n 0";
+
+	private CelSocket celSocket = null;
 
 	/** Port used to communicate with Java. */
 	private int port = 0;
 
+	private Process process = null;
 	/**
 	 * Small gap in milliseconds between different commands of the operating
 	 * system.
 	 */
 	private int timeGap = 100;
 
-	private Process process = null;
-	private CelSocket celSocket = null;
-
 	public CelProcessThread(int port) {
 		this.port = port;
 	}
 
-	public int getPort() {
-		return this.port;
-	}
-
-	public Process getProcess() {
-		return this.process;
-	}
-
-	public CelSocket getCelSocket() {
-		return this.celSocket;
-	}
-
 	/**
-	 * Tells when the operating system *seems* to be Unix-like.
-	 * 
-	 * @return true if the operating system seems to be a Unix
+	 * Installs CEL files in a temporary directory. These files will be deleted
+	 * using deleteOnExit().
 	 */
-	protected boolean isUnixlikePlatform() {
-		boolean ret = System.getProperty("file.separator").equals("/")
-				&& System.getProperty("path.separator").equals(":")
-				&& System.getProperty("line.separator").equals("\n");
-		return ret;
+	protected File createBinary() throws IOException, InterruptedException {
+		File tempDirectory = File.createTempFile(celMain, "");
+		tempDirectory.delete();
+		tempDirectory.mkdir();
+		tempDirectory.deleteOnExit();
+		decompressFile(bundleLocation, celMain, tempDirectory);
+		decompressFile(bundleLocation, celImage, tempDirectory);
+		decompressFile(bundleLocation, lispLicense, tempDirectory);
+		decompressFile(bundleLocation, lispLibrary, tempDirectory);
+		return tempDirectory;
 	}
 
 	/**
@@ -128,25 +120,34 @@ class CelProcessThread extends Thread {
 		source.close();
 	}
 
+	public CelSocket getCelSocket() {
+		return this.celSocket;
+	}
+
+	public int getPort() {
+		return this.port;
+	}
+
+	public Process getProcess() {
+		return this.process;
+	}
+
 	/**
-	 * Installs CEL files in a temporary directory. These files will be deleted
-	 * using deleteOnExit().
+	 * Tells when the operating system *seems* to be Unix-like.
+	 * 
+	 * @return true if the operating system seems to be a Unix
 	 */
-	protected File createBinary() throws IOException, InterruptedException {
-		File tempDirectory = File.createTempFile(celMain, "");
-		tempDirectory.delete();
-		tempDirectory.mkdir();
-		tempDirectory.deleteOnExit();
-		decompressFile(bundleLocation, celMain, tempDirectory);
-		decompressFile(bundleLocation, celImage, tempDirectory);
-		decompressFile(bundleLocation, lispLicense, tempDirectory);
-		decompressFile(bundleLocation, lispLibrary, tempDirectory);
-		return tempDirectory;
+	protected boolean isUnixlikePlatform() {
+		boolean ret = System.getProperty("file.separator").equals("/")
+				&& System.getProperty("path.separator").equals(":")
+				&& System.getProperty("line.separator").equals("\n");
+		return ret;
 	}
 
 	/**
 	 * Starts a new instance of the CEL server.
 	 */
+	@Override
 	public void run() {
 		try {
 			File celDirectory = createBinary();

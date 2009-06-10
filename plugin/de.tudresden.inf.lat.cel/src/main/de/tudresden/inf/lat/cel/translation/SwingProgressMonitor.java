@@ -34,8 +34,8 @@ class SwingProgressMonitor implements CelProgressMonitor {
 
 	private boolean active = false;
 	private String message = "";
-	private long progress = 0;
 	private javax.swing.ProgressMonitor monitor = null;
+	private long progress = 0;
 
 	public SwingProgressMonitor() {
 		init();
@@ -45,28 +45,12 @@ class SwingProgressMonitor implements CelProgressMonitor {
 		return this.message;
 	}
 
-	public void setMessage(String msg) {
-		this.message = msg;
-	}
-
 	public long getProgress() {
 		return this.progress;
 	}
 
-	public void setProgress(long prog) {
-		if (active) {
-			this.progress = prog;
-			this.monitor.setProgress((int) prog);
-			updateTitle();
-		}
-	}
-
 	public long getSize() {
 		return this.monitor.getMaximum();
-	}
-
-	public void setSize(long s) {
-		this.monitor.setMaximum((int) s);
 	}
 
 	/**
@@ -87,17 +71,33 @@ class SwingProgressMonitor implements CelProgressMonitor {
 		return this.monitor.isCanceled();
 	}
 
-	public void setStarted() {
-		active = true;
-		init();
-	}
-
 	public void setFinished() {
 		active = false;
 		this.monitor.close();
 	}
 
 	public void setIndeterminate(boolean ind) {
+	}
+
+	public void setMessage(String msg) {
+		this.message = msg;
+	}
+
+	public void setProgress(long prog) {
+		if (active) {
+			this.progress = prog;
+			this.monitor.setProgress((int) prog);
+			updateTitle();
+		}
+	}
+
+	public void setSize(long s) {
+		this.monitor.setMaximum((int) s);
+	}
+
+	public void setStarted() {
+		active = true;
+		init();
 	}
 
 	protected void updateTitle() {

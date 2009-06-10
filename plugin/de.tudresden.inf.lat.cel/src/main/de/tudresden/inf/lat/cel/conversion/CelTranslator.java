@@ -79,22 +79,93 @@ public class CelTranslator {
 		return createAtomicSymbol(uri.toString());
 	}
 
-	protected Sexp translateDescription(OWLObjectIntersectionOf description)
-			throws CelTranslatorException {
-		Sexp ret = SexpFactory.newNonAtomicSexp();
-		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyAnd));
-		for (OWLDescription elem : description.getOperands()) {
-			ret.add(translate(elem));
+	protected boolean isIgnoredAxiom(OWLAxiom axiom) {
+		boolean ret = (axiom instanceof OWLAxiomAnnotationAxiom)
+				|| (axiom instanceof OWLDeclarationAxiom)
+				|| (axiom instanceof OWLDeprecatedClassAxiom)
+				|| (axiom instanceof OWLDeprecatedObjectPropertyAxiom)
+				|| (axiom instanceof OWLEntityAnnotationAxiom)
+				|| (axiom instanceof OWLImportsDeclaration)
+				|| (axiom instanceof OWLOntologyAnnotationAxiom);
+		return ret;
+	}
+
+	public Sexp translate(boolean boolval) {
+		return boolval ? SexpFactory.newAtomicSexp(LispKeyword.lispTrue)
+				: SexpFactory.newAtomicSexp(LispKeyword.lispFalse);
+	}
+
+	/**
+	 * Axiom translation to S-expression.
+	 * 
+	 * @param axiom
+	 *            an axiom that should not be ignored according to
+	 *            isIgnoredAxiom.
+	 * @return corresponding S-expression
+	 * @throws CelTranslatorException
+	 *             if the translation was not found.
+	 */
+	public Sexp translate(OWLAxiom axiom) throws CelTranslatorException {
+		Sexp ret = null;
+		if (axiom instanceof OWLClassAssertionAxiom) {
+			ret = translateAxiom((OWLClassAssertionAxiom) axiom);
+		} else if (axiom instanceof OWLDifferentIndividualsAxiom) {
+			ret = translateAxiom((OWLDifferentIndividualsAxiom) axiom);
+		} else if (axiom instanceof OWLDisjointClassesAxiom) {
+			ret = translateAxiom((OWLDisjointClassesAxiom) axiom);
+		} else if (axiom instanceof OWLEquivalentClassesAxiom) {
+			ret = translateAxiom((OWLEquivalentClassesAxiom) axiom);
+		} else if (axiom instanceof OWLEquivalentObjectPropertiesAxiom) {
+			ret = translateAxiom((OWLEquivalentObjectPropertiesAxiom) axiom);
+		} else if (axiom instanceof OWLObjectPropertyAssertionAxiom) {
+			ret = translateAxiom((OWLObjectPropertyAssertionAxiom) axiom);
+		} else if (axiom instanceof OWLObjectPropertyChainSubPropertyAxiom) {
+			ret = translateAxiom((OWLObjectPropertyChainSubPropertyAxiom) axiom);
+		} else if (axiom instanceof OWLObjectPropertyDomainAxiom) {
+			ret = translateAxiom((OWLObjectPropertyDomainAxiom) axiom);
+		} else if (axiom instanceof OWLObjectPropertyRangeAxiom) {
+			ret = translateAxiom((OWLObjectPropertyRangeAxiom) axiom);
+		} else if (axiom instanceof OWLObjectSubPropertyAxiom) {
+			ret = translateAxiom((OWLObjectSubPropertyAxiom) axiom);
+		} else if (axiom instanceof OWLReflexiveObjectPropertyAxiom) {
+			ret = translateAxiom((OWLReflexiveObjectPropertyAxiom) axiom);
+		} else if (axiom instanceof OWLSameIndividualsAxiom) {
+			ret = translateAxiom((OWLSameIndividualsAxiom) axiom);
+		} else if (axiom instanceof OWLSubClassAxiom) {
+			ret = translateAxiom((OWLSubClassAxiom) axiom);
+		} else if (axiom instanceof OWLTransitiveObjectPropertyAxiom) {
+			ret = translateAxiom((OWLTransitiveObjectPropertyAxiom) axiom);
+		}
+		if (ret == null) {
+			throw new CelTranslatorException("OWLAxiom '" + axiom.toString()
+					+ "' was not recognized.");
 		}
 		return ret;
 	}
 
-	protected Sexp translateDescription(OWLObjectSomeRestriction description)
+	public Sexp translate(OWLDescription description)
 			throws CelTranslatorException {
-		Sexp ret = SexpFactory.newNonAtomicSexp();
-		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keySome));
-		ret.add(translate(description.getProperty()));
-		ret.add(translate(description.getFiller()));
+		Sexp ret = null;
+		if (description.isOWLThing()) {
+			ret = SexpFactory.newAtomicSexp(CelKeyword.keyTop);
+		} else if (description.isOWLNothing()) {
+			ret = SexpFactory.newAtomicSexp(CelKeyword.keyBottom);
+		} else if (description instanceof OWLObjectIntersectionOf) {
+			ret = translateDescription((OWLObjectIntersectionOf) description);
+		} else if (description instanceof OWLObjectSomeRestriction) {
+			ret = translateDescription((OWLObjectSomeRestriction) description);
+		} else if (description instanceof OWLClass) {
+			ret = translateDescription((OWLClass) description);
+		}
+		if (ret == null) {
+			throw new CelTranslatorException("OWLDescription '"
+					+ description.toString() + "' was not recognized.");
+		}
+		return ret;
+	}
+
+	public Sexp translate(OWLIndividual individual) {
+		Sexp ret = createAtomicSymbol(individual.getURI());
 		return ret;
 	}
 
@@ -103,13 +174,14 @@ public class CelTranslator {
 		return ret;
 	}
 
-	protected Sexp translateProperty(OWLObjectProperty property) {
-		Sexp ret = createAtomicSymbol(property.getURI());
-		return ret;
-	}
-
-	protected Sexp translateDescription(OWLClass cl) {
-		Sexp ret = createAtomicSymbol(cl.getURI());
+	public Sexp translate(OWLOntology ontology) throws CelTranslatorException {
+		Sexp ret = SexpFactory.newNonAtomicSexp();
+		Set<OWLAxiom> axioms = ontology.getAxioms();
+		for (OWLAxiom axiom : axioms) {
+			if (!isIgnoredAxiom(axiom)) {
+				ret.add(translate(axiom));
+			}
+		}
 		return ret;
 	}
 
@@ -252,104 +324,32 @@ public class CelTranslator {
 		return ret;
 	}
 
-	protected boolean isIgnoredAxiom(OWLAxiom axiom) {
-		boolean ret = (axiom instanceof OWLAxiomAnnotationAxiom)
-				|| (axiom instanceof OWLDeclarationAxiom)
-				|| (axiom instanceof OWLDeprecatedClassAxiom)
-				|| (axiom instanceof OWLDeprecatedObjectPropertyAxiom)
-				|| (axiom instanceof OWLEntityAnnotationAxiom)
-				|| (axiom instanceof OWLImportsDeclaration)
-				|| (axiom instanceof OWLOntologyAnnotationAxiom);
+	protected Sexp translateDescription(OWLClass cl) {
+		Sexp ret = createAtomicSymbol(cl.getURI());
 		return ret;
 	}
 
-	/**
-	 * Axiom translation to S-expression.
-	 * 
-	 * @param axiom
-	 *            an axiom that should not be ignored according to
-	 *            isIgnoredAxiom.
-	 * @return corresponding S-expression
-	 * @throws CelTranslatorException
-	 *             if the translation was not found.
-	 */
-	public Sexp translate(OWLAxiom axiom) throws CelTranslatorException {
-		Sexp ret = null;
-		if (axiom instanceof OWLClassAssertionAxiom) {
-			ret = translateAxiom((OWLClassAssertionAxiom) axiom);
-		} else if (axiom instanceof OWLDifferentIndividualsAxiom) {
-			ret = translateAxiom((OWLDifferentIndividualsAxiom) axiom);
-		} else if (axiom instanceof OWLDisjointClassesAxiom) {
-			ret = translateAxiom((OWLDisjointClassesAxiom) axiom);
-		} else if (axiom instanceof OWLEquivalentClassesAxiom) {
-			ret = translateAxiom((OWLEquivalentClassesAxiom) axiom);
-		} else if (axiom instanceof OWLEquivalentObjectPropertiesAxiom) {
-			ret = translateAxiom((OWLEquivalentObjectPropertiesAxiom) axiom);
-		} else if (axiom instanceof OWLObjectPropertyAssertionAxiom) {
-			ret = translateAxiom((OWLObjectPropertyAssertionAxiom) axiom);
-		} else if (axiom instanceof OWLObjectPropertyChainSubPropertyAxiom) {
-			ret = translateAxiom((OWLObjectPropertyChainSubPropertyAxiom) axiom);
-		} else if (axiom instanceof OWLObjectPropertyDomainAxiom) {
-			ret = translateAxiom((OWLObjectPropertyDomainAxiom) axiom);
-		} else if (axiom instanceof OWLObjectPropertyRangeAxiom) {
-			ret = translateAxiom((OWLObjectPropertyRangeAxiom) axiom);
-		} else if (axiom instanceof OWLObjectSubPropertyAxiom) {
-			ret = translateAxiom((OWLObjectSubPropertyAxiom) axiom);
-		} else if (axiom instanceof OWLReflexiveObjectPropertyAxiom) {
-			ret = translateAxiom((OWLReflexiveObjectPropertyAxiom) axiom);
-		} else if (axiom instanceof OWLSameIndividualsAxiom) {
-			ret = translateAxiom((OWLSameIndividualsAxiom) axiom);
-		} else if (axiom instanceof OWLSubClassAxiom) {
-			ret = translateAxiom((OWLSubClassAxiom) axiom);
-		} else if (axiom instanceof OWLTransitiveObjectPropertyAxiom) {
-			ret = translateAxiom((OWLTransitiveObjectPropertyAxiom) axiom);
-		}
-		if (ret == null) {
-			throw new CelTranslatorException("OWLAxiom '" + axiom.toString()
-					+ "' was not recognized.");
-		}
-		return ret;
-	}
-
-	public Sexp translate(OWLDescription description)
+	protected Sexp translateDescription(OWLObjectIntersectionOf description)
 			throws CelTranslatorException {
-		Sexp ret = null;
-		if (description.isOWLThing()) {
-			ret = SexpFactory.newAtomicSexp(CelKeyword.keyTop);
-		} else if (description.isOWLNothing()) {
-			ret = SexpFactory.newAtomicSexp(CelKeyword.keyBottom);
-		} else if (description instanceof OWLObjectIntersectionOf) {
-			ret = translateDescription((OWLObjectIntersectionOf) description);
-		} else if (description instanceof OWLObjectSomeRestriction) {
-			ret = translateDescription((OWLObjectSomeRestriction) description);
-		} else if (description instanceof OWLClass) {
-			ret = translateDescription((OWLClass) description);
-		}
-		if (ret == null) {
-			throw new CelTranslatorException("OWLDescription '"
-					+ description.toString() + "' was not recognized.");
-		}
-		return ret;
-	}
-
-	public Sexp translate(OWLOntology ontology) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
-		Set<OWLAxiom> axioms = ontology.getAxioms();
-		for (OWLAxiom axiom : axioms) {
-			if (!isIgnoredAxiom(axiom)) {
-				ret.add(translate(axiom));
-			}
+		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyAnd));
+		for (OWLDescription elem : description.getOperands()) {
+			ret.add(translate(elem));
 		}
 		return ret;
 	}
 
-	public Sexp translate(boolean boolval) {
-		return boolval ? SexpFactory.newAtomicSexp(LispKeyword.lispTrue)
-				: SexpFactory.newAtomicSexp(LispKeyword.lispFalse);
+	protected Sexp translateDescription(OWLObjectSomeRestriction description)
+			throws CelTranslatorException {
+		Sexp ret = SexpFactory.newNonAtomicSexp();
+		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keySome));
+		ret.add(translate(description.getProperty()));
+		ret.add(translate(description.getFiller()));
+		return ret;
 	}
 
-	public Sexp translate(OWLIndividual individual) {
-		Sexp ret = createAtomicSymbol(individual.getURI());
+	protected Sexp translateProperty(OWLObjectProperty property) {
+		Sexp ret = createAtomicSymbol(property.getURI());
 		return ret;
 	}
 }

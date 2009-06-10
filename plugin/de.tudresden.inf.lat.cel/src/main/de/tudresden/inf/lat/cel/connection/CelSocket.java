@@ -41,10 +41,10 @@ class CelSocket {
 
 	private static final Logger logger = Logger.getAnonymousLogger();
 
-	public static final String protReturn = ":RETURN";
 	public static final String protError = ":ERROR";
-	public static final String protVoid = ":VOID";
 	public static final String protOther = ":OWLAPI-RETURN";
+	public static final String protReturn = ":RETURN";
+	public static final String protVoid = ":VOID";
 
 	private Socket socket = null;
 
@@ -62,10 +62,6 @@ class CelSocket {
 		this.socket = socket;
 	}
 
-	protected Socket getSocket() {
-		return this.socket;
-	}
-
 	/**
 	 * Closes the connection to the CEL reasoner in Lisp.
 	 * 
@@ -73,6 +69,36 @@ class CelSocket {
 	 */
 	public void close() throws IOException {
 		getSocket().close();
+	}
+
+	protected Socket getSocket() {
+		return this.socket;
+	}
+
+	protected Sexp process(Sexp original) throws CelConnectionException {
+		Sexp ret = null;
+		if (original.getLength() > 0) {
+			String msgid = original.get(0).toString();
+			if (msgid.equalsIgnoreCase(protReturn)) {
+				ret = original.get(1);
+			} else if (msgid.equalsIgnoreCase(protError)) {
+				logger.fine("error " + original.get(1) + "'.");
+				throw new CelConnectionException("Error received: '"
+						+ original.get(1) + "'.");
+			} else if (msgid.equalsIgnoreCase(protVoid)) {
+				ret = SexpFactory.newNonAtomicSexp();
+			} else if (msgid.equalsIgnoreCase(protOther)) {
+				ret = SexpFactory.newNonAtomicSexp();
+			} else {
+				throw new CelConnectionException(
+						"Message identification not recognized: '" + msgid
+								+ "'.");
+			}
+		} else {
+			throw new CelConnectionException("Unexpected response format: '"
+					+ original + "'.");
+		}
+		return ret;
 	}
 
 	/**
@@ -101,32 +127,6 @@ class CelSocket {
 			throw new CelConnectionException(e);
 		} catch (SexpParserException e) {
 			throw new CelConnectionException(e);
-		}
-		return ret;
-	}
-
-	protected Sexp process(Sexp original) throws CelConnectionException {
-		Sexp ret = null;
-		if (original.getLength() > 0) {
-			String msgid = original.get(0).toString();
-			if (msgid.equalsIgnoreCase(protReturn)) {
-				ret = original.get(1);
-			} else if (msgid.equalsIgnoreCase(protError)) {
-				logger.fine("error " + original.get(1) + "'.");
-				throw new CelConnectionException("Error received: '"
-						+ original.get(1) + "'.");
-			} else if (msgid.equalsIgnoreCase(protVoid)) {
-				ret = SexpFactory.newNonAtomicSexp();
-			} else if (msgid.equalsIgnoreCase(protOther)) {
-				ret = SexpFactory.newNonAtomicSexp();
-			} else {
-				throw new CelConnectionException(
-						"Message identification not recognized: '" + msgid
-								+ "'.");
-			}
-		} else {
-			throw new CelConnectionException("Unexpected response format: '"
-					+ original + "'.");
 		}
 		return ret;
 	}

@@ -28,8 +28,8 @@ package de.tudresden.inf.lat.cel.conversion;
  */
 public interface LispKeyword {
 
-	public static final String lispTrue = "t";
 	public static final String lispFalse = "nil";
 	public static final String lispNil = "nil";
+	public static final String lispTrue = "t";
 	public static final char lispVBar = '|';
 }

@@ -46,38 +46,6 @@ import de.tudresden.inf.lat.jsexp.SexpParserException;
  */
 public class CelTranslatorTest extends TestCase {
 
-	public void testTopAndBottom() throws CelTranslatorException,
-			URISyntaxException {
-		CelTranslator translator = new CelTranslator();
-		OWLOntologyManager ontologyManager = OWLManager
-				.createOWLOntologyManager();
-		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
-		OWLDescription description = dataFactory.getOWLThing();
-		Sexp translated = translator.translate(description);
-		Sexp expected = SexpFactory.newAtomicSexp("top");
-		assertEquals(expected, translated);
-		description = dataFactory.getOWLNothing();
-		translated = translator.translate(description);
-		expected = SexpFactory.newAtomicSexp("bottom");
-		assertEquals(expected, translated);
-	}
-
-	public void testSome() throws URISyntaxException, CelTranslatorException,
-			SexpParserException, IOException {
-		CelTranslator translator = new CelTranslator();
-		OWLOntologyManager ontologyManager = OWLManager
-				.createOWLOntologyManager();
-		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
-		OWLObjectProperty role = dataFactory.getOWLObjectProperty(new URI(
-				"has-child"));
-		OWLDescription desc1 = dataFactory.getOWLClass(new URI("Person"));
-		OWLDescription description = dataFactory.getOWLObjectSomeRestriction(
-				role, desc1);
-		Sexp translated = translator.translate(description);
-		Sexp expected = SexpFactory.parse("(some |has-child| |Person|)");
-		assertEquals(expected, translated);
-	}
-
 	public void testAnd() throws CelTranslatorException, URISyntaxException,
 			SexpParserException, IOException {
 		CelTranslator translator = new CelTranslator();
@@ -128,6 +96,38 @@ public class CelTranslatorTest extends TestCase {
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory
 				.parse("(and |Person| (some |has-child| (and |Friendly| |Intelligent| |Person|)))");
+		assertEquals(expected, translated);
+	}
+
+	public void testSome() throws URISyntaxException, CelTranslatorException,
+			SexpParserException, IOException {
+		CelTranslator translator = new CelTranslator();
+		OWLOntologyManager ontologyManager = OWLManager
+				.createOWLOntologyManager();
+		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
+		OWLObjectProperty role = dataFactory.getOWLObjectProperty(new URI(
+				"has-child"));
+		OWLDescription desc1 = dataFactory.getOWLClass(new URI("Person"));
+		OWLDescription description = dataFactory.getOWLObjectSomeRestriction(
+				role, desc1);
+		Sexp translated = translator.translate(description);
+		Sexp expected = SexpFactory.parse("(some |has-child| |Person|)");
+		assertEquals(expected, translated);
+	}
+
+	public void testTopAndBottom() throws CelTranslatorException,
+			URISyntaxException {
+		CelTranslator translator = new CelTranslator();
+		OWLOntologyManager ontologyManager = OWLManager
+				.createOWLOntologyManager();
+		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
+		OWLDescription description = dataFactory.getOWLThing();
+		Sexp translated = translator.translate(description);
+		Sexp expected = SexpFactory.newAtomicSexp("top");
+		assertEquals(expected, translated);
+		description = dataFactory.getOWLNothing();
+		translated = translator.translate(description);
+		expected = SexpFactory.newAtomicSexp("bottom");
 		assertEquals(expected, translated);
 	}
 }

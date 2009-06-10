@@ -21,7 +21,7 @@
 
 package de.tudresden.inf.lat.cel.translation;
 
-import org.semanticweb.owl.inference.UnsupportedReasonerOperationException;
+import org.semanticweb.owl.inference.OWLReasonerException;
 
 /**
  * This exception should be thrown when it is invoked an operation supported by
@@ -29,8 +29,7 @@ import org.semanticweb.owl.inference.UnsupportedReasonerOperationException;
  * 
  * @author Julian Mendez
  */
-public class NotImplementedOperationException extends
-		UnsupportedReasonerOperationException {
+public class NotImplementedOperationException extends OWLReasonerException {
 
 	private static final long serialVersionUID = 6255906342903657818L;
 

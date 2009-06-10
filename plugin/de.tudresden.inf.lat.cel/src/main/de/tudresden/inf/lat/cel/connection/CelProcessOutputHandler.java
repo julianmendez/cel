@@ -35,20 +35,20 @@ import java.util.logging.Logger;
  */
 class CelProcessOutputHandler extends Thread {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
-
 	/** Character sent by CEL to show progress. */
 	public static final char countingChar = '#';
 
+	private static final Logger logger = Logger.getAnonymousLogger();
+
 	private boolean active = false;
 	private InputStream input = null;
-	private OutputStream output = null;
+	private CelOutputListener listener = null;
 	private CelProgressMonitor monitor = null;
+
+	private OutputStream output = null;
 
 	/** Time for reading the output of the CEL reasoner. */
 	private long pollingPeriod = 500;
-
-	private CelOutputListener listener = null;
 
 	/**
 	 * Creates a new instance.
@@ -60,20 +60,12 @@ class CelProcessOutputHandler extends Thread {
 		this.output = out;
 	}
 
-	public CelProgressMonitor getProgressMonitor() {
-		return this.monitor;
-	}
-
-	public void setProgressMonitor(CelProgressMonitor progressMonitor) {
-		this.monitor = progressMonitor;
-	}
-
 	public CelOutputListener getOutputListener() {
 		return this.listener;
 	}
 
-	public void setOutputListener(CelOutputListener outputListener) {
-		this.listener = outputListener;
+	public CelProgressMonitor getProgressMonitor() {
+		return this.monitor;
 	}
 
 	public boolean isActive() {
@@ -84,6 +76,7 @@ class CelProcessOutputHandler extends Thread {
 	 * Reads the output of the CEL reasoner and updates the values of the
 	 * ProgressMonitor.
 	 */
+	@Override
 	public void run() {
 		try {
 			this.active = true;
@@ -121,6 +114,14 @@ class CelProcessOutputHandler extends Thread {
 		if (getOutputListener() != null) {
 			getOutputListener().executionFinished();
 		}
+	}
+
+	public void setOutputListener(CelOutputListener outputListener) {
+		this.listener = outputListener;
+	}
+
+	public void setProgressMonitor(CelProgressMonitor progressMonitor) {
+		this.monitor = progressMonitor;
 	}
 
 	/**

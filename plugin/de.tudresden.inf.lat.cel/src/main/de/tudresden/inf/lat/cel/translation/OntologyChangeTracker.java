@@ -45,19 +45,19 @@ class OntologyChangeTracker implements OWLOntologyChangeListener {
 	}
 
 	/**
+	 * @return true if the ontology has changed.
+	 */
+	public boolean getOntologyChanged() {
+		return this.ontologyChanged;
+	}
+
+	/**
 	 * This is invoked when the ontology has changed.
 	 */
 	public void ontologiesChanged(List<? extends OWLOntologyChange> arg0)
 			throws OWLException {
 		logger.fine("The ontologies have changed.");
 		this.ontologyChanged = true;
-	}
-
-	/**
-	 * @return true if the ontology has changed.
-	 */
-	public boolean getOntologyChanged() {
-		return this.ontologyChanged;
 	}
 
 	/**

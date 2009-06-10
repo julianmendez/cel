@@ -38,8 +38,6 @@ import de.tudresden.inf.lat.jsexp.Sexp;
  */
 public class CelSocketManager implements CelOutputListener {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
-
 	/** Greeting message presented when the program starts. */
 	public static final String greetingMessage = ""
 			+ "\nCEL: [C]lassifier for the Description Logic [E][L]+ "
@@ -49,26 +47,56 @@ public class CelSocketManager implements CelOutputListener {
 			+ "\nThis is free software for research and evaluation purposes."
 			+ "\nCommercial use is prohibited; please contact the author.";
 
+	private static final Logger logger = Logger.getAnonymousLogger();
+
+	private CelSocket celSocket = null;
+
+	/** Time given to CEL to finish the connection. */
+	private int closingConnectionTime = 1000;
+
 	/** First port to try to open a socket. */
 	private int firstPort = 4000;
 
 	/** Last port to try to open a socket. */
 	private int lastPort = 5000;
 
-	/** Time given to CEL to finish the connection. */
-	private int closingConnectionTime = 1000;
-
+	private CelProcessOutputHandler outputHandler = null;
+	private Process process = null;
 	/**
 	 * Timeout in milliseconds used to determine whether there is client (the
 	 * CEL reasoner in Lisp) trying to connect to the server (a Java thread).
 	 */
 	private int timeoutForServer = 10000;
 
-	private CelSocket celSocket = null;
-	private Process process = null;
-	private CelProcessOutputHandler outputHandler = null;
-
 	public CelSocketManager() {
+	}
+
+	public void cancelButtonPressed() {
+		getOutputHandler().stopExecution();
+	}
+
+	public void executionFinished() {
+		getProcess().destroy();
+	}
+
+	private CelSocket getCelSocket() {
+		return this.celSocket;
+	}
+
+	public CelProcessOutputHandler getOutputHandler() {
+		return this.outputHandler;
+	}
+
+	private Process getProcess() {
+		return this.process;
+	}
+
+	public CelProgressMonitor getProgressMonitor() {
+		CelProgressMonitor ret = null;
+		if (getOutputHandler() != null) {
+			ret = getOutputHandler().getProgressMonitor();
+		}
+		return ret;
 	}
 
 	/**
@@ -97,6 +125,12 @@ public class CelSocketManager implements CelOutputListener {
 			}
 		}
 		return response;
+	}
+
+	public void setProgressMonitor(CelProgressMonitor progressMonitor) {
+		if (getOutputHandler() != null) {
+			getOutputHandler().setProgressMonitor(progressMonitor);
+		}
 	}
 
 	/**
@@ -172,39 +206,5 @@ public class CelSocketManager implements CelOutputListener {
 			getOutputHandler().stopExecution();
 		}
 		// getProcess().destroy();
-	}
-
-	public CelProcessOutputHandler getOutputHandler() {
-		return this.outputHandler;
-	}
-
-	private CelSocket getCelSocket() {
-		return this.celSocket;
-	}
-
-	private Process getProcess() {
-		return this.process;
-	}
-
-	public CelProgressMonitor getProgressMonitor() {
-		CelProgressMonitor ret = null;
-		if (getOutputHandler() != null) {
-			ret = getOutputHandler().getProgressMonitor();
-		}
-		return ret;
-	}
-
-	public void setProgressMonitor(CelProgressMonitor progressMonitor) {
-		if (getOutputHandler() != null) {
-			getOutputHandler().setProgressMonitor(progressMonitor);
-		}
-	}
-
-	public void cancelButtonPressed() {
-		getOutputHandler().stopExecution();
-	}
-
-	public void executionFinished() {
-		getProcess().destroy();
 	}
 }

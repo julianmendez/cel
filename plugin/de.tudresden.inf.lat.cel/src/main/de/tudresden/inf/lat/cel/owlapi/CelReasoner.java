@@ -55,19 +55,11 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
 	private static final Logger logger = Logger.getAnonymousLogger();
 
-	private ProgressMonitor monitor = null;
 	private CelReasonerInterface celInterface = null;
+	private ProgressMonitor monitor = null;
 
 	public CelReasoner(OWLOntologyManager manager) {
 		this.celInterface = new CelReasonerInterface(manager);
-	}
-
-	protected CelReasonerInterface getCelInterface() {
-		return this.celInterface;
-	}
-
-	public OWLOntologyManager getOWLOntologyManager() {
-		return getCelInterface().getOWLOntologyManager();
 	}
 
 	public void classify() throws OWLReasonerException {
@@ -85,6 +77,13 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		getCelInterface().dispose();
 	}
 
+	@Override
+	public void finalize() throws Throwable {
+		logger.fine("(finalize)");
+		this.dispose();
+		super.finalize();
+	}
+
 	public Set<Set<OWLClass>> getAncestorClasses(OWLDescription description)
 			throws OWLReasonerException {
 		logger.fine("(called)");
@@ -100,6 +99,14 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 			OWLObjectProperty property) throws OWLReasonerException {
 		logger.fine("(called) " + property.getURI());
 		return getCelInterface().getAncestorProperties(property);
+	}
+
+	protected CelReasonerInterface getCelInterface() {
+		return this.celInterface;
+	}
+
+	public OWLEntity getCurrentEntity() {
+		return null;
 	}
 
 	public Map<OWLDataProperty, Set<OWLConstant>> getDataPropertyRelationships(
@@ -177,6 +184,14 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 			OWLIndividual individual) throws OWLReasonerException {
 		logger.fine("(called) " + individual.getURI());
 		return getCelInterface().getObjectPropertyRelationships(individual);
+	}
+
+	public OWLOntologyManager getOWLOntologyManager() {
+		return getCelInterface().getOWLOntologyManager();
+	}
+
+	public ProgressMonitor getProgressMonitor() {
+		return this.monitor;
 	}
 
 	public Set<OWLDataRange> getRanges(OWLDataProperty dataProperty)
@@ -378,27 +393,13 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		getCelInterface().realise();
 	}
 
-	public void unloadOntologies(Set<OWLOntology> ontologySet)
-			throws OWLReasonerException {
-		logger.fine("(called)");
-		getCelInterface().unloadOntologies(ontologySet);
-	}
-
-	public ProgressMonitor getProgressMonitor() {
-		return this.monitor;
-	}
-
 	public void setProgressMonitor(ProgressMonitor pMonitor) {
 		this.monitor = pMonitor;
 	}
 
-	public OWLEntity getCurrentEntity() {
-		return null;
-	}
-
-	public void finalize() throws Throwable {
-		logger.fine("(finalize)");
-		this.dispose();
-		super.finalize();
+	public void unloadOntologies(Set<OWLOntology> ontologySet)
+			throws OWLReasonerException {
+		logger.fine("(called)");
+		getCelInterface().unloadOntologies(ontologySet);
 	}
 }

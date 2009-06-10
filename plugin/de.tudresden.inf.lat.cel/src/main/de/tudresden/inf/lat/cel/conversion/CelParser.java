@@ -50,82 +50,31 @@ public class CelParser {
 	public CelParser() {
 	}
 
-	protected Sexp removeVbars(Sexp symbolWithVbars) {
-		Sexp ret = symbolWithVbars;
-		if (symbolWithVbars.isAtomic()) {
-			String text = symbolWithVbars.toString();
-			if (text.length() >= 2
-					&& text.startsWith("" + LispKeyword.lispVBar)
-					&& text.endsWith("" + LispKeyword.lispVBar)) {
-				ret = SexpFactory.newAtomicSexp(text.substring(1,
-						text.length() - 1));
-			}
-		}
-		return ret;
-	}
-
-	protected OWLDescription tryToParseAnd(Sexp expr, OWLDataFactory dataFactory)
+	public OWLDescription parse(String str, OWLDataFactory dataFactory)
 			throws CelParserException {
 		OWLDescription ret = null;
-		if (!expr.isAtomic()) {
-			Iterator<Sexp> it = expr.iterator();
-			Sexp current = it.next();
-			if (current.isAtomic()
-					&& current.toString().equalsIgnoreCase(CelKeyword.keyAnd)) {
-				Set<OWLDescription> set = new HashSet<OWLDescription>();
-				while (it.hasNext()) {
-					current = it.next();
-					set.add(parseDescription(current, dataFactory));
-				}
-				ret = dataFactory.getOWLObjectIntersectionOf(set);
-			}
+		BufferedInputStream in = new BufferedInputStream(
+				new ByteArrayInputStream(str.getBytes()));
+		try {
+			Sexp expr = SexpFactory.parse(in);
+			ret = parseDescription(expr, dataFactory);
+		} catch (SexpParserException e) {
+			throw new CelParserException(e);
+		} catch (IOException e) {
+			throw new CelParserException(e);
 		}
 		return ret;
 	}
 
-	protected OWLDescription tryToParseSome(Sexp expr,
-			OWLDataFactory dataFactory) throws CelParserException {
-		OWLDescription ret = null;
-		if (!expr.isAtomic()) {
-			Iterator<Sexp> it = expr.iterator();
-			Sexp current = it.next();
-			if (current.isAtomic()
-					&& current.toString().equalsIgnoreCase(CelKeyword.keySome)) {
-				Sexp role = it.next();
-				if (!role.isAtomic()) {
-					throw new CelParserException("'" + role.toString() + "'"
-							+ "was found but only simple roles are accepted.");
-				}
-				Sexp cleanexpr = removeVbars(role);
-				OWLObjectPropertyExpression re = dataFactory
-						.getOWLObjectProperty(URI.create(cleanexpr.toString()));
-				Sexp concept = it.next();
-				if (it.hasNext()) {
-					throw new CelParserException("'" + expr
-							+ "' 'some' has too many parameters.");
-				}
-				OWLDescription ce = parseDescription(concept, dataFactory);
-				ret = dataFactory.getOWLObjectSomeRestriction(re, ce);
-			}
-		}
-		return ret;
-	}
-
-	protected OWLClass tryToParseBottom(Sexp expr, OWLDataFactory dataFactory) {
-		OWLClass ret = null;
-		if (expr.isAtomic()
-				&& expr.toString().equalsIgnoreCase(CelKeyword.keyBottom)) {
-			ret = dataFactory.getOWLNothing();
-		}
-		return ret;
-	}
-
-	protected OWLClass tryToParseTop(Sexp expr, OWLDataFactory dataFactory) {
-		OWLClass ret = null;
-		if (expr.isAtomic()
-				&& expr.toString().equalsIgnoreCase(CelKeyword.keyTop)) {
-			ret = dataFactory.getOWLThing();
-		}
+	/**
+	 * Note: This function returns false for every S-expression which is not
+	 * shown as 't' or 'T'.
+	 * 
+	 * @param expr
+	 * @return true if the S-expression is 't' or 'T'
+	 */
+	public boolean parseBoolean(Sexp expr) {
+		boolean ret = expr.toString().equalsIgnoreCase(LispKeyword.lispTrue);
 		return ret;
 	}
 
@@ -160,22 +109,6 @@ public class CelParser {
 		return ret;
 	}
 
-	public OWLDescription parse(String str, OWLDataFactory dataFactory)
-			throws CelParserException {
-		OWLDescription ret = null;
-		BufferedInputStream in = new BufferedInputStream(
-				new ByteArrayInputStream(str.getBytes()));
-		try {
-			Sexp expr = SexpFactory.parse(in);
-			ret = parseDescription(expr, dataFactory);
-		} catch (SexpParserException e) {
-			throw new CelParserException(e);
-		} catch (IOException e) {
-			throw new CelParserException(e);
-		}
-		return ret;
-	}
-
 	public Set<OWLClass> parseSetOfClasses(Sexp expr, OWLDataFactory dataFactory) {
 		Set<OWLClass> ret = new HashSet<OWLClass>();
 		for (Sexp elem : expr) {
@@ -189,6 +122,28 @@ public class CelParser {
 		Set<OWLDescription> ret = new HashSet<OWLDescription>();
 		for (Sexp elem : expr) {
 			ret.add(parseDescription(elem, dataFactory));
+		}
+		return ret;
+	}
+
+	public Set<OWLIndividual> parseSetOfIndividuals(Sexp expr,
+			OWLDataFactory dataFactory) {
+		Set<OWLIndividual> ret = new HashSet<OWLIndividual>();
+		for (Sexp elem : expr) {
+			Sexp cleanexpr = removeVbars(elem);
+			ret.add(dataFactory.getOWLIndividual(URI.create(cleanexpr
+					.toString())));
+		}
+		return ret;
+	}
+
+	public Set<OWLObjectProperty> parseSetOfProperties(Sexp expr,
+			OWLDataFactory dataFactory) {
+		Set<OWLObjectProperty> ret = new HashSet<OWLObjectProperty>();
+		for (Sexp elem : expr) {
+			Sexp cleanexpr = removeVbars(elem);
+			ret.add(dataFactory.getOWLObjectProperty(URI.create(cleanexpr
+					.toString())));
 		}
 		return ret;
 	}
@@ -219,17 +174,6 @@ public class CelParser {
 		return ret;
 	}
 
-	public Set<OWLObjectProperty> parseSetOfProperties(Sexp expr,
-			OWLDataFactory dataFactory) {
-		Set<OWLObjectProperty> ret = new HashSet<OWLObjectProperty>();
-		for (Sexp elem : expr) {
-			Sexp cleanexpr = removeVbars(elem);
-			ret.add(dataFactory.getOWLObjectProperty(URI.create(cleanexpr
-					.toString())));
-		}
-		return ret;
-	}
-
 	public Set<Set<OWLObjectProperty>> parseSetOfSetOfProperties(Sexp expr,
 			OWLDataFactory dataFactory) {
 		Set<Set<OWLObjectProperty>> ret = new HashSet<Set<OWLObjectProperty>>();
@@ -245,26 +189,82 @@ public class CelParser {
 		return ret;
 	}
 
-	public Set<OWLIndividual> parseSetOfIndividuals(Sexp expr,
-			OWLDataFactory dataFactory) {
-		Set<OWLIndividual> ret = new HashSet<OWLIndividual>();
-		for (Sexp elem : expr) {
-			Sexp cleanexpr = removeVbars(elem);
-			ret.add(dataFactory.getOWLIndividual(URI.create(cleanexpr
-					.toString())));
+	protected Sexp removeVbars(Sexp symbolWithVbars) {
+		Sexp ret = symbolWithVbars;
+		if (symbolWithVbars.isAtomic()) {
+			String text = symbolWithVbars.toString();
+			if (text.length() >= 2
+					&& text.startsWith("" + LispKeyword.lispVBar)
+					&& text.endsWith("" + LispKeyword.lispVBar)) {
+				ret = SexpFactory.newAtomicSexp(text.substring(1,
+						text.length() - 1));
+			}
 		}
 		return ret;
 	}
 
-	/**
-	 * Note: This function returns false for every S-expression which is not
-	 * shown as 't' or 'T'.
-	 * 
-	 * @param expr
-	 * @return true if the S-expression is 't' or 'T'
-	 */
-	public boolean parseBoolean(Sexp expr) {
-		boolean ret = expr.toString().equalsIgnoreCase(LispKeyword.lispTrue);
+	protected OWLDescription tryToParseAnd(Sexp expr, OWLDataFactory dataFactory)
+			throws CelParserException {
+		OWLDescription ret = null;
+		if (!expr.isAtomic()) {
+			Iterator<Sexp> it = expr.iterator();
+			Sexp current = it.next();
+			if (current.isAtomic()
+					&& current.toString().equalsIgnoreCase(CelKeyword.keyAnd)) {
+				Set<OWLDescription> set = new HashSet<OWLDescription>();
+				while (it.hasNext()) {
+					current = it.next();
+					set.add(parseDescription(current, dataFactory));
+				}
+				ret = dataFactory.getOWLObjectIntersectionOf(set);
+			}
+		}
+		return ret;
+	}
+
+	protected OWLClass tryToParseBottom(Sexp expr, OWLDataFactory dataFactory) {
+		OWLClass ret = null;
+		if (expr.isAtomic()
+				&& expr.toString().equalsIgnoreCase(CelKeyword.keyBottom)) {
+			ret = dataFactory.getOWLNothing();
+		}
+		return ret;
+	}
+
+	protected OWLDescription tryToParseSome(Sexp expr,
+			OWLDataFactory dataFactory) throws CelParserException {
+		OWLDescription ret = null;
+		if (!expr.isAtomic()) {
+			Iterator<Sexp> it = expr.iterator();
+			Sexp current = it.next();
+			if (current.isAtomic()
+					&& current.toString().equalsIgnoreCase(CelKeyword.keySome)) {
+				Sexp role = it.next();
+				if (!role.isAtomic()) {
+					throw new CelParserException("'" + role.toString() + "'"
+							+ "was found but only simple roles are accepted.");
+				}
+				Sexp cleanexpr = removeVbars(role);
+				OWLObjectPropertyExpression re = dataFactory
+						.getOWLObjectProperty(URI.create(cleanexpr.toString()));
+				Sexp concept = it.next();
+				if (it.hasNext()) {
+					throw new CelParserException("'" + expr
+							+ "' 'some' has too many parameters.");
+				}
+				OWLDescription ce = parseDescription(concept, dataFactory);
+				ret = dataFactory.getOWLObjectSomeRestriction(re, ce);
+			}
+		}
+		return ret;
+	}
+
+	protected OWLClass tryToParseTop(Sexp expr, OWLDataFactory dataFactory) {
+		OWLClass ret = null;
+		if (expr.isAtomic()
+				&& expr.toString().equalsIgnoreCase(CelKeyword.keyTop)) {
+			ret = dataFactory.getOWLThing();
+		}
 		return ret;
 	}
 }

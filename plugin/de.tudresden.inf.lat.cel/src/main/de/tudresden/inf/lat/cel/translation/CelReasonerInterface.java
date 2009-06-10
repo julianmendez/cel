@@ -89,6 +89,27 @@ public class CelReasonerInterface {
 		this.ontologies = new HashSet<OWLOntology>();
 	}
 
+	/**
+	 * Converts a NIL into a (), and a (NIL) into a (()).
+	 * 
+	 * @param expr
+	 * @return the () list if NIL is found, and (()) if (NIL) is found.
+	 */
+	protected Sexp convertNil(Sexp expr) {
+		Sexp nilExpr = SexpFactory.newAtomicSexp(LispKeyword.lispNil);
+		Sexp listOfNilExpr = SexpFactory.newNonAtomicSexp();
+		listOfNilExpr.add(nilExpr);
+
+		Sexp ret = expr;
+		if (ret.toString().equalsIgnoreCase(nilExpr.toString())) {
+			ret = SexpFactory.newNonAtomicSexp();
+		} else if (ret.toString().equalsIgnoreCase(listOfNilExpr.toString())) {
+			ret = SexpFactory.newNonAtomicSexp();
+			ret.add(SexpFactory.newNonAtomicSexp());
+		}
+		return ret;
+	}
+
 	public void dispose() {
 		if (getSocketManager() != null) {
 			Sexp message = SexpFactory.newNonAtomicSexp();
@@ -104,8 +125,9 @@ public class CelReasonerInterface {
 	}
 
 	public Set<Set<OWLObjectProperty>> getAncestorProperties(
-			OWLObjectProperty arg0) throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
+			OWLObjectProperty property) throws CelReasonerException {
+		return getSetOfSetOfProperties(
+				CelOwlApiKeyword.keyGetAncestorProperties, property);
 	}
 
 	public Set<Set<OWLClass>> getDescendantClasses(OWLDescription description)
@@ -115,8 +137,9 @@ public class CelReasonerInterface {
 	}
 
 	public Set<Set<OWLObjectProperty>> getDescendantProperties(
-			OWLObjectProperty arg0) throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
+			OWLObjectProperty property) throws CelReasonerException {
+		return getSetOfSetOfProperties(
+				CelOwlApiKeyword.keyGetDescendantProperties, property);
 	}
 
 	public Set<Set<OWLDescription>> getDomains(OWLObjectProperty property)
@@ -152,30 +175,17 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	/**
-	 * Converts a NIL into a (), and a (NIL) into a (()).
-	 * 
-	 * @param expr
-	 * @return the () list if NIL is found, and (()) if (NIL) is found.
-	 */
-	protected Sexp convertNil(Sexp expr) {
-		Sexp nilExpr = SexpFactory.newAtomicSexp(LispKeyword.lispNil);
-		Sexp listOfNilExpr = SexpFactory.newNonAtomicSexp();
-		listOfNilExpr.add(nilExpr);
-
-		Sexp ret = expr;
-		if (ret.toString().equalsIgnoreCase(nilExpr.toString())) {
-			ret = SexpFactory.newNonAtomicSexp();
-		} else if (ret.toString().equalsIgnoreCase(listOfNilExpr.toString())) {
-			ret = SexpFactory.newNonAtomicSexp();
-			ret.add(SexpFactory.newNonAtomicSexp());
-		}
-		return ret;
-	}
-
 	public Set<OWLObjectProperty> getEquivalentProperties(
-			OWLObjectProperty property) throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
+			OWLObjectProperty property) throws CelReasonerException {
+		Set<OWLObjectProperty> ret = null;
+		Sexp message = SexpFactory.newNonAtomicSexp();
+		message.add(SexpFactory
+				.newAtomicSexp(CelOwlApiKeyword.keyGetEquivalentProperties));
+		message.add(getTranslator().translate(property));
+		Sexp response = sendAndConvert(message);
+		ret = getParser().parseSetOfProperties(response,
+				getOWLOntologyManager().getOWLDataFactory());
+		return ret;
 	}
 
 	/**
@@ -583,10 +593,6 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	protected Sexp sendAndConvert(Sexp message) throws CelReasonerException {
-		return convertNil(send(message));
-	}
-
 	protected Sexp send(Sexp message, String title) throws CelReasonerException {
 		SwingProgressMonitor monitor = new SwingProgressMonitor();
 		monitor.setStarted();
@@ -596,6 +602,10 @@ public class CelReasonerInterface {
 		Sexp ret = send(message);
 		monitor.setFinished();
 		return ret;
+	}
+
+	protected Sexp sendAndConvert(Sexp message) throws CelReasonerException {
+		return convertNil(send(message));
 	}
 
 	public void synchronizedIfChanged() throws CelReasonerException {
