@@ -29,7 +29,7 @@ package de.tudresden.inf.lat.cel.connection;
  */
 public interface CelOutputListener {
 
-	public void cancelButtonPressed();
+	public void notifyCancelButtonPressed();
 
-	public void executionFinished();
+	public void notifyExecutionFinished();
 }

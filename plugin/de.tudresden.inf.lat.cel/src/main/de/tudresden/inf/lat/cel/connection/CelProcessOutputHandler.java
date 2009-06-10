@@ -90,7 +90,7 @@ class CelProcessOutputHandler extends Thread {
 						if (getProgressMonitor() != null) {
 							if (getProgressMonitor().isCancelled()
 									&& getOutputListener() != null) {
-								getOutputListener().cancelButtonPressed();
+								getOutputListener().notifyCancelButtonPressed();
 							}
 							if (ch == countingChar) {
 								getProgressMonitor().increment();
@@ -112,7 +112,7 @@ class CelProcessOutputHandler extends Thread {
 			logger.log(Level.WARNING, "Process was interrupted.", e);
 		}
 		if (getOutputListener() != null) {
-			getOutputListener().executionFinished();
+			getOutputListener().notifyExecutionFinished();
 		}
 	}
 

@@ -26,9 +26,10 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 /**
  * This thread starts a new instance of the CEL server. All the platform
@@ -71,6 +72,9 @@ class CelProcessThread extends Thread {
 	private int port = 0;
 
 	private Process process = null;
+
+	private List<File> temporaryFiles = null;
+
 	/**
 	 * Small gap in milliseconds between different commands of the operating
 	 * system.
@@ -82,33 +86,58 @@ class CelProcessThread extends Thread {
 	}
 
 	/**
+	 * Copies the CEL binary files into a temporary directory.
+	 * 
+	 * @param tempDirectory
+	 * @return a list of the copied files.
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	protected List<File> copyFiles(File tempDirectory) throws IOException,
+			InterruptedException {
+		List<File> ret = new ArrayList<File>();
+		ret.add(decompressFile(bundleLocation, celMain, tempDirectory));
+		ret.add(decompressFile(bundleLocation, celImage, tempDirectory));
+		ret.add(decompressFile(bundleLocation, lispLicense, tempDirectory));
+		ret.add(decompressFile(bundleLocation, lispLibrary, tempDirectory));
+		ret.add(tempDirectory);
+		return ret;
+	}
+
+	/**
 	 * Installs CEL files in a temporary directory. These files will be deleted
 	 * using deleteOnExit().
+	 * 
+	 * @return a new temporary directory where the files were decompressed.
 	 */
-	protected File createBinary() throws IOException, InterruptedException {
-		File tempDirectory = File.createTempFile(celMain, "");
-		tempDirectory.delete();
-		tempDirectory.mkdir();
-		tempDirectory.deleteOnExit();
-		decompressFile(bundleLocation, celMain, tempDirectory);
-		decompressFile(bundleLocation, celImage, tempDirectory);
-		decompressFile(bundleLocation, lispLicense, tempDirectory);
-		decompressFile(bundleLocation, lispLibrary, tempDirectory);
-		return tempDirectory;
+	protected File createTemporaryDirectory() throws IOException {
+		File ret = File.createTempFile(celMain, "");
+		ret.delete();
+		ret.mkdir();
+		ret.deleteOnExit();
+		return ret;
 	}
 
 	/**
 	 * Decompresses one file into a directory, marking it with deleteOnExit().
+	 * 
+	 * @param location
+	 *            path inside the bundle.
+	 * @param filename
+	 *            file name.
+	 * @param directory
+	 *            destination directory.
+	 * @return the new file.
 	 */
-	protected void decompressFile(String location, String filename,
+	protected File decompressFile(String location, String filename,
 			File directory) throws IOException {
 		BufferedInputStream source = new BufferedInputStream(
 				CelProcessThread.class.getClassLoader().getResourceAsStream(
 						location + "/" + filename));
-		File newFile = new File(directory, filename);
-		newFile.deleteOnExit();
+		File ret = new File(directory, filename);
+		ret.deleteOnExit();
 		BufferedOutputStream out = new BufferedOutputStream(
-				new FileOutputStream(newFile));
+				new FileOutputStream(ret));
 		for (int ch = 0; ch != -1;) {
 			ch = source.read();
 			if (ch != -1) {
@@ -118,10 +147,15 @@ class CelProcessThread extends Thread {
 		out.flush();
 		out.close();
 		source.close();
+		return ret;
 	}
 
 	public CelSocket getCelSocket() {
 		return this.celSocket;
+	}
+
+	public List<File> getFiles() {
+		return this.temporaryFiles;
 	}
 
 	public int getPort() {
@@ -150,7 +184,8 @@ class CelProcessThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			File celDirectory = createBinary();
+			File celDirectory = createTemporaryDirectory();
+			this.temporaryFiles = copyFiles(celDirectory);
 			logger.fine("Creating CEL directory "
 					+ celDirectory.getAbsolutePath());
 			if (!isUnixlikePlatform()) {
@@ -177,6 +212,22 @@ class CelProcessThread extends Thread {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Stops the CEL reasoner and removes all the temporary files.
+	 */
+	public void stopProcess() {
+		if (getProcess() != null) {
+			getProcess().destroy();
+			this.process = null;
+		}
+		if (getFiles() != null) {
+			for (File tempFile : getFiles()) {
+				tempFile.delete();
+			}
+			this.temporaryFiles = null;
 		}
 	}
 }

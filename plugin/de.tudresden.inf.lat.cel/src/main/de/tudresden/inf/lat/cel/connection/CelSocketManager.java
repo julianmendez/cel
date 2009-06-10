@@ -61,7 +61,7 @@ public class CelSocketManager implements CelOutputListener {
 	private int lastPort = 5000;
 
 	private CelProcessOutputHandler outputHandler = null;
-	private Process process = null;
+	private CelProcessThread processThread = null;
 	/**
 	 * Timeout in milliseconds used to determine whether there is client (the
 	 * CEL reasoner in Lisp) trying to connect to the server (a Java thread).
@@ -69,14 +69,6 @@ public class CelSocketManager implements CelOutputListener {
 	private int timeoutForServer = 10000;
 
 	public CelSocketManager() {
-	}
-
-	public void cancelButtonPressed() {
-		getOutputHandler().stopExecution();
-	}
-
-	public void executionFinished() {
-		getProcess().destroy();
 	}
 
 	private CelSocket getCelSocket() {
@@ -87,8 +79,12 @@ public class CelSocketManager implements CelOutputListener {
 		return this.outputHandler;
 	}
 
-	private Process getProcess() {
-		return this.process;
+	protected Process getProcess() {
+		return getProcessThread().getProcess();
+	}
+
+	protected CelProcessThread getProcessThread() {
+		return this.processThread;
 	}
 
 	public CelProgressMonitor getProgressMonitor() {
@@ -97,6 +93,16 @@ public class CelSocketManager implements CelOutputListener {
 			ret = getOutputHandler().getProgressMonitor();
 		}
 		return ret;
+	}
+
+	public void notifyCancelButtonPressed() {
+		getOutputHandler().stopExecution();
+	}
+
+	public void notifyExecutionFinished() {
+		if (getProcessThread() != null) {
+			getProcessThread().stopProcess();
+		}
 	}
 
 	/**
@@ -156,11 +162,10 @@ public class CelSocketManager implements CelOutputListener {
 			server.setSoTimeout(timeoutForServer);
 			logger.fine("Java CEL server waits for Lisp CEL clients on port "
 					+ port + " for " + timeoutForServer + " milliseconds.");
-			CelProcessThread processThread = new CelProcessThread(port);
-			processThread.start();
+			this.processThread = new CelProcessThread(port);
+			this.processThread.start();
 			Socket connection = server.accept();
 			this.celSocket = new CelSocket(connection);
-			this.process = processThread.getProcess();
 			logger.fine("Java CEL server received a client on port " + port
 					+ ".");
 			// The only output that has to be sent by console.
@@ -205,6 +210,5 @@ public class CelSocketManager implements CelOutputListener {
 		if (getOutputHandler() != null) {
 			getOutputHandler().stopExecution();
 		}
-		// getProcess().destroy();
 	}
 }
