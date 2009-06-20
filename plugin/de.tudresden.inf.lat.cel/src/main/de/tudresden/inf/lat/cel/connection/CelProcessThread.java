@@ -58,7 +58,8 @@ class CelProcessThread extends Thread {
 	/** License for CEL binary. */
 	private static final String lispLicense = "cel.lic";
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger
+			.getLogger(CelProcessThread.class.getName());
 
 	/** Suffix to indicate logging mode. */
 	private static String loggingSuffix = "logging";
@@ -200,10 +201,7 @@ class CelProcessThread extends Thread {
 			String message = nicePrefix + " " + celDirectory.getAbsolutePath()
 					+ System.getProperty("file.separator") + celCommandLine
 					+ " " + port;
-			if (logger.getParent() != null
-					&& logger.getParent().getLevel() != null
-					&& logger.getParent().getLevel().intValue() < Level.INFO
-							.intValue()) {
+			if (logger.isLoggable(Level.FINER)) {
 				message = message + " " + loggingSuffix;
 			}
 			logger.fine("Trying '" + message + "'.");

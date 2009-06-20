@@ -47,7 +47,8 @@ public class CelSocketManager implements CelOutputListener {
 			+ "\nThis is free software for research and evaluation purposes."
 			+ "\nCommercial use is prohibited; please contact the author.";
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger
+			.getLogger(CelSocketManager.class.getName());
 
 	private CelSocket celSocket = null;
 

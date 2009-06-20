@@ -53,7 +53,8 @@ import de.tudresden.inf.lat.jsexp.SexpFactory;
  */
 public class CelReasonerInterface {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger
+			.getLogger(CelReasonerInterface.class.getName());
 
 	private static final String nothing = "Nothing";
 	private static final String thing = "Thing";
@@ -594,6 +595,7 @@ public class CelReasonerInterface {
 	}
 
 	protected Sexp send(Sexp message, String title) throws CelReasonerException {
+		logger.fine(title);
 		SwingProgressMonitor monitor = new SwingProgressMonitor();
 		monitor.setStarted();
 		monitor.setMessage(title);

@@ -21,8 +21,10 @@
 
 package de.tudresden.inf.lat.cel.owlapi;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.semanticweb.owl.inference.MonitorableOWLReasoner;
@@ -53,18 +55,26 @@ import de.tudresden.inf.lat.cel.translation.CelReasonerInterface;
  */
 public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger.getLogger(CelReasoner.class
+			.getName());
 
 	private CelReasonerInterface celInterface = null;
 	private ProgressMonitor monitor = null;
+	private Date start = null;
 
 	public CelReasoner(OWLOntologyManager manager) {
+		this.start = new Date();
 		this.celInterface = new CelReasonerInterface(manager);
 	}
 
 	public void classify() throws OWLReasonerException {
 		logger.fine("(called)");
 		getCelInterface().classify();
+		Date end = new Date();
+		if (logger.isLoggable(Level.INFO)) {
+			logger.info("CEL ran for " + (end.getTime() - this.start.getTime())
+					+ "ms");
+		}
 	}
 
 	public void clearOntologies() throws OWLReasonerException {

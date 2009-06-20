@@ -38,7 +38,8 @@ class CelProcessOutputHandler extends Thread {
 	/** Character sent by CEL to show progress. */
 	public static final char countingChar = '#';
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger
+			.getLogger(CelProcessOutputHandler.class.getName());
 
 	private boolean active = false;
 	private InputStream input = null;
@@ -52,8 +53,11 @@ class CelProcessOutputHandler extends Thread {
 
 	/**
 	 * Creates a new instance.
-	 * @param in input to be read.
-	 * @param out output used to write what was read. 
+	 * 
+	 * @param in
+	 *            input to be read.
+	 * @param out
+	 *            output used to write what was read.
 	 */
 	public CelProcessOutputHandler(InputStream in, OutputStream out) {
 		this.input = in;
@@ -99,9 +103,7 @@ class CelProcessOutputHandler extends Thread {
 						sbuf.append((char) ch);
 					}
 					sbuf.append("\n");
-					if (logger.getParent().getLevel() != null
-							&& logger.getParent().getLevel().intValue() < Level.INFO
-									.intValue()) {
+					if (logger.isLoggable(Level.FINER)) {
 						this.output.write(sbuf.toString().getBytes());
 					}
 				}

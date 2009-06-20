@@ -32,9 +32,14 @@ import de.tudresden.inf.lat.cel.owlapi.CelReasoner;
 
 /**
  * This is the main class invoked by Protege.
+ * 
  * @author Julian Mendez
  */
 public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
+
+	private static final Logger logger = Logger
+			.getLogger("de.tudresden.inf.lat.cel");
+
 	/**
 	 * This constructor is invoked when the CEL reasoner is selected in Protege.
 	 */
@@ -53,8 +58,7 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 	 * @see org.protege.editor.core.plugin.ProtegePluginInstance#initialise()
 	 */
 	public void initialise() throws Exception {
-		//Logger.getAnonymousLogger().getParent().setLevel(Level.FINE);
-		Logger.getAnonymousLogger().getParent().setLevel(Level.INFO);
+		logger.setLevel(Level.INFO);
 	}
 
 	/**

@@ -39,7 +39,8 @@ import de.tudresden.inf.lat.jsexp.SexpParserException;
  */
 class CelSocket {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger.getLogger(CelSocket.class
+			.getName());
 
 	public static final String protError = ":ERROR";
 	public static final String protOther = ":OWLAPI-RETURN";
@@ -121,7 +122,7 @@ class CelSocket {
 					getSocket().getInputStream()));
 			String str = "sent '" + expr + "'  received '" + response
 					+ "'     ";
-			logger.fine(str);
+			logger.finer(str);
 			ret = process(response);
 		} catch (IOException e) {
 			throw new CelConnectionException(e);

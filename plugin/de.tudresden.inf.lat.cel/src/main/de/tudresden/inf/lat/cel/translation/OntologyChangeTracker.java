@@ -36,7 +36,8 @@ import org.semanticweb.owl.model.OWLOntologyChangeListener;
  */
 class OntologyChangeTracker implements OWLOntologyChangeListener {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+	private static final Logger logger = Logger
+			.getLogger(OntologyChangeTracker.class.getName());
 
 	/** Tells whether the ontology has changed. */
 	private boolean ontologyChanged = true;
