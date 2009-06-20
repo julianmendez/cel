@@ -44,7 +44,8 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 	 * This constructor is invoked when the CEL reasoner is selected in Protege.
 	 */
 	public OWLReasoner createReasoner(OWLOntologyManager owlOntologyManager) {
-		OWLReasoner ret = new CelReasoner(owlOntologyManager);
+		OWLReasoner ret = new CelReasoner(owlOntologyManager,
+				new SwingProgressMonitor());
 		return ret;
 	}
 

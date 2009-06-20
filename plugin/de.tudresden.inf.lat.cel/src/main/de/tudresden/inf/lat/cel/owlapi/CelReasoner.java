@@ -59,12 +59,17 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 			.getName());
 
 	private CelReasonerInterface celInterface = null;
-	private ProgressMonitor monitor = null;
 	private Date start = null;
 
 	public CelReasoner(OWLOntologyManager manager) {
 		this.start = new Date();
 		this.celInterface = new CelReasonerInterface(manager);
+	}
+
+	public CelReasoner(OWLOntologyManager manager,
+			ProgressMonitor progressMonitor) {
+		this.start = new Date();
+		this.celInterface = new CelReasonerInterface(manager, progressMonitor);
 	}
 
 	public void classify() throws OWLReasonerException {
@@ -201,7 +206,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 	}
 
 	public ProgressMonitor getProgressMonitor() {
-		return this.monitor;
+		return getCelInterface().getProgressMonitor();
 	}
 
 	public Set<OWLDataRange> getRanges(OWLDataProperty dataProperty)
@@ -403,8 +408,8 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		getCelInterface().realise();
 	}
 
-	public void setProgressMonitor(ProgressMonitor pMonitor) {
-		this.monitor = pMonitor;
+	public void setProgressMonitor(ProgressMonitor progressMonitor) {
+		getCelInterface().setProgressMonitor(progressMonitor);
 	}
 
 	public void unloadOntologies(Set<OWLOntology> ontologySet)

@@ -35,6 +35,7 @@ import org.semanticweb.owl.model.OWLObjectProperty;
 import org.semanticweb.owl.model.OWLObjectPropertyExpression;
 import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLOntologyManager;
+import org.semanticweb.owl.util.ProgressMonitor;
 
 import de.tudresden.inf.lat.cel.connection.CelConnectionException;
 import de.tudresden.inf.lat.cel.connection.CelSocketManager;
@@ -68,6 +69,12 @@ public class CelReasonerInterface {
 	public CelReasonerInterface(OWLOntologyManager manager) {
 		this.ontologyManager = manager;
 		this.ontologyManager.addOntologyChangeListener(this.changeTracker);
+	}
+
+	public CelReasonerInterface(OWLOntologyManager manager,
+			ProgressMonitor progressMonitor) {
+		this(manager);
+		getSocketManager().setProgressMonitor(progressMonitor);
 	}
 
 	public void classify() throws CelReasonerException {
@@ -247,6 +254,10 @@ public class CelReasonerInterface {
 
 	public CelParser getParser() {
 		return this.parser;
+	}
+
+	public ProgressMonitor getProgressMonitor() {
+		return this.socketManager.getProgressMonitor();
 	}
 
 	public Set<OWLDescription> getRanges(OWLObjectProperty property)
@@ -596,18 +607,23 @@ public class CelReasonerInterface {
 
 	protected Sexp send(Sexp message, String title) throws CelReasonerException {
 		logger.fine(title);
-		SwingProgressMonitor monitor = new SwingProgressMonitor();
-		monitor.setStarted();
-		monitor.setMessage(title);
-		monitor.increment();
-		getSocketManager().setProgressMonitor(monitor);
+		if (getProgressMonitor() != null) {
+			getProgressMonitor().setStarted();
+			getProgressMonitor().setMessage(title);
+		}
 		Sexp ret = send(message);
-		monitor.setFinished();
+		if (getProgressMonitor() != null) {
+			getProgressMonitor().setFinished();
+		}
 		return ret;
 	}
 
 	protected Sexp sendAndConvert(Sexp message) throws CelReasonerException {
 		return convertNil(send(message));
+	}
+
+	public void setProgressMonitor(ProgressMonitor progressMonitor) {
+		getSocketManager().setProgressMonitor(progressMonitor);
 	}
 
 	public void synchronizedIfChanged() throws CelReasonerException {

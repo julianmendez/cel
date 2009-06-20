@@ -19,52 +19,27 @@
  *
  */
 
-package de.tudresden.inf.lat.cel.translation;
+package de.tudresden.inf.lat.cel.protege;
 
-import de.tudresden.inf.lat.cel.connection.CelProgressMonitor;
+import org.semanticweb.owl.util.ProgressMonitor;
 
 /**
  * This class is a progress monitor that shows the progress using Swing
  * components.
  */
-class SwingProgressMonitor implements CelProgressMonitor {
+class SwingProgressMonitor implements ProgressMonitor {
 
 	private static final int DEFAULT_MAXIMUM = 100;
 	private static final int MINIMUM = 0;
 
-	private boolean active = false;
 	private String message = "";
-	private javax.swing.ProgressMonitor monitor = null;
+	private javax.swing.ProgressMonitor monitor = new javax.swing.ProgressMonitor(
+			null, "", "", MINIMUM, DEFAULT_MAXIMUM);
+
 	private long progress = 0;
 
 	public SwingProgressMonitor() {
-		init();
-	}
-
-	public String getMessage() {
-		return this.message;
-	}
-
-	public long getProgress() {
-		return this.progress;
-	}
-
-	public long getSize() {
-		return this.monitor.getMaximum();
-	}
-
-	/**
-	 * Increases by 1 the level of progress.
-	 */
-	public void increment() {
-		setProgress(getProgress() + 1);
-	}
-
-	protected void init() {
-		this.monitor = new javax.swing.ProgressMonitor(null, "", "", MINIMUM,
-				DEFAULT_MAXIMUM);
-		this.progress = 0;
-		setProgress(this.progress);
+		setProgress(0);
 	}
 
 	public boolean isCancelled() {
@@ -72,7 +47,7 @@ class SwingProgressMonitor implements CelProgressMonitor {
 	}
 
 	public void setFinished() {
-		active = false;
+		setProgress(this.monitor.getMaximum());
 		this.monitor.close();
 	}
 
@@ -84,11 +59,9 @@ class SwingProgressMonitor implements CelProgressMonitor {
 	}
 
 	public void setProgress(long prog) {
-		if (active) {
-			this.progress = prog;
-			this.monitor.setProgress((int) prog);
-			updateTitle();
-		}
+		this.progress = prog;
+		this.monitor.setProgress((int) prog);
+		updateTitle();
 	}
 
 	public void setSize(long s) {
@@ -96,12 +69,12 @@ class SwingProgressMonitor implements CelProgressMonitor {
 	}
 
 	public void setStarted() {
-		active = true;
-		init();
+		setProgress(0);
 	}
 
 	protected void updateTitle() {
-		this.monitor.setNote(getMessage() + " "
-				+ (100 * progress / (getSize() - MINIMUM)) + "%");
+		this.monitor.setNote(this.message + " "
+				+ (100 * progress / (this.monitor.getMaximum() - MINIMUM))
+				+ "%");
 	}
 }
