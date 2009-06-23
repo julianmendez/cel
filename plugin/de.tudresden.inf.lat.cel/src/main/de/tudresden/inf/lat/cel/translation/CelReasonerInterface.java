@@ -94,7 +94,7 @@ public class CelReasonerInterface {
 		message.add(SexpFactory
 				.newAtomicSexp(CelOwlApiKeyword.keyClearOntologies));
 		send(message, "Clearing ontologies ...");
-		this.ontologies = new HashSet<OWLOntology>();
+		setOntologies(new HashSet<OWLOntology>());
 	}
 
 	/**
@@ -582,7 +582,7 @@ public class CelReasonerInterface {
 	 */
 	public void loadOntologies(Set<OWLOntology> setOfOntologies)
 			throws CelReasonerException {
-		this.ontologies = setOfOntologies;
+		setOntologies(setOfOntologies);
 		synchronizedIfChanged();
 	}
 
@@ -620,6 +620,11 @@ public class CelReasonerInterface {
 
 	protected Sexp sendAndConvert(Sexp message) throws CelReasonerException {
 		return convertNil(send(message));
+	}
+
+	protected void setOntologies(Set<OWLOntology> setOfOntologies) {
+		this.ontologies = setOfOntologies;
+		this.changeTracker.setOntologyChanged(true);
 	}
 
 	public void setProgressMonitor(ProgressMonitor progressMonitor) {
