@@ -59,7 +59,7 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 	 * @see org.protege.editor.core.plugin.ProtegePluginInstance#initialise()
 	 */
 	public void initialise() throws Exception {
-		logger.setLevel(Level.INFO);
+		logger.setLevel(Level.CONFIG);
 	}
 
 	/**

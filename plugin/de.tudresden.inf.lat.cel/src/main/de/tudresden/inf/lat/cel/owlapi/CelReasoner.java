@@ -59,32 +59,43 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 			.getName());
 
 	private CelReasonerInterface celInterface = null;
-	private Date start = null;
+	private Date instanceStart = null;
 
 	public CelReasoner(OWLOntologyManager manager) {
-		this.start = new Date();
+		this.instanceStart = new Date();
 		this.celInterface = new CelReasonerInterface(manager);
 	}
 
 	public CelReasoner(OWLOntologyManager manager,
 			ProgressMonitor progressMonitor) {
-		this.start = new Date();
+		this.instanceStart = new Date();
 		this.celInterface = new CelReasonerInterface(manager, progressMonitor);
 	}
 
 	public void classify() throws OWLReasonerException {
 		logger.fine("(called)");
+		Date start = new Date();
 		getCelInterface().classify();
 		Date end = new Date();
-		if (logger.isLoggable(Level.INFO)) {
-			logger.info("CEL ran for " + (end.getTime() - this.start.getTime())
-					+ "ms");
+		if (logger.isLoggable(Level.CONFIG)) {
+			logger.info("CEL classified the ontology in "
+					+ (end.getTime() - start.getTime())
+					+ " ms and has been running for "
+					+ (end.getTime() - this.instanceStart.getTime()) + " ms");
 		}
 	}
 
 	public void clearOntologies() throws OWLReasonerException {
 		logger.fine("(called)");
+		Date start = new Date();
 		getCelInterface().clearOntologies();
+		Date end = new Date();
+		if (logger.isLoggable(Level.CONFIG)) {
+			logger.info("CEL cleared the ontology in "
+					+ (end.getTime() - start.getTime())
+					+ " ms and has been running for "
+					+ (end.getTime() - this.instanceStart.getTime()) + " ms");
+		}
 	}
 
 	public void dispose() throws OWLReasonerException {
@@ -400,7 +411,15 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 	public void loadOntologies(Set<OWLOntology> ontologySet)
 			throws OWLReasonerException {
 		logger.fine("(called)");
+		Date start = new Date();
 		getCelInterface().loadOntologies(ontologySet);
+		Date end = new Date();
+		if (logger.isLoggable(Level.CONFIG)) {
+			logger.info("CEL loaded the ontology in "
+					+ (end.getTime() - start.getTime())
+					+ " ms and has been running for "
+					+ (end.getTime() - this.instanceStart.getTime()) + " ms");
+		}
 	}
 
 	public void realise() throws OWLReasonerException {
