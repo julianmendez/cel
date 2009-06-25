@@ -138,7 +138,7 @@ public class CelTranslator {
 		}
 		if (ret == null) {
 			throw new CelTranslatorException("OWLAxiom '" + axiom.toString()
-					+ "' was not recognized.");
+					+ "' is not supported.");
 		}
 		return ret;
 	}
