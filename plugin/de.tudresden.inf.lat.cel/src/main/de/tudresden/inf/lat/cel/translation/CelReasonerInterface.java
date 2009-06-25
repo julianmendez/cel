@@ -77,6 +77,15 @@ public class CelReasonerInterface {
 		getSocketManager().setProgressMonitor(progressMonitor);
 	}
 
+	protected void assertSupportedDescription(OWLDescription description)
+			throws CelReasonerException {
+		try {
+			getTranslator().translate(description);
+		} catch (CelTranslatorException e) {
+			throw new CelReasonerException(e);
+		}
+	}
+
 	public void classify() throws CelReasonerException {
 		synchronizedIfChanged();
 		Sexp message = SexpFactory.newNonAtomicSexp();
@@ -396,6 +405,7 @@ public class CelReasonerInterface {
 	public boolean hasTypes(OWLIndividual individual,
 			OWLDescription description, boolean direct)
 			throws CelReasonerException {
+		assertSupportedDescription(description);
 		boolean found = false;
 		Set<Set<OWLClass>> typeSet = getTypes(individual, direct);
 		for (Iterator<Set<OWLClass>> it = typeSet.iterator(); !found

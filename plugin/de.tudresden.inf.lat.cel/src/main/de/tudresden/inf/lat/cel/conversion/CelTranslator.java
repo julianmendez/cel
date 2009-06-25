@@ -159,7 +159,7 @@ public class CelTranslator {
 		}
 		if (ret == null) {
 			throw new CelTranslatorException("OWLDescription '"
-					+ description.toString() + "' was not recognized.");
+					+ description.toString() + "' is not supported.");
 		}
 		return ret;
 	}
