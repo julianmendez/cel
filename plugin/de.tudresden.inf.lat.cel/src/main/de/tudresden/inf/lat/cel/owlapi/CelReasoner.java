@@ -78,10 +78,10 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		getCelInterface().classify();
 		Date end = new Date();
 		if (logger.isLoggable(Level.CONFIG)) {
-			logger.info("CEL classified the ontology in "
-					+ (end.getTime() - start.getTime())
-					+ " ms and has been running for "
-					+ (end.getTime() - this.instanceStart.getTime()) + " ms");
+			System.out.println(" ("
+					+ (end.getTime() - this.instanceStart.getTime()) + " ms) "
+					+ "\tCEL classified in  "
+					+ (end.getTime() - start.getTime()) + " ms ");
 		}
 	}
 
@@ -91,10 +91,10 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		getCelInterface().clearOntologies();
 		Date end = new Date();
 		if (logger.isLoggable(Level.CONFIG)) {
-			logger.info("CEL cleared the ontology in "
-					+ (end.getTime() - start.getTime())
-					+ " ms and has been running for "
-					+ (end.getTime() - this.instanceStart.getTime()) + " ms");
+			System.out.println(" ("
+					+ (end.getTime() - this.instanceStart.getTime()) + " ms) "
+					+ "\tCEL cleared in     "
+					+ (end.getTime() - start.getTime()) + " ms ");
 		}
 	}
 
@@ -415,10 +415,10 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		getCelInterface().loadOntologies(ontologySet);
 		Date end = new Date();
 		if (logger.isLoggable(Level.CONFIG)) {
-			logger.info("CEL loaded the ontology in "
-					+ (end.getTime() - start.getTime())
-					+ " ms and has been running for "
-					+ (end.getTime() - this.instanceStart.getTime()) + " ms");
+			System.out.println(" ("
+					+ (end.getTime() - this.instanceStart.getTime()) + " ms) "
+					+ "\tCEL loaded in      "
+					+ (end.getTime() - start.getTime()) + " ms ");
 		}
 	}
 

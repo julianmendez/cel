@@ -47,7 +47,8 @@ public class CelSocketManager implements CelOutputListener {
 			+ "\nOWL API - Copyright (C) 2009: Julian Mendez."
 			+ "\nCEL comes with ABSOLUTELY NO WARRANTY; use at your own risk."
 			+ "\nThis is free software for research and evaluation purposes."
-			+ "\nCommercial use is prohibited; please contact the author.";
+			+ "\nCommercial use is prohibited; please contact the author."
+			+ "\n";
 
 	private static final Logger logger = Logger
 			.getLogger(CelSocketManager.class.getName());
@@ -169,8 +170,9 @@ public class CelSocketManager implements CelOutputListener {
 			this.celSocket = new CelSocket(connection);
 			logger.fine("Java CEL server received a client on port " + port
 					+ ".");
-			// The only output that has to be sent by console.
-			System.out.println(greetingMessage);
+			if (logger.isLoggable(Level.CONFIG)) {
+				System.out.println(greetingMessage);
+			}
 			this.outputHandler = new CelProcessOutputHandler(getProcess()
 					.getInputStream(), System.out);
 			getOutputHandler().setProgressMonitor(getProgressMonitor());
