@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: 2009-03-12
+;;;; Last Modified: 2009-07-02
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -322,6 +322,24 @@
   )
 ;;_____________________________________________________________________________
 
+(defmacro owlapi.get-super-properties (rname)
+  "public Set<OWLObjectProperty> getSuperProperties (OWLObjectProperty)"
+  `(owlapi.get-super-properties-f ',rname))
+(defun owlapi.get-super-properties-f (rname)
+  (list :return
+	(q-super-roles-f rname))
+  )
+;;_____________________________________________________________________________
+
+(defmacro owlapi.get-sub-properties (rname)
+  "public Set<OWLObjectProperty> getSubProperties (OWLObjectProperty)"
+  `(owlapi.get-sub-properties-f ',rname))
+(defun owlapi.get-sub-properties-f (rname)
+  (list :return
+	(q-sub-roles-f rname))
+  )
+;;_____________________________________________________________________________
+
 (defmacro owlapi.is-sub-class-of (cname1 cname2)
   "public boolean isSubClassOf (OWLDescription OWLDescription)"
   `(owlapi.is-sub-class-of-f ',cname1 ',cname2))
@@ -339,6 +357,15 @@
 (defun owlapi.get-equivalent-classes-f (cname)
   (list :return
 	(q-equivalents-f cname))
+  )
+;;_____________________________________________________________________________
+
+(defmacro owlapi.get-equivalent-properties (rname)
+  "public Set<OWLObjectProperty> getEquivalentProperties (OWLObjectProperty)"
+  `(owlapi.get-equivalent-properties-f ',rname))
+(defun owlapi.get-equivalent-properties-f (rname)
+  (list :return
+        (intersection (q-sub-roles-f rname) (q-super-roles-f rname)))
   )
 ;;_____________________________________________________________________________
 
