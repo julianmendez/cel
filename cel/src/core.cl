@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: Tue Jan 27 2009
+;;;; Last Modified: 2009-03-26
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -46,7 +46,8 @@
 ;;____________________________________________________________________________
 
 
-(defun act-complete-all-imp-sets (&optional (t0 (get-internal-run-time)))
+(defun act-complete-all-imp-sets (&optional (t0 (get-internal-run-time))
+					    (classified-marker (gensym)))
   "Complete all implication sets one by one (only those user-defined)"
   
   (init-s-r-structures)
@@ -60,7 +61,7 @@
 	;;(when (cname-struct c)
 	
 	;; definitional ordering
-	(ordered-act-complete-imp-set c)
+	(ordered-act-complete-imp-set c classified-marker)
 	;; reverse definitional ordering
 	;;(reverse-ordered-act-complete-imp-set c)
 	
@@ -70,7 +71,12 @@
 	)
   
   (setf (ont-classification-time) (/ (- (get-internal-run-time) t0)
-				      internal-time-units-per-second))
+				     internal-time-units-per-second))
+  
+  ;; fill the progress bar until 100th percentile
+  (when *enable-progress-bar*
+    (loop for i from (ods-percentile-classified-cnames) to 100 do
+	  (format t "#")))
   )
 ;;_____________________________________________________________________________
 
@@ -87,39 +93,44 @@
     (cons c subsumers))
   )
 
-(defun get-all-known-subsumers (c)
-  "Processing in definitional order gives us more known subsumers for later-processed concepts. These are gathered from told subsumption and their S sets. This function is used to initialize S and queue when activate the concept c and when all told subsumers of c have been processed."
-  (let ((subsumers))
+(defun get-all-told-subsumers-r (c &optional 
+				 (told-table (make-hash-table :test 'eq)))
+  "Return a hash table of all told subsumers"
+  (unless (gethash c told-table)
+    (setf (gethash c told-table) t)
     (dolist (x (c-told-subsumers c))
-      (setq subsumers (union subsumers
-			     (s-labels x)
-			     :test 'eq))
-      )    
-    (cons c subsumers))
-  )
+      (get-all-told-subsumers-r x told-table)))
+  told-table)
+  
+
+(defun get-all-told-subsumers (c)
+  (get-hash-keys (get-all-told-subsumers-r c)))
 
 
 ;;_____________________________________________________________________________
-(defun ordered-act-complete-imp-set (c)
+(defun ordered-act-complete-imp-set (c &optional (visited (gensym)))
   "Definitional ordering (based on told subsumers)"
-  (unless (activation-flag c)
+  (unless (eq (c-marked c) visited)
+    (setf (c-marked c) visited)
     (dolist (d (c-told-subsumers c))
-      (ordered-act-complete-imp-set d))
+      (ordered-act-complete-imp-set d visited))
     (act-complete-imp-set c)))
 ;;_____________________________________________________________________________
-(defun reverse-ordered-act-complete-imp-set (c)
+(defun reverse-ordered-act-complete-imp-set (c &optional (visited (gensym)))
   "Reverse definitional ordering (based on told subsumees)"
-  (unless (activation-flag c)
+  (unless (eq (c-marked c) visited)
+    (setf (c-marked c) visited)
     (dolist (d (c-told-subsumees c))
-      (reverse-ordered-act-complete-imp-set d))
+      (reverse-ordered-act-complete-imp-set d visited))
     (act-complete-imp-set c)))
- ;;_____________________________________________________________________________  
+;;_____________________________________________________________________________  
+
 (defun act-complete-imp-set (c)
   "Complete the implication set for c. Only S and queue of c are initialized, and existential reachable (posssibly new) cnames are activated during processing as required"
   
  ;;(activate c)
   ;;(activate-w-told c (cons c (c-told-subsumers c)))
-  (activate-w-told c (get-all-known-subsumers c))
+  (activate-w-told c (get-all-told-subsumers c))
   
   (do ((pair
 	(q-next-queue)
@@ -136,12 +147,29 @@
 ;;;	(act-process s-cn x)
 	
 	;; ENABLING OPTIMIZATION
-	(if (ont-tbox-primitive?)
+	(if (and *enable-primitive-tbox-optimization*
+		 (ont-tbox-primitive?))
 	    (act-process-no-existentials s-cn x)
 	  (act-process s-cn x))
 	
-	)))
+	)))  
 
+  
+  (when (and *enable-progress-bar*
+	     (> c 0))
+    (incf (ods-total-classified-cnames))
+    
+    (let ((p1 (ods-percentile-classified-cnames))
+	  (p2 (floor (* 100 (ods-total-classified-cnames))
+		     (cdr (ods-system-cname-range)))))
+      ;; when there is a move in percentile of completed cnames
+      (when (> p2 p1)
+	(setf (ods-percentile-classified-cnames) p2)
+	(loop for i from 1 to (- p2 p1) do
+	      (format t "#")))
+      ))
+      
+   
   (verbose "*")
   ;;(incf *total-classified-cnames*)
   )
@@ -653,12 +681,14 @@ pproach"
 		       t nil))
 	)
        (t ;; reasoning is needed, use lazy subsupmtion without caching
-	;;(activate-ttbox-f)
-	;;(msg "TTBox activated for preclassified subsumption query")
-	;;(setq yes? (test-subs-2-tbox-not-classified s-c2 s-c1))
+	;; Safe mode: use the ttbox to do the job
+	;; to avoid that 1st datastructures are modified
+	(activate-ttbox-f)
+	(setq yes? (test-subs-2-tbox-not-classified s-c2 s-c1))
+	(deactivate-ttbox-f)
 	
-	(setq yes? (test-subs s-c2 s-c1))
-	;;(deactivate-ttbox-f)
+	;; Unsafe mode:
+	;;(setq yes? (test-subs s-c2 s-c1))	
 	))
       )))  
   yes?)
@@ -799,3 +829,5 @@ pproach"
   
   nil)
 ;;_____________________________________________________________________________
+
+

@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: Tue Jan 27 2009
+;;;; Last Modified: 2009-03-12
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -61,11 +61,12 @@
   `(implies-f ',c1 ',c2))
 ;;_____________________________________________________________________________
 
-(defmacro equivalent (c1 c2)
+(defmacro equivalent (c1 c2 &rest c-rest)
   "to assert a concept equivalence, eg., 
+(equivalent Kangaroo Masupial Macropods)
 (equivalent (AND Man (SOME has-child Human))
 	    (AND Parent Male))"
-  `(equivalent-f ',c1 ',c2))
+  `(equivalent-f (cons ',c1 (cons ',c2 ',c-rest))))
 ;;_____________________________________________________________________________
 
 (defmacro disjoint (c1 c2 &rest c-rest)
@@ -128,10 +129,10 @@
   `(role-inclusion-f ',role-composite ',role-name))
 ;;_____________________________________________________________________________
 
-(defmacro role-equivalent (rn1 rn2)
+(defmacro role-equivalent (rn1 rn2 &rest r-rest)
   "to assert an equivalent of two role names, which is essentially a pair of role hierarchy assertions in both direction. Eg.,
 (role-equivalent composed-of has-component)"
-  `(role-equivalent-f ',rn1 ',rn2))
+  `(role-equivalent-f (cons ',rn1 (cons ',rn2 ',r-rest))))
 ;;_____________________________________________________________________________  
 
 (defmacro define-primitive-individual (ind &key type)
@@ -139,6 +140,21 @@
 (define-primitive-individual THAILAND :type TropicalCountry)"
   `(define-primitive-individual-f ',ind ',type))
 ;;_____________________________________________________________________________  
+
+(defmacro same-individuals (ind1 ind2 &rest ind-rest)
+  "to assert that two (or more) individuals refer to the same domain object, e.g.,
+(instance EL-PROJECT DFG-BA112211-1)
+(instance MENG SUNTISRIVARAPORN BOONTAWEE)"
+  `(same-individuals-f (cons ',ind1 (cons ',ind2 ',ind-rest))))
+;;_____________________________________________________________________________  
+
+(defmacro different-individuals (ind1 ind2 &rest ind-rest)
+  "to assert that two (or more) individuals refer to different domain objects, e.g.,
+(instance EL-PROJECT TONES-PROJECT)
+(instance BAADER CARSTEN MENG JULIAN)"
+  `(different-individuals-f (cons ',ind1 (cons ',ind2 ',ind-rest))))
+;;_____________________________________________________________________________  
+
 (defmacro instance (ind c)
   "to assert an instance of a concept, e.g., 
 (instance JOHN Man)"
@@ -212,6 +228,14 @@
 (defmacro load-ontology (file-name &key clear)
   "to load and preprocess an input TBox, eg. (load-tbox \"med.tbox\")"
   `(load-tbox-f ,file-name ,clear))
+;;_____________________________________________________________________________
+
+(defmacro add-axiom (axiom)
+  "to add a new axiom into the current ontology, eg. (add-axiom (implies A B))"
+  `(add-axiom-f ',axiom))
+(defmacro add-axioms (axioms)
+  "to add a list of new axioms into the current ontology"
+  `(add-axioms-f ',axioms))
 ;;_____________________________________________________________________________
 
 (defmacro classify-tbox ()
@@ -358,30 +382,30 @@
 
 ;;_____________________________________________________________________________
 
-(defmacro parents (cn &key (dig nil))
+(defmacro parents (cn &key (make-eclass nil))
   "to get all parent concepts of the input concept name CN"
-  `(q-parents-f ',cn ',dig))
+  `(q-parents-f ',cn :make-eclass ',make-eclass))
 ;;_____________________________________________________________________________
 
-(defmacro children (cn &key (dig nil))
+(defmacro children (cn &key (make-eclass nil))
   "to get all child concepts of the input concept name CN"
- `(q-children-f ',cn ',dig))
+ `(q-children-f ',cn :make-eclass ',make-eclass))
 ;;_____________________________________________________________________________
 
-(defmacro ancestors (cn &key (dig nil))
+(defmacro ancestors (cn &key (make-eclass nil))
   "to get all concept names subsuming the input concept name CN"
-  `(q-ancestors-f ',cn ',dig))
-(defmacro super-concepts (cn &key (dig nil))
+  `(q-ancestors-f ',cn :make-eclass ',make-eclass))
+(defmacro super-concepts (cn &key (make-eclass nil))
   "to get all concept names subsuming the input concept name CN"
-  `(q-ancestors-f ',cn ',dig))
+  `(q-ancestors-f ',cn :make-eclass ',make-eclass))
 ;;_____________________________________________________________________________
 
-(defmacro descendants (cn &key (dig nil))
+(defmacro descendants (cn &key (make-eclass nil))
   "to get all concept names being subsumed by the input concept name CN"
-  `(q-descendants-f ',cn ',dig))
-(defmacro sub-concepts (cn &key (dig nil))
+  `(q-descendants-f ',cn :make-eclass ',make-eclass))
+(defmacro sub-concepts (cn &key (make-eclass nil))
   "to get all concept names being subsumed by the input concept name CN"
-  `(q-descendants-f ',cn ',dig))
+  `(q-descendants-f ',cn :make-eclass ',make-eclass))
 ;;_____________________________________________________________________________
 
 (defmacro equivalents (cn &key (unknown-as-primitive nil))
@@ -433,6 +457,11 @@
 (defmacro role-subsumes? (rn1 rn2)
   "to query subsumption relationship between two role names"
   `(q-role-subsumes-f ',rn1 ',rn2))
+;;_____________________________________________________________________________
+
+(defmacro role-equivalent? (rn1 rn2)
+  "to query equivalent relationship between two role names"
+  `(q-role-equivalent-f ',rn1 ',rn2))
 ;;_____________________________________________________________________________
 
 (defmacro role-implies? (rn1 rn2)
@@ -495,14 +524,19 @@
   `(q-instance-f ',ind ',cn))
 ;;_____________________________________________________________________________
 
-(defmacro individual-direct-types (ind)
+(defmacro individual-direct-types (ind  &key (make-eclass nil))
   "to query the direct (i.e., most specific) types of the individual"
-  `(q-individual-direct-types-f ',ind))
+  `(q-individual-direct-types-f ',ind :make-eclass ',make-eclass))
 ;;_____________________________________________________________________________
 
-(defmacro individual-types (ind)
+(defmacro individual-types (ind &key (make-eclass nil))
   "to query the types of the individual"
-  `(q-individual-types-f ',ind))
+  `(q-individual-types-f ',ind :make-eclass ',make-eclass))
+;;_____________________________________________________________________________
+
+(defmacro concept-direct-instances (cn)
+  "to query all direct instances belonging to the concept name"
+  `(q-concept-direct-instances-f ',cn))
 ;;_____________________________________________________________________________
 
 (defmacro concept-instances (cn)
@@ -706,19 +740,45 @@
   (verbose "I"))
 ;;_____________________________________________________________________________
 
-(defun equivalent-f (c1 c2)
+(defun equivalent-f (c-list &optional (n (length c-list) ))
   (unless (ont-state? (:cleared :i-cleared))
-    (return-from equivalent-f ':tbox-state-error)) 
+    (return-from equivalent-f ':tbox-state-error))
+  
+  (cond
+   ((< (length c-list) 2)
+    (err "Syntax: equivalent expects at least 2 arguments")
+    (return-from equivalent-f :malformed-axiom))
+   
+;;;   ((= (length c-list) 2)
+;;;    (binary-equivalent-f (car c-list)
+;;;			 (cadr c-list)))
+
+   (t
+    (dolist (c c-list)
+      (unless (el-concept c)
+      (err "Syntax: \"~A\" is not a well-formed EL concept" c)
+      (return-from equivalent-f ':malformed-concept)))      
+
+    ;; 0th element is equivalent to every other
+    (loop for i from 1 to (- n 1) do
+	  (binary-equivalent-f (nth i c-list)
+			       (nth 0 c-list))
+	  )
+    ))
+  (verbose "E")
+  )
+  
+(defun binary-equivalent-f (c1 c2)
   
   (cond
    ((not (el-concept c1))
     ;; c1 must be an EL concept
     (err "Syntax: \"~A\" is not a well-formed EL concept" c1)
-    (return-from equivalent-f ':malformed-concept))
+    (return-from binary-equivalent-f ':malformed-concept))
    ((not (el-concept c2))
     ;; c2 must be an EL concept
     (err "Syntax: \"~A\" is not a well-formed EL concept" c2)
-    (return-from equivalent-f ':malformed-concept))
+    (return-from binary-equivalent-f ':malformed-concept))
    ((and (listp c1) (listp c2))
     ;; both c1 and c2 are complex     
     (incf (ont-n-gcis) 2)  
@@ -749,10 +809,11 @@
    ;; neither c1 nor c2 is complex
    (t
     (add-synonym c1 c2)))
-  (verbose "E"))
+  (verbose "E")
+  )
 ;;_____________________________________________________________________________
 
-(defun disjoint-f (c-list &optional (n (- (length c-list) 1)))
+(defun disjoint-f (c-list &optional (n (length c-list)) )
   (unless (ont-state? (:cleared :i-cleared))
     (return-from disjoint-f ':tbox-state-error)) 
   
@@ -761,8 +822,9 @@
       (err "Syntax: \"~A\" is not a well-formed EL concept" c)
       (return-from disjoint-f ':malformed-concept)))
   
-  (loop for i from 0 to (- n 1) do
-	(loop for j from (+ i 1) to n do
+  (loop for i from 0 to (- n 2) do
+	(loop for j from (+ i 1) to (- n 1) do
+	      (incf (ont-n-gcis))
 	      (push-gci-list1 `(and ,(copy-tree (nth i c-list))
 				    ,(copy-tree (nth j c-list)))
 			      bottom)
@@ -923,13 +985,47 @@
   (verbose "R"))
 ;;_____________________________________________________________________________
 
-(defun role-equivalent-f (rn1 rn2)
+(defun role-equivalent-f (r-list &optional (n (length r-list) ))
   (unless (ont-state? :cleared)
     (return-from role-equivalent-f ':tbox-state-error)) 
-  (when (or (listp rn1)
-	    (listp rn2))
-    (err "Syntax: role-equivalent can only be applied to concept names")
-    (return-from role-equivalent-f ':named-role))
+  
+  (cond
+   ((< (length r-list) 2)
+    (err "Syntax: role-equivalent expects at least 2 arguments")
+    (return-from role-equivalent-f :malformed-axiom))
+   
+   (t
+    (dolist (rn r-list)
+      (when (listp rn)
+	(err "Syntax: \"~A\" is not an admissible role name" rn)
+	(return-from role-equivalent-f ':malformed-role))
+      )
+    
+    ;; adding all role names
+    (loop for i from 0 to (- n 1) do
+	  (add-rname (nth i r-list)))
+    ;; adding RH axioms forming a loop
+    (incf (ont-n-ris) n)
+    (loop for i from 0 to (- n 2) do
+	  (add-rh (nth i r-list) 
+		  (nth (+ i 1) r-list)
+		  ))
+    (add-rh (nth (- n 1) r-list)
+	    (nth 0 r-list))    
+    ))
+  (verbose "R")
+  )
+
+(defun binary-role-equivalent-f (rn1 rn2)
+  (unless (ont-state? :cleared)
+    (return-from binary-role-equivalent-f ':tbox-state-error))   
+  
+  (when (listp rn1)
+    (err "Syntax: \"~A\" is not an admissible role name" rn1)
+    (return-from binary-role-equivalent-f ':named-role))
+  (when (listp rn2)
+    (err "Syntax: \"~A\" is not an admissible role name" rn2)
+    (return-from binary-role-equivalent-f ':named-role))
   
   (incf (ont-n-ris) 2)
   
@@ -939,6 +1035,66 @@
   (add-rh rn2 rn1)
   
   (verbose "R"))
+;;_____________________________________________________________________________
+
+(defun same-individuals-f (ind-list &optional (n (length ind-list)) )
+  (unless (ont-state? (:cleared :i-cleared))
+    (return-from same-individuals-f ':tbox-state-error))
+  
+  (cond
+   ((< (length ind-list) 2)
+    (err "Syntax: same-individuals expects at least 2 arguments")
+    (return-from same-individuals-f :malformed-axiom))
+   
+   (t
+    (dolist (ind ind-list)
+      (when (listp ind)
+	(err "Syntax: \"~A\" is not an admissible individual" ind)
+	(return-from same-individuals-f :malformed-individual)))
+
+    ;;(dolist (ind ind-list)
+    ;;  (add-cname-later ind
+    ;;		       :individual? t))
+
+    (incf (ont-n-cas) n)
+    ;; 0th element is equivalent to every other
+    (loop for i from 1 to (- n 1) do
+	  (add-ind-synonym (nth i ind-list)
+			   (nth 0 ind-list)))
+    ))
+  (verbose "A")
+  )
+;;_____________________________________________________________________________
+
+(defun different-individuals-f (ind-list &optional (n (length ind-list)) )
+  (unless (ont-state? (:cleared :i-cleared))
+    (return-from different-individuals-f ':tbox-state-error))
+  
+  (cond
+   ((< (length ind-list) 2)
+    (err "Syntax: different-individuals expects at least 2 arguments")
+    (return-from different-individuals-f :malformed-axiom))
+   
+   (t
+    (dolist (ind ind-list)
+      (when (listp ind)
+	(err "Syntax: \"~A\" is not an admissible individual" ind)
+	(return-from different-individuals-f :malformed-individual)))
+
+    (dolist (ind ind-list)
+      (add-cname ind
+		 :individual? t))
+
+    (loop for i from 0 to (- n 2) do
+	  (loop for j from (+ i 1) to (- n 1) do
+		(incf (ont-n-cas))
+		(push-gci-list1 `(and ,(nth i ind-list)
+				      ,(nth j ind-list))
+				bottom)
+		))
+    ))
+  (verbose "A")
+  )
 ;;_____________________________________________________________________________
 
 (defun define-primitive-individual-f (ind c)
@@ -1084,6 +1240,36 @@
   *ontology*)
 ;;_____________________________________________________________________________
 
+(defun add-axiom-f (ax &key (make-copy t))
+  "Properly add a new axiom to the system"
+  ;; Directly evaluating new-axiom also works w.r.t. standard reasoning,
+  ;; but CEL will lose track of the syntactical form of the axiom
+  (unless (ont-state? (:cleared :i-cleared))
+    (return-from add-axiom-f ':tbox-state-error))
+  
+  (handler-case (eval (if make-copy
+			  (copy-tree ax)
+			ax))
+    (error ()
+      (err "Unrecognized axiom: ~S" ax)
+      (return-from add-axiom-f nil)
+      ))  
+  (push ax (odsm-axioms))
+  t)
+;;_____________________________________________________________________________
+
+(defun add-axioms-f (ax-list &key (make-copy t))
+  "Properly add new axioms to the system"
+  ;; Directly evaluating new-axiom also works w.r.t. standard reasoning,
+  ;; but CEL will lose track of the syntactical form of the axiom
+  (unless (ont-state? (:cleared :i-cleared))
+    (return-from add-axioms-f ':tbox-state-error))  
+  
+  (dolist (ax ax-list)
+    (add-axiom-f ax :make-copy make-copy))
+  t)
+;;_____________________________________________________________________________
+
 (defun reclassify-tbox-f ()
   "to reclassify the current TBox"
   (unless (ont-state? (:classified :taxonomized))    
@@ -1158,6 +1344,24 @@
     basket))
 ;;_____________________________________________________________________________
 
+(defun q-all-concept-eclasses-f ()
+  "Return the list of all eclasses of all cnames"
+  (request-hasse)
+  (let ((eclass-set nil))
+    (loop for i from 0 to (cdr (ods-system-cname-range)) do
+	  (unless (c-individual? i)
+	    
+	    (let ((eclass nil))
+	      (when (listp (c-equivalent i))
+		(dolist (y (cons i (c-equivalent i)))
+		  (setq eclass (append (synonyms (user-cname y))
+				       eclass)))
+		(push eclass eclass-set)
+		)
+	      )))
+    eclass-set))
+;;_____________________________________________________________________________
+
 (defun q-all-individuals-f ()
   (ont-individuals))
 ;;_____________________________________________________________________________
@@ -1196,8 +1400,10 @@
 (defun q-concept-satisfiable-f (x)
   (setq x (system-cname x))
   
-  (if (or (null x)
-	  (eq x *bot*)
+  ;; when the concept is unknown, then it is satisfiable
+  (when (null x)
+    (return-from q-concept-satisfiable-f t))    
+  (if (or (eq x *bot*)
 	  (eq (s-labels-both x) *bot*))
       nil
     t))
@@ -1274,6 +1480,11 @@
   (q-role-subsumes-f rn2 rn1))
 ;;_____________________________________________________________________________
 
+(defun q-role-equivalent-f (rn1 rn2)
+  (and (q-role-subsumes-f rn2 rn1)
+       (q-role-subsumes-f rn1 rn2)))
+;;_____________________________________________________________________________
+
 (defun q-transitive-f (rn)
   (setq rn (system-rname rn))  
   (unless rn
@@ -1290,12 +1501,12 @@
   (r-reflexive rn))
 ;;_____________________________________________________________________________
 
-(defun q-parents-f (cn &optional (dig nil))
+(defun q-parents-f (cn &key (make-eclass nil))
   (setq cn (system-cname (synonym-of cn)))
   
   (when (or (not cn)
 	    (c-individual? cn))
-    (return-from q-parents-f (and dig
+    (return-from q-parents-f (and make-eclass
 				  '((top)) )))
   
   ;; this requires DAG
@@ -1304,12 +1515,15 @@
   ;; optimized retrieval, as the parent-set for bottom tends to be giantic
   ;; also, we need to deal with intermediate individual nodes
   (when (eq *bot* cn)
-    (return-from q-parents-f (q-bottom-parents-f dig)))
-  
+    (return-from q-parents-f 
+      (if make-eclass
+	  (q-bottom-parents-eclass-set-f)
+	(q-bottom-parents-flat-set-f)
+	)))  
   
   (cond
    
-   (dig
+   (make-eclass
     (let ((s-cnames (c-parents cn))
 	  (parent-set nil))
       (dolist (s-cn s-cnames)
@@ -1331,71 +1545,70 @@
    ))
 ;;_____________________________________________________________________________
 
-(defun q-bottom-parents-f (&optional (dig nil))
-  (cond
-   
-   (dig
-    (let ((s-cnames (c-parents *bot*))
-	  (parent-set nil))
-      (dolist (s-cn s-cnames)
-	(cond
-	 ;; if s-cn is an individual, leap up one step
-	 ((c-individual? s-cn)	  
-	  (let ((synonym-set nil)
-		(ind-types (c-parents s-cn)))
-	    
-	    (dolist (ind-type ind-types)
-	      (when (every #'(lambda (x)
-			       (c-individual? x))
-			   (c-children ind-type))
-		(dolist (x (cons ind-type (c-equivalent ind-type)))
-		  (setq synonym-set (append (synonyms (user-cname x))
-					    synonym-set)))))
-	    (push synonym-set parent-set)
-	    ))	  
-	 ;; ordinary concept
-	 (t
+(defun q-bottom-parents-eclass-set-f ()
+  
+  (let ((s-cnames (c-parents *bot*))
+	(parent-set nil))
+    (dolist (s-cn s-cnames)
+      (cond
+       ;; if s-cn is an individual, leap up one step
+       ((c-individual? s-cn)	  
+	(let ((synonym-set nil)
+	      (ind-types (c-parents s-cn)))
+	  
+	  (dolist (ind-type ind-types)
+	    (when (every #'(lambda (x)
+			     (c-individual? x))
+			 (c-children ind-type))
+	      (dolist (x (cons ind-type (c-equivalent ind-type)))
+		(setq synonym-set (append (synonyms (user-cname x))
+					  synonym-set)))))
+	  (push synonym-set parent-set)
+	  ))	  
+       ;; ordinary concept
+       (t
 	  (let ((synonym-set nil))
 	    (dolist (x (cons s-cn (c-equivalent s-cn)))
 	      (setq synonym-set (append (synonyms (user-cname x))
 					synonym-set)))
 	    (push synonym-set parent-set)
 	    ))
-	 ))
-      parent-set))
-   
-   (t
-    (let ((s-cnames (c-parents *bot*))
-	  (parent-set nil))
-      (dolist (s-cn s-cnames)
-	(cond
-	 ;; if s-cn is an individual, leap up one step
-	 ((c-individual? s-cn)	  
-	  
-	  (dolist (ind-type (c-parents s-cn))
-	    (when (every #'(lambda (x)
-			     (c-individual? x))
-			 (c-children ind-type))
-	      (dolist (x (cons ind-type (c-equivalent ind-type)))
-		(setq parent-set (append (synonyms (user-cname x))
-					 parent-set)))))
-	  )	 
-	 ;; ordinary concept
-	 (t
-	  (dolist (x (cons s-cn (c-equivalent s-cn)))
-	    (setq parent-set (append (synonyms (user-cname x))
-				     parent-set)))
-	  )))
-      parent-set))
-   ))
+       ))
+    parent-set
+    ))
+
+(defun q-bottom-parents-flat-set-f ()
+  (let ((s-cnames (c-parents *bot*))
+	(parent-set nil))
+    (dolist (s-cn s-cnames)
+      (cond
+       ;; if s-cn is an individual, leap up one step
+       ((c-individual? s-cn)	  
+	
+	(dolist (ind-type (c-parents s-cn))
+	  (when (every #'(lambda (x)
+			   (c-individual? x))
+		       (c-children ind-type))
+	    (dolist (x (cons ind-type (c-equivalent ind-type)))
+	      (setq parent-set (append (synonyms (user-cname x))
+				       parent-set)))))
+	)	 
+       ;; ordinary concept
+       (t
+	(dolist (x (cons s-cn (c-equivalent s-cn)))
+	  (setq parent-set (append (synonyms (user-cname x))
+				   parent-set)))
+	)))
+    parent-set
+    ))
 ;;_____________________________________________________________________________
 
-(defun q-children-f (cn &optional (dig nil))
+(defun q-children-f (cn &key (make-eclass nil))
   (setq cn (system-cname (synonym-of cn)))
   
   (when (or (not cn)
 	    (c-individual? cn))
-    (return-from q-children-f (and dig
+    (return-from q-children-f (and make-eclass
 				   '((bottom)) )))
   
   ;; this requires DAG
@@ -1403,7 +1616,7 @@
   
   (cond
    
-   (dig
+   (make-eclass
     (let ((s-cnames (c-children cn))
 	  (child-set nil))
       (dolist (s-cn s-cnames)
@@ -1415,8 +1628,8 @@
 					synonym-set)))
 	    (push synonym-set child-set))))
       (or child-set
-	  '(bottom))))
-   
+	  '((bottom)))
+      ))
    (t
     (let ((s-cnames (c-children cn))
 	  (child-set nil))
@@ -1431,19 +1644,149 @@
     ))
 ;;_____________________________________________________________________________
 
-(defun q-ancestors-f (cn &optional (dig nil))
-  "Given a concept name cn, the function returns *all* concept names subsuming it"
-  (declare (ignore dig))
+
+(defun mark-all-told-subsumers-of (s-cn t-marker
+				   &key (mark-itself t))
+  "Mark all told subsumers of s-cn in the hashtable t-marker"
+  (when mark-itself 
+    (setf (gethash s-cn t-marker) t))
+  (dolist (x (c-told-subsumers s-cn))
+    (unless (gethash x t-marker)
+      (mark-all-told-subsumers-of x t-marker))))
+;;_____________________________________________________________________________
+
+
+(defun q-told-ancestors-f (cn)
+  "Given a concept name cn, the funtion returns subsuming concept names told explicitly in the ontology, i.e. transitive closure of told subsumers"
   
+  (setq cn (system-cname (synonym-of cn)))
+  
+  (when (or (not cn)
+	    (c-individual? cn)
+	    (eq cn *top*)
+	    (eq cn *bot*))
+    (return-from q-told-ancestors-f :not-concept-name))
+  
+  (let ((told-table (make-hash-table :test 'eq))
+	(told-list nil)
+	(u-cnames nil))
+	
+    (mark-all-told-subsumers-of cn told-table
+				:mark-itself nil)
+    (setq told-list (get-hash-keys told-table))
+    (dolist (s-cn told-list)
+      (setq u-cnames (append (synonyms (user-cname s-cn))
+			     u-cnames)))
+    
+    u-cnames
+    ))
+;;_____________________________________________________________________________
+    
+(defun q-inferred-ancestors-f (cn)
+  "Given a concept name cn, the funtion returns subsuming strictly inferred concept names subsuming cn, i.e. all ancestors except for told and trivial ones"
+  
+  (setq cn (system-cname (synonym-of cn)))
+  
+  (when (or (not cn)
+	    (c-individual? cn)
+	    (eq cn *top*)
+	    (eq cn *bot*))
+    (return-from q-inferred-ancestors-f :not-concept-name))
+  
+  (let ((ignore-table (make-hash-table :test 'eq))
+	(cn-supers (s-labels-both cn))
+	(top-supers (s-top-labels))
+	(u-cnames nil))
+
+    (when (eq cn-supers *bot*)
+      ;; all concepts are ancestors of an unsat concept
+      (return-from q-inferred-ancestors-f
+	(q-all-concepts-f)))
+    
+    (mark-all-told-subsumers-of cn ignore-table
+				:mark-itself t)
+    (setf (gethash *top* ignore-table) t)
+    
+    (dolist (s-cn (union cn-supers
+			 top-supers
+			 :test 'eq))
+      (when (and (> s-cn 0)
+		 (not (gethash s-cn ignore-table)))		       
+	(setq u-cnames (append (synonyms (user-cname s-cn))
+			       u-cnames))))
+    u-cnames))
+;;_____________________________________________________________________________
+
+(defun q-ancestors-f (cn &key (make-eclass nil))
+  "Given a concept name cn, the function returns *all* concept names subsuming it"
+  (setq cn (system-cname (synonym-of cn)))
+  
+  (when (or (not cn)
+	    (c-individual? cn))
+    (return-from q-ancestors-f (and make-eclass
+				    '((top)) )))  
+  (cond
+   (make-eclass
+    (if (zerop cn)
+	(q-all-concept-eclasses-f)
+      (q-ancestors-eclass-set-f cn)))
+   (t
+    (if (zerop cn)
+	(q-all-concepts-f)
+      (q-ancestors-flat-set-f cn)))
+   ))
+
+(defun q-ancestors-flat-set-f (s-cn)
+  "Given a (valid) system cname, return a flat set of user cnames subsuming it"
+  (let ((cn-supers (s-labels-both s-cn))
+	(top-supers (s-top-labels-both))
+	(u-cnames nil))
+    (when (eq cn-supers *bot*)
+      ;; all concepts are ancestors of an unsat concept
+      (return-from q-ancestors-flat-set-f
+	(q-all-concepts-f)))
+    
+    (dolist (x (union cn-supers top-supers
+		      :test 'eq))
+      (when (> x 0)
+	(setq u-cnames (append (synonyms (user-cname x))
+			       u-cnames))))
+    u-cnames))
+
+(defun q-ancestors-eclass-set-f (s-cn)
+  "Given a (valid) system cname, return an eclass set of user cnames subsuming it"
+  (let ((cn-supers (s-labels-both s-cn))
+	(top-supers (s-top-labels-both))
+	(eclass-set nil))
+    (when (eq cn-supers *bot*)
+      ;; all concepts are ancestors of an unsat concept
+      (return-from q-ancestors-eclass-set-f
+	(q-all-concept-eclasses-f)))
+    
+    (dolist (x (union cn-supers top-supers
+		      :test 'eq))
+      (when (> x 0)
+	(let ((eclass nil))
+	  (when (listp (c-equivalent x))
+	    (dolist (y (cons x (c-equivalent x)))
+	      (setq eclass (append (synonyms (user-cname y))
+				   eclass)))
+	    (push eclass eclass-set)
+	    )
+	  )))
+    eclass-set))
+
+(defun q-ancestors-f-backup (cn)
+  "Given a concept name cn, the function returns *all* concept names subsuming it"
   (setq cn (system-cname (synonym-of cn)))
   
   ;; ============================ to check
   (when (or (not cn)
 	    (c-individual? cn))
-    (return-from q-ancestors-f nil))  
+    (return-from q-ancestors-f-backup nil))
   (when (zerop cn)
     ;; all concepts are ancestors of bottom (or unsatisfiable concepts)
-    (return-from q-ancestors-f
+    (return-from q-ancestors-f-backup
       (q-all-concepts-f)))
   
   (let ((cn-supers (s-labels-both cn))
@@ -1451,7 +1794,7 @@
 	(u-cnames nil))
     (when (eq cn-supers *bot*)
       ;; all concepts are ancestors of an unsat concept
-      (return-from q-ancestors-f
+      (return-from q-ancestors-f-backup
 	(q-all-concepts-f)))
     
     (dolist (s-cn (union cn-supers
@@ -1463,31 +1806,94 @@
     u-cnames))
 ;;_____________________________________________________________________________
 
-(defun q-descendants-f (cn &optional (dig nil))  
-  (declare (ignore dig))
+
+(defun q-descendants-f (cn &key (make-eclass nil))
+  "Given a concept name cn, the function returns *all* concept names subsuming it"
+  (setq cn (system-cname (synonym-of cn)))
   
+  (when (or (not cn)
+	    (c-individual? cn))
+    (return-from q-descendants-f (and make-eclass
+				      '((bottom)) )))  
+  (cond
+   (make-eclass
+    (if (= cn 1)
+	(q-all-concept-eclasses-f)
+      (q-descendants-eclass-set-f cn)))
+   (t
+    (if (= cn 1)
+	(q-all-concepts-f)
+      (q-descendants-flat-set-f cn)))
+   ))
+
+(defun q-descendants-flat-set-f (cn)
+  (let ((descendants-table (make-hash-table :test 'eq))
+	(descendants nil))    
+    (q-descendants-flat-set-f-r cn descendants-table)
+    (loop as key being the hash-key of descendants-table do
+	  (setq descendants (append (synonyms (user-cname key))
+				    descendants)))
+    descendants
+    ))
+      
+(defun q-descendants-flat-set-f-r (cn table)
+  (unless (or (gethash cn table)
+	      (c-individual? cn))
+    (setf (gethash cn table) t)    
+    (dolist (x (c-equivalent cn))
+      (setf (gethash x table) t))
+    (dolist (y (c-children cn))
+      (q-descendants-flat-set-f-r y table))
+    ))
+
+(defun q-descendants-eclass-set-f (cn)
+  (let ((descendants-table (make-hash-table :test 'eq))
+	(eclass-set nil))
+    (declare (special descendants-table))
+    (declare (special eclass-set))
+    
+    (q-descendants-eclass-set-f-r cn)
+    eclass-set
+    ))
+(defun q-descendants-eclass-set-f-r (cn)
+  (declare (special descendants-table))
+  (declare (special eclass-set))
+  
+  (unless (or (gethash cn descendants-table)
+	      (c-individual? cn))
+    ;;(setf (gethash cn table) t)
+    (let ((eclass nil))
+      (dolist (x (cons cn (c-equivalent cn)))
+	(setf (gethash x descendants-table) t)
+	(setq eclass (append (synonyms (user-cname x))
+			     eclass)))
+      (push eclass eclass-set)
+      )
+    
+    (dolist (y (c-children cn))
+      (q-descendants-eclass-set-f-r y))
+    ))
+
+    
+    
+
+(defun q-descendants-f-backup (cn &key (make-eclass nil))  
   (when (eq cn top)
     ;; all concepts are descendants of top
-    (return-from q-descendants-f
+    (return-from q-descendants-f-backup
       (q-all-concepts-f)))
   
   (setq cn (system-cname (synonym-of cn)))  
   (when (or (not cn)
 	    (c-individual? cn))
-    (return-from q-descendants-f nil))
+    (return-from q-descendants-f-backup (and make-eclass
+				      '((bottom)) )))
   
   ;; this requires DAG
   (request-hasse)  
   
   ;; OPTIMIZED: compute all descendants in user cname format directly
-  (hasse-concept-descendants-new cn))
-  
-;;;  (let ((s-cnames (hasse-concept-descendants cn))
-;;;	(u-cnames nil))
-;;;    (dolist (s-cn s-cnames)
-;;;      (setq u-cnames (append (synonyms (user-cname s-cn))
-;;;			     u-cnames)))
-;;;    u-cnames))
+  (hasse-concept-descendants-new cn))  
 ;;_____________________________________________________________________________
 
 (defun q-equivalents-f (cn &optional (unknown-as-primitive nil)
@@ -1511,21 +1917,21 @@
     ))
 ;;_____________________________________________________________________________
 
-(defun q-individual-direct-types-f (cn &optional (dig nil))
+(defun q-individual-direct-types-f (cn &key (make-eclass nil))
   "Comparable to q-parents-f"
   (setq cn (system-cname (synonym-of cn)))
   
   (unless (and cn
 	       (c-individual? cn))
-    (return-from q-individual-direct-types-f 
-      (and dig '((top)) )))
+    (return-from q-individual-direct-types-f (and make-eclass 
+						  '((top)) )))
   
   ;; this requires DAG
   (request-hasse)  
   
   (cond
    
-   (dig
+   (make-eclass
     (let ((s-cnames (c-parents cn))
 	  (parent-set nil))
       (dolist (s-cn s-cnames)	
@@ -1549,30 +1955,63 @@
     ))
 ;;_____________________________________________________________________________
 
-(defun q-individual-types-f (cn)
+(defun q-individual-types-f (cn &key (make-eclass nil))
   "Comparable to q-ancestors-f"
   (setq cn (system-cname (synonym-of cn)))
   
-  ;; ============================ to check
-  (unless (and cn
-	       (c-individual? cn))
-    (return-from q-individual-types-f nil))
-  (let ((cn-supers (s-labels-both cn))
+  (when (or (not cn)
+	    (not (c-individual? cn)))   
+    (return-from q-individual-types-f (and make-eclass
+					   '((top)) )))  
+  (cond
+   (make-eclass    
+    (q-individual-types-eclass-set-f cn))
+   (t    
+    (q-individual-types-flat-set-f cn))
+   ))
+
+(defun q-individual-types-flat-set-f (s-cn)
+  "Given a (valid) system individual cname, return a flat set of user cnames that are its types"  
+  (let ((cn-supers (s-labels-both s-cn))
 	(top-supers (s-top-labels-both))
 	(u-cnames nil))
     (when (eq cn-supers *bot*)
       ;; all concepts are ancestors of an unsat concept
-      (return-from q-individual-types-f
+      (return-from q-individual-types-flat-set-f
 	(q-all-concepts-f)))
     
-    (dolist (s-cn (union cn-supers
-			 top-supers
-			 :test 'eq))
-      (when (and (> s-cn 0)
-		 (not (= s-cn cn))) ;; cn itself is individual, not its type
-	(setq u-cnames (append (synonyms (user-cname s-cn))
+    (dolist (x (union cn-supers
+		      top-supers
+		      :test 'eq))
+      (when (and (> x 0)
+		 (not (= x s-cn))) ;; cn itself is individual, not its type
+	(setq u-cnames (append (synonyms (user-cname x))
 			       u-cnames))))
     u-cnames))
+
+(defun q-individual-types-eclass-set-f (s-cn)
+  "Given a (valid) system individual cname, return an eclass set of user cnames that are its types"
+  (let ((cn-supers (s-labels-both s-cn))
+	(top-supers (s-top-labels-both))
+	(eclass-set nil))
+    (when (eq cn-supers *bot*)
+      ;; all concepts are ancestors of an unsat concept
+      (return-from q-individual-types-eclass-set-f
+	(q-all-concept-eclasses-f)))
+    
+    (dolist (x (union cn-supers top-supers
+		      :test 'eq))
+      (when (and (> x 0)
+		 (not (= x s-cn)))
+	(let ((eclass nil))
+	  (when (listp (c-equivalent x))
+	    (dolist (y (cons x (c-equivalent x)))
+	      (setq eclass (append (synonyms (user-cname y))
+				   eclass)))
+	    (push eclass eclass-set)
+	    )
+	  )))
+    eclass-set))
 ;;_____________________________________________________________________________
 
 (defun q-instance-f (ind cn)
@@ -1616,8 +2055,30 @@
       )))
 ;;_____________________________________________________________________________
 
+(defun q-concept-direct-instances-f (cn)
+  "Comparable to q-children-f, filtering only individual cnames"
+  (setq cn (system-cname (synonym-of cn)))  
+  
+  (when (or (not cn)
+	    (c-individual? cn))
+    (return-from q-concept-direct-instances-f))
+  
+  (request-hasse)  
+  
+  (let ((s-cnames (c-children cn))
+	(instances nil))
+    (dolist (s-cn s-cnames)
+      (when (c-individual? s-cn)
+	(dolist (x (cons s-cn
+			 (c-equivalent s-cn)))
+	  (setq instances (append (synonyms (user-cname x))
+				  instances)))))
+    instances
+    ))
+;;_____________________________________________________________________________
+
 (defun q-concept-instances-f (cn)
-  "Comparable to q-descendants-f"
+  "Comparable to q-descendants-f, filtering only individual cnames"
   (when (eq cn top)
     ;; all individuals are instance of top
     (return-from q-concept-instances-f
@@ -1822,7 +2283,7 @@
 	(with-open-file (output-stream file-name		   
 			 :direction :output 
 			 :if-exists :supersede)
-	  (output-hierarchy-fr output-stream 
+	  (output-hierarchy-fr-new output-stream 
 			       (or system-root 1)
 			       depth
 			       realization)
@@ -1839,10 +2300,10 @@
 			    unsat-inds)))
 	  ))
        (t	  
-	(output-hierarchy-fr t 
-			     (or system-root 1)
-			     depth
-			     realization)
+	(output-hierarchy-fr-new t 
+				 (or system-root 1)
+				 depth
+				 realization)
 	;; bottom-most in the hierarchy is the bottom conncept and all unsat ones
 	(when unsat-cns
 	  (format t "~%~%  -:~A =~S"	 
@@ -1857,6 +2318,63 @@
 	))))))
 ;;_____________________________________________________________________________
 
+(defun output-hierarchy-fr-new (&optional (stream t)
+					  (c *top*)
+					  (depth nil)
+					  (realization nil)
+					  (indent 0) (spacing 2))
+  ;; we process this node, only when it's a concept node or individual when we want realization
+  ;;(print realization)  
+  (when (<= c 0)
+    (return-from output-hierarchy-fr-new))
+  
+  (cond
+   ((c-individual? c)
+    (unless realization
+      (return-from output-hierarchy-fr-new))
+    
+    (let* ((ind (user-cname c))
+	   (ind-equivalents (remove-if #'(lambda (x) (eq x ind))
+				       (ind-synonyms ind)))
+	   )
+      (format stream "~%~3D:~A{~S}"
+	      (/ indent spacing)
+	      (make-string indent :initial-element #\ )
+	      ind)
+      (when ind-equivalents
+	(format stream " ={~S}"
+		ind-equivalents))
+      ))
+   
+   (t ;; when c is an actual concept name
+    (let* ((c-user-name (user-cname c))
+	   (equivalents (union (c-equivalent-user-names c)
+			       (remove-if #'(lambda (x) (eq x c-user-name))
+					  (synonyms c-user-name))
+			       :test 'eq)))
+      (format stream "~%~3D:~A~S"
+	      (/ indent spacing)
+	      (make-string indent :initial-element #\ )
+	      c-user-name)
+      (when equivalents
+	(format stream " =~S"
+		equivalents))
+      ))
+   )
+   
+  ;; depth handling
+  (cond
+   ((null depth)
+    (dolist (x (c-children c))
+      (output-hierarchy-fr-new stream x nil realization (+ indent spacing))))
+   
+   ((not (zerop depth))
+    (decf depth)
+    (dolist (x (c-children c))
+      (output-hierarchy-fr-new stream x depth realization (+ indent spacing))))
+   ))
+
+
 (defun output-hierarchy-fr (&optional (stream t)
 				      (c *top*)
 				      (depth nil)
@@ -1866,7 +2384,8 @@
   ;;(print realization)
   (when (and (> c 0)
 	     (or (not (c-individual? c))
-		 realization))    
+		 realization))
+    
     (let* ((c-user-name (user-cname c))
 	   (equivalents (union (c-equivalent-user-names c)
 			       (remove-if #'(lambda (x) (eq x c-user-name))
@@ -1884,6 +2403,7 @@
       (when equivalents
 	(format stream " =~S"
 		equivalents))
+      
       ;; depth handling
       (cond
        ((null depth)
@@ -1980,5 +2500,7 @@
 		keyword
 		synonym     
 		(user-cname equivalent)))))))
-	      
+	     
+  
 ;;_____________________________________________________________________________
+

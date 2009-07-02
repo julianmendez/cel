@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: Tue Jan 27 2009
+;;;; Last Modified: 2009-03-26
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -16,21 +16,22 @@
 
 ;; The module :aserve is required for the DIG server and should be included when the application is built
 (eval-when (:load-toplevel :execute)
-  (require :aserve))
+  (require :aserve)
+  (require :sock))
 
 
 (defpackage cel
   (:use cl-user
-        common-lisp
+	common-lisp
         ))
 (defpackage cel-system
   (:use cl-user
-        common-lisp
-        ))
+        common-lisp)  
+  )
 
 (defpackage cel-dig 
   (:use excl 
-	cl 
+	common-lisp
 	net.aserve 
 	net.html.generator
 	net.uri
@@ -49,6 +50,10 @@
 (setq excl:*print-startup-message* nil)
 ;;_____________________________________________________________
 
+(defvar *cel-mode* :interactive
+  "Valid modes are :interactive :batch :dig :owlapi")
+(defparameter *enable-primitive-tbox-optimization* nil)
+(defparameter *enable-progress-bar* t)
 (defparameter *classification-mode**** 2
   "Mode of classification: 
 - 0 = Implication sets
@@ -77,6 +82,8 @@
       ;; abox assertional axioms
       define-primitive-individual
       instance related 
+      same-individuals
+      different-individuals
       ;; queries about concepts
       concept? 
       all-concepts
@@ -125,6 +132,7 @@
       restore-tbox restore-ontology
       repository
       ;; operation on current ontology
+      add-axiom add-axioms
       clear-tbox clear-ontology
       load-tbox load-ontology
       classify-tbox classify-ontology
@@ -297,6 +305,9 @@
 	   
 	   ((string= arg "-digServer")
 
+	    ;; CEL is running in :owlapi mode
+	    (setq *cel-mode* :dig)
+
 	    ;; << put the DIG server startup function here >>
 	    ;;(err "DIG feature is not yet available!"))
 	    
@@ -307,12 +318,46 @@
 	    ;; forever loop until kill signal
 	    )
 	   
+	   ((string= arg "-owlapiServer")
+	    
+	    ;; CEL is running in :owlapi mode
+	    (setq *cel-mode* :owlapi)
+	    
+	    (cond
+	     ((>= (+ i 2) (length args))
+	      (err "The -owlapiServer option requires remote-host and remote-port parameters~%")
+	      (excl:exit))
+	     
+	     (t
+	      (let ((remote-host (nth (+ i 1) args))
+		    (remote-port (parse-integer (nth (+ i 2) args)
+						:junk-allowed t))
+		    (logging? (nth (+ i 3) args)))
+		(when (null remote-port)
+		  (err "Value of remote-port must be integer~%")
+		  (excl:exit))
+		
+		(msg "You request to start CEL with an OWLAPI connection to ~A:~A"
+		     remote-host 
+		     remote-port)
+		(in-package cel-system)
+		(when (string= logging? "logging")
+		  (msg "OWLAPI logging is enabled")
+		  (setq *owlapi-verbose-msg* t))
+		(startup-owlapi-listener remote-host remote-port)
+		))
+	     ))
+	      
+	   
 	   ((or (string= arg "-q")
 		(string= arg "-quit"))
 	    
 	    (setq q t)))
 	  
 	  )
+    
+    (when (and l c q)
+      (setq *cel-mode* :batch))
     
     (if l 
 	(progn (msg "You want to load an ontology ~S," l)
@@ -360,3 +405,6 @@
     (when q (excl:exit))
     ))
 
+
+;;(eval-when (:execute)
+;;  (global-initialization))

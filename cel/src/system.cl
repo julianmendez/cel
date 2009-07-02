@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: Tue Jan 27 2009
+;;;; Last Modified: 2009-03-26
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -200,6 +200,12 @@
   (synonym-list ;; List of synonymic cnames that have a representative
    nil
    :type cons)
+  (ind-synonym-table ;; Mapping of cnames to their synonyms (union-find structure); the representatives have value as the list of all synonyms
+   (make-hash-table :test 'equal)
+   :type hash-table)
+  (ind-synonym-list ;; List of synonymic cnames that have a representative
+   nil
+   :type cons)
   ;;------------------------------------------------
   (gci-list1 ;; List of input GCIs which must be normalized in NF1
    nil
@@ -231,7 +237,8 @@
   (total-cache-accesses 0)
   (total-cache-hits 0)
   (total-classified-cnames 0)
-    
+  (percentile-classified-cnames 0)
+  
   ) ;; end of defstruct
 ;;_____________________________________________________________________________
 
@@ -439,6 +446,10 @@
   `(internal-data-structure-synonym-table (ontology-ds *ontology*)))
 (defmacro ods-synonym-list ()
   `(internal-data-structure-synonym-list (ontology-ds *ontology*)))
+(defmacro ods-ind-synonym-table ()
+  `(internal-data-structure-ind-synonym-table (ontology-ds *ontology*)))
+(defmacro ods-ind-synonym-list ()
+  `(internal-data-structure-ind-synonym-list (ontology-ds *ontology*)))
 
 (defmacro ods-gci-list1 ()
   `(internal-data-structure-gci-list1 (ontology-ds *ontology*)))
@@ -471,6 +482,8 @@
   `(internal-data-structure-total-cache-hits (ontology-ds *ontology*)))
 (defmacro ods-total-classified-cnames ()
   `(internal-data-structure-total-classified-cnames (ontology-ds *ontology*)))
+(defmacro ods-percentile-classified-cnames ()
+  `(internal-data-structure-percentile-classified-cnames (ontology-ds *ontology*)))
 ;;_____________________________________________________________________________
 
 (defmacro ods2-o ()
@@ -1047,13 +1060,15 @@
 (defun init-s-r-structures ()
   ;; initialize (ods-s-table), this is used in place of the array
   (setf (ods-s-table) (make-hash-table :test 'eq))
+  (setf (ods-total-s-counter) 0)
   ;; initialize (ods-r-...) structures  
   (setf (ods-r-pred) (make-hash-table :test 'equal))
   (setf (ods-r-succ) (make-hash-table :test 'equal))
   )
 ;;_____________________________________________________________________________
 
-(defun add-cname-later (cn &key (status nil) (definition nil))
+(defun add-cname-later (cn &key (status nil) 
+				(definition nil))
   (push (cons cn (cons status definition))
 	(ods-defined-cname-list)))
 ;;_____________________________________________________________________________
@@ -1065,6 +1080,16 @@
 		 ;; key is a representative synonym
 		 (add-cname key)))	       	   
 	   (ods-synonym-table))
+  )
+;;_____________________________________________________________________________
+
+(defun add-synonymic-ind-cnames ()
+  "Add all representative synonyms, ie., cnames that are supposed to be in the range of *system-cname* array. Some synonymic (equivalent) classes might not connect with other system names. We add these here."
+  (maphash #'(lambda (key value)
+	       (when (listp value)
+		 ;; key is a representative synonym
+		 (add-cname key :individual? t)))
+	   (ods-ind-synonym-table))
   )
 ;;_____________________________________________________________________________
 
@@ -1159,6 +1184,13 @@
     (if (listp cn-value)
 	cn
       (synonym-of cn-value))))
+
+(defun ind-synonym-of (ind)
+  "Find and return the synonym representative of cn; nil if cn has no synonym"
+  (let ((ind-value (gethash ind (ods-ind-synonym-table))))
+    (if (listp ind-value)
+	ind
+      (synonym-of ind-value))))
 ;;_____________________________________________________________________________
 
 (defun synonyms (cn)
@@ -1167,6 +1199,13 @@
     (if (listp cn-value)
 	(cons cn cn-value)
       (synonyms cn-value))))
+
+(defun ind-synonyms (ind)
+  "Find and return the set of all synonyms of cn; nil if cn has no synonym"
+  (let ((ind-value (gethash ind (ods-ind-synonym-table))))
+    (if (listp ind-value)
+	(cons ind ind-value)
+      (synonyms ind-value))))
 ;;_____________________________________________________________________________
 
 (defun add-synonym (cn1 cn2)
@@ -1184,6 +1223,18 @@
 	 (length (gethash cn2 (ods-synonym-table))))
       (synonym-class-union cn2 cn1)
     (synonym-class-union cn1 cn2)))
+
+(defun add-ind-synonym (ind1 ind2)
+  "Add a pair of synonym"
+  (setq ind1 (synonym-of ind1))
+  (setq ind2 (synonym-of ind2))  
+  (if (eq ind1 ind2)
+      (return-from add-ind-synonym))
+  
+  (if (> (length (gethash ind1 (ods-ind-synonym-table)))
+	 (length (gethash ind2 (ods-ind-synonym-table))))
+      (ind-synonym-class-union ind2 ind1)
+    (ind-synonym-class-union ind1 ind2)))
 ;;_____________________________________________________________________________
 
 (defun synonym-class-union (x y)
@@ -1196,10 +1247,20 @@
   
   (push x (ods-synonym-list))
   ;; update the union-find structure
-  (setf (gethash y (ods-synonym-table)) (cons x (union (gethash x (ods-synonym-table))
-						   (gethash y (ods-synonym-table))
-						   :test 'eq)))
+  (setf (gethash y (ods-synonym-table)) 
+    (cons x (union (gethash x (ods-synonym-table))
+		   (gethash y (ods-synonym-table))
+		   :test 'eq)))
   (setf (gethash x (ods-synonym-table)) y))
+
+(defun ind-synonym-class-union (x y)
+  "Union x and y by keeping y as the representative"
+  (push x (ods-ind-synonym-list))
+  (setf (gethash y (ods-ind-synonym-table))
+    (cons x (union (gethash x (ods-ind-synonym-table))
+		   (gethash y (ods-ind-synonym-table))
+		   :test 'eq)))
+  (setf (gethash x (ods-ind-synonym-table)) y))
 ;;_____________________________________________________________________________
 
 (defun set-labels (s-cn-n labels)
@@ -1706,6 +1767,7 @@ Note: this version is aware of role range axiom, i.e. the range of r will be ins
 
   ;; add synonymic cnames that are representative of a synonymic class and probably have not been added before.
   (add-synonymic-cnames)
+  (add-synonymic-ind-cnames)
   
   ;; clear all unused data structures
   ;;(clrhash (ods-subconcept-table))
@@ -2205,6 +2267,8 @@ Solutions: (1) do this when TTBox is committed (2) Aaarch!"
     
     ;; instead of adding itself only, we add all told subsumers
     (set-labels s-cn told-subsumers)
+    (incf (ods-total-s-counter) 
+	  (length told-subsumers))
     
     ;; update queue accordingly
     (let ((new-q-items))
@@ -2495,6 +2559,8 @@ This is a varient used when 1. data structures have been fully populated by a fu
     (internal-data-structure-total-cache-hits (ontology-ds *ontology*)))
   (setq *total-classified-cnames* 
     (internal-data-structure-total-classified-cnames (ontology-ds *ontology*)))
+  (setq *percentile-classified-cnames* 
+    (internal-data-structure-percentile-classified-cnames (ontology-ds *ontology*)))
   (setq *2-o* 
     (internal-data-structure-2-o (ontology-ds-2 *ontology*)))
   (setq *2-s-table* 

@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: Tue Jan 27 2009
+;;;; Last Modified: 2009-02-19
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -76,7 +76,7 @@
   )
 
 
-(defun add-axiom (axiom l-sig r-sig)
+(defun add-odsm-axiom (axiom l-sig r-sig)
   "Add to (odsm-axiom-sig-array) and return its reference index"  
   (vector-push-extend (make-axiom-sig :original axiom
 				      :l-sig l-sig
@@ -92,7 +92,8 @@
 	(dolist (y (cdr x))
 	  (setq x-sig (union x-sig (sig-of y) :test 'eql)))
 	x-sig)
-    (list x)))
+    (set-difference (list x) '(roleGroup))))
+    ;;(list x)))
 
 (defun cn-of (x)
   "Retrieve a set of all role and concept names occurring in x"
@@ -111,15 +112,15 @@
     ((define-primitive-concept implies role-inclusion)
      (let* ((l-sig (sig-of (cadr axiom)))
 	    (r-sig (sig-of (caddr axiom)))
-	    (ax (add-axiom axiom l-sig r-sig)))
+	    (ax (add-odsm-axiom axiom l-sig r-sig)))
        (dolist (x l-sig)
 	 (push ax (active-axioms x)))
        ))
     ((define-concept equivalent)
      (let* ((l-sig (sig-of (cadr axiom)))
 	    (r-sig (sig-of (caddr axiom)))
-	    (ax1 (add-axiom axiom l-sig r-sig))
-	    (ax2 (add-axiom axiom r-sig l-sig)))
+	    (ax1 (add-odsm-axiom axiom l-sig r-sig))
+	    (ax2 (add-odsm-axiom axiom r-sig l-sig)))
        (dolist (x l-sig)
 	 (push ax1 (active-axioms x)))
        (dolist (x r-sig)
@@ -128,37 +129,37 @@
     ;; all symbols occur on the left and only bot on the right
     ((disjoint)
      (let* ((ax-sig (sig-of axiom))
-	    (ax (add-axiom axiom ax-sig nil))
+	    (ax (add-odsm-axiom axiom ax-sig nil))
 	    )
        (dolist (x ax-sig)
 	 (push ax (active-axioms x)))
        ))
     ((transitive)
-     (push (add-axiom axiom 
-		      (cdr axiom) 
-		      (cdr axiom))
+     (push (add-odsm-axiom axiom 
+			   (cdr axiom) 
+			   (cdr axiom))
 	   (active-axioms (cadr axiom)))
      )
     ((reflexive)
-     (push (add-axiom axiom 
-		      nil
-		      (cdr axiom))
+     (push (add-odsm-axiom axiom 
+			   nil
+			   (cdr axiom))
 	   (active-axioms nil))
      )
     ((define-primitive-role) ;; only parent is treated: s is parent of r
      (let ((r (cadr axiom))
 	   (s (cadddr axiom)))
-       (push (add-axiom axiom 
-			(list r)
-			(list s))
+       (push (add-odsm-axiom axiom 
+			     (list r)
+			     (sig-of s))
 	     (active-axioms r))
        ))
     ((domain range)
      (let ((r (cadr axiom))
 	   (c-sig (sig-of (caddr axiom))))
-       (push (add-axiom axiom
-			(list r)
-			c-sig)
+       (push (add-odsm-axiom axiom
+			     (list r)
+			     c-sig)
 	     (active-axioms r))
        ))
     (t 
@@ -168,6 +169,7 @@
 	        
 
 (defun prepare-for-module-extraction (&optional new-axioms)
+  ;;&optional (t0 (get-internal-run-time)))
   "Read and prepare relevant data structures for extracting reachability-based modules"         
   (msg "Preparing for module extraction...")
   
@@ -194,13 +196,6 @@
 	  (pushnew (ax-original ax) axioms :test 'eq))
     axioms))
 
-
-
-(defmacro get-hash-keys (hash)
-  `(let (keys)
-     (loop as key being the hash-key of ,hash do
-	   (push key keys))
-     keys))
 
 ;;_____________________________________________________________________________
 

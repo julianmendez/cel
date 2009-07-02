@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: Tue Jan 27 13:39:22 CET 2009
+;;;; Last Modified: 2009-03-12
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -27,6 +27,7 @@ The following options can be used:
    -outputTaxonomy [file]      Output the direct sub- and super-classes
    -outputHierarchy [file]     Output the hierarchy as an indented tree
    -digServer [port]           Start CEL as a backend DIG reasoner
+   -owlapiServer host port     Start CEL as a backend OWLAPI-like reasoner
    -quit <-q>                  Exit; Don't enter the interactive interface
    -help <-h>                  Display this help message
   
@@ -41,7 +42,7 @@ Examples:
 (defconstant *greeting-text*    
     (format nil 	    
 	    "
-   * * * * * * * * *  CEL Version ~A  * * * * * * * * * * * * * * *
+   * * * * * * * * * * *  CEL Version ~A  * * * * * * * * * * * * *
    *                                                               *
    *  CEL: [C]lassifier for the Description Logic [E][L]+          *
    *  Supported description logic: EL+  (el+)                      *

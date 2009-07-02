@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: Tue Jan 27 2009
+;;;; Last Modified: 2009-02-19
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -30,8 +30,8 @@
   "Display the version of the CEL reasoner"
   (format t "~A" *cel-version*))
 
-(defun build (&key (internal-reference-build-id 6)
-		   (internal-reference-build-date "January 15, 2008"))
+(defun build (&key (internal-reference-build-id 8)
+		   (internal-reference-build-date "February 5, 2009"))
   "Display the build of the CEL reasoner"
   (format t "CEL ~A; Build #~A on ~A"
 	  *cel-version*
@@ -204,6 +204,13 @@
     (err "Sorry, no documentation is given")
     nil)
    ))
+;;_____________________________________________________________________________
+
+(defmacro get-hash-keys (hash)
+  `(let (keys)
+     (loop as key being the hash-key of ,hash do
+	   (push key keys))
+     keys))
 ;;_____________________________________________________________________________
 
 (defun print-hash (hash-table &optional n (i 0))
