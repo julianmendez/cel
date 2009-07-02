@@ -807,6 +807,9 @@
     (push-gci-list1 c1 (copy-tree c2))
     (push-gci-list1 c2 c1))
    ;; neither c1 nor c2 is complex
+   ((or (eq c1 top) (eq c2 top) (eq c1 bottom) (eq c2 bottom))
+    (push-gci-list1 c1 c2)
+    (push-gci-list1 c2 c1))
    (t
     (add-synonym c1 c2)))
   (verbose "E")
