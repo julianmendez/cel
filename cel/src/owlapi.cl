@@ -322,21 +322,21 @@
   )
 ;;_____________________________________________________________________________
 
-(defmacro owlapi.get-super-properties (rname)
-  "public Set<OWLObjectProperty> getSuperProperties (OWLObjectProperty)"
-  `(owlapi.get-super-properties-f ',rname))
-(defun owlapi.get-super-properties-f (rname)
+(defmacro owlapi.get-flattened-ancestor-properties (rname)
+  "public Set<OWLObjectProperty> getFlattenedAncestorProperties (OWLObjectProperty)"
+  `(owlapi.get-flattened-ancestor-properties-f ',rname))
+(defun owlapi.get-flattened-ancestor-properties-f (rname)
   (list :return
-	(q-super-roles-f rname))
+	(union (list rname) (q-super-roles-f rname)))
   )
 ;;_____________________________________________________________________________
 
-(defmacro owlapi.get-sub-properties (rname)
-  "public Set<OWLObjectProperty> getSubProperties (OWLObjectProperty)"
-  `(owlapi.get-sub-properties-f ',rname))
-(defun owlapi.get-sub-properties-f (rname)
+(defmacro owlapi.get-flattened-descendant-properties (rname)
+  "public Set<OWLObjectProperty> getFlattenedDescendantProperties (OWLObjectProperty)"
+  `(owlapi.get-flattened-descendant-properties-f ',rname))
+(defun owlapi.get-flattened-descendant-properties-f (rname)
   (list :return
-	(q-sub-roles-f rname))
+	(union (list rname) (q-sub-roles-f rname)))
   )
 ;;_____________________________________________________________________________
 
@@ -365,7 +365,7 @@
   `(owlapi.get-equivalent-properties-f ',rname))
 (defun owlapi.get-equivalent-properties-f (rname)
   (list :return
-        (intersection (q-sub-roles-f rname) (q-super-roles-f rname)))
+        (union (list rname) (intersection (q-sub-roles-f rname) (q-super-roles-f rname))))
   )
 ;;_____________________________________________________________________________
 
