@@ -31,13 +31,13 @@ public interface CelOwlApiKeyword {
 	public static final String keyClearOntologies = "owlapi.clear-ontologies";
 	public static final String keyDispose = "owlapi.dispose";
 	public static final String keyGetAncestorClasses = "owlapi.get-ancestor-classes";
-	public static final String keyGetAncestorProperties = "owlapi.get-ancestor-properties";
 	public static final String keyGetDataPropertyRelationships = "owlapi.get-data-property-relationships";
 	public static final String keyGetDescendantClasses = "owlapi.get-descendant-classes";
-	public static final String keyGetDescendantProperties = "owlapi.get-descendant-properties";
 	public static final String keyGetDomains = "owlapi.get-domains";
 	public static final String keyGetEquivalentClasses = "owlapi.get-equivalent-classes";
 	public static final String keyGetEquivalentProperties = "owlapi.get-equivalent-properties";
+	public static final String keyGetFlattenedAncestorProperties = "owlapi.get-flattened-ancestor-properties";
+	public static final String keyGetFlattenedDescendantProperties = "owlapi.get-flattened-descendant-properties";
 	public static final String keyGetInconsistentClasses = "owlapi.get-inconsistent-classes";
 	public static final String keyGetIndividuals = "owlapi.get-individuals";
 	public static final String keyGetInverseProperties = "owlapi.get-inverse-properties";
@@ -47,9 +47,7 @@ public interface CelOwlApiKeyword {
 	public static final String keyGetRelatedIndividuals = "owlapi.get-related-individuals";
 	public static final String keyGetRelatedValues = "owlapi.get-related-values";
 	public static final String keyGetSubClasses = "owlapi.get-sub-classes";
-	public static final String keyGetSubProperties = "owlapi.get-sub-properties";
 	public static final String keyGetSuperClasses = "owlapi.get-super-classes";
-	public static final String keyGetSuperProperties = "owlapi.get-super-properties";
 	public static final String keyGetTypes = "owlapi.get-types";
 	public static final String keyHasDataPropertyRelationship = "owlapi.has-data-property-relationship";
 	public static final String keyHasObjectPropertyRelationship = "owlapi.has-object-property-relationship";

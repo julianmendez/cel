@@ -258,8 +258,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
 	public Set<Set<OWLObjectProperty>> getSubProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
-		logger.fine("(called) " + property.getURI());
-		return getCelInterface().getSubProperties(property);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 
 	public Set<Set<OWLClass>> getSuperClasses(OWLDescription description)
@@ -275,8 +274,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
 	public Set<Set<OWLObjectProperty>> getSuperProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
-		logger.fine("(called) " + property.getURI());
-		return getCelInterface().getSuperProperties(property);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 
 	public Set<Set<OWLClass>> getTypes(OWLIndividual individual, boolean arg1)

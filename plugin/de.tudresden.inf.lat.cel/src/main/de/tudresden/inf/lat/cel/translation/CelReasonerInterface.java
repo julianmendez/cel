@@ -143,8 +143,7 @@ public class CelReasonerInterface {
 
 	public Set<Set<OWLObjectProperty>> getAncestorProperties(
 			OWLObjectProperty property) throws CelReasonerException {
-		return getSetOfSetOfProperties(
-				CelOwlApiKeyword.keyGetAncestorProperties, property);
+		return makeEquivalentClasses(getFlattenedAncestorProperties(property));
 	}
 
 	public Set<Set<OWLClass>> getDescendantClasses(OWLDescription description)
@@ -155,8 +154,7 @@ public class CelReasonerInterface {
 
 	public Set<Set<OWLObjectProperty>> getDescendantProperties(
 			OWLObjectProperty property) throws CelReasonerException {
-		return getSetOfSetOfProperties(
-				CelOwlApiKeyword.keyGetDescendantProperties, property);
+		return makeEquivalentClasses(getFlattenedDescendantProperties(property));
 	}
 
 	public Set<Set<OWLDescription>> getDomains(OWLObjectProperty property)
@@ -203,6 +201,18 @@ public class CelReasonerInterface {
 		ret = getParser().parseSetOfProperties(response,
 				getOWLOntologyManager().getOWLDataFactory());
 		return ret;
+	}
+
+	protected Set<OWLObjectProperty> getFlattenedAncestorProperties(
+			OWLObjectProperty property) throws CelReasonerException {
+		return getSetOfProperties(
+				CelOwlApiKeyword.keyGetFlattenedAncestorProperties, property);
+	}
+
+	protected Set<OWLObjectProperty> getFlattenedDescendantProperties(
+			OWLObjectProperty property) throws CelReasonerException {
+		return getSetOfProperties(
+				CelOwlApiKeyword.keyGetFlattenedDescendantProperties, property);
 	}
 
 	/**
@@ -313,6 +323,17 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
+	protected Set<OWLObjectProperty> getSetOfProperties(String command,
+			OWLObjectProperty property) throws CelReasonerException {
+		Sexp message = SexpFactory.newNonAtomicSexp();
+		message.add(SexpFactory.newAtomicSexp(command));
+		message.add(getTranslator().translate(property));
+		Sexp response = sendAndConvert(message);
+		Set<OWLObjectProperty> ret = getParser().parseSetOfProperties(response,
+				getOWLOntologyManager().getOWLDataFactory());
+		return ret;
+	}
+
 	protected Set<Set<OWLClass>> getSetOfSetOfClasses(String command,
 			OWLDescription description) throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
@@ -328,19 +349,6 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	protected Set<Set<OWLObjectProperty>> getSetOfSetOfProperties(
-			String command, OWLObjectProperty property)
-			throws CelReasonerException {
-		Sexp message = SexpFactory.newNonAtomicSexp();
-		message.add(SexpFactory.newAtomicSexp(command));
-		message.add(getTranslator().translate(property));
-		Sexp response = sendAndConvert(message);
-		Set<Set<OWLObjectProperty>> ret = getParser()
-				.parseSetOfSetOfProperties(response,
-						getOWLOntologyManager().getOWLDataFactory());
-		return ret;
-	}
-
 	protected CelSocketManager getSocketManager() {
 		return this.socketManager;
 	}
@@ -353,22 +361,10 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	public Set<Set<OWLObjectProperty>> getSubProperties(
-			OWLObjectProperty property) throws CelReasonerException {
-		return getSetOfSetOfProperties(CelOwlApiKeyword.keyGetSubProperties,
-				property);
-	}
-
 	public Set<Set<OWLClass>> getSuperClasses(OWLDescription description)
 			throws CelReasonerException {
 		return getSetOfSetOfClasses(CelOwlApiKeyword.keyGetSuperClasses,
 				description);
-	}
-
-	public Set<Set<OWLObjectProperty>> getSuperProperties(
-			OWLObjectProperty property) throws CelReasonerException {
-		return getSetOfSetOfProperties(CelOwlApiKeyword.keyGetSuperProperties,
-				property);
 	}
 
 	public CelTranslator getTranslator() {
@@ -594,6 +590,20 @@ public class CelReasonerInterface {
 			throws CelReasonerException {
 		setOntologies(setOfOntologies);
 		synchronizedIfChanged();
+	}
+
+	protected Set<Set<OWLObjectProperty>> makeEquivalentClasses(
+			Set<OWLObjectProperty> flattenedSet) throws CelReasonerException {
+		Set<Set<OWLObjectProperty>> ret = new HashSet<Set<OWLObjectProperty>>();
+		Set<OWLObjectProperty> visited = new HashSet<OWLObjectProperty>();
+		for (OWLObjectProperty property : flattenedSet) {
+			if (!visited.contains(property)) {
+				Set<OWLObjectProperty> equivalentProperties = getEquivalentProperties(property);
+				ret.add(equivalentProperties);
+				visited.addAll(equivalentProperties);
+			}
+		}
+		return ret;
 	}
 
 	/**
