@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: 2009-03-26
+;;;; Last Modified: 2009-07-06
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
