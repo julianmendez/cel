@@ -56,7 +56,7 @@
     
   (loop
       for c
-      from 2
+      from 1
       to (cdr (ods-system-cname-range)) do
 	;;(when (cname-struct c)
 	
