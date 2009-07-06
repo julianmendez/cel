@@ -189,7 +189,7 @@
       :tbox-state-error
       ))
 
-(defconstant *cel-version* "1.0")
+(defconstant *cel-version* "1.1.0")
 ;;_____________________________________________________________
 
 (eval-when (:load-toplevel :execute)
