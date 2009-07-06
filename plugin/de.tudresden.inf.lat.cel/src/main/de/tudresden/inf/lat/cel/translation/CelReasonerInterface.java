@@ -361,10 +361,34 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
+	public Set<Set<OWLObjectProperty>> getSubProperties(
+			OWLObjectProperty property) throws OWLReasonerException {
+		ReachabilityGraph<OWLObjectProperty> graph = new ReachabilityGraph<OWLObjectProperty>();
+		Set<OWLObjectProperty> reachableVertices = getFlattenedDescendantProperties(property);
+		graph.addReachable(property, reachableVertices);
+		for (OWLObjectProperty vertex : reachableVertices) {
+			graph
+					.addReachable(vertex,
+							getFlattenedDescendantProperties(vertex));
+		}
+		return makeEquivalentClasses(graph.getDirectSuccessors(property));
+	}
+
 	public Set<Set<OWLClass>> getSuperClasses(OWLDescription description)
 			throws CelReasonerException {
 		return getSetOfSetOfClasses(CelOwlApiKeyword.keyGetSuperClasses,
 				description);
+	}
+
+	public Set<Set<OWLObjectProperty>> getSuperProperties(
+			OWLObjectProperty property) throws OWLReasonerException {
+		ReachabilityGraph<OWLObjectProperty> graph = new ReachabilityGraph<OWLObjectProperty>();
+		Set<OWLObjectProperty> reachableVertices = getFlattenedAncestorProperties(property);
+		graph.addReachable(property, reachableVertices);
+		for (OWLObjectProperty vertex : reachableVertices) {
+			graph.addReachable(vertex, getFlattenedAncestorProperties(vertex));
+		}
+		return makeEquivalentClasses(graph.getDirectSuccessors(property));
 	}
 
 	public CelTranslator getTranslator() {
@@ -660,15 +684,15 @@ public class CelReasonerInterface {
 			message = SexpFactory.newNonAtomicSexp();
 			message.add(SexpFactory
 					.newAtomicSexp(CelOwlApiKeyword.keyLoadOntologies));
-			Sexp temp = SexpFactory.newNonAtomicSexp();
+			Sexp axiomSet = SexpFactory.newNonAtomicSexp();
 			try {
 				for (OWLOntology currentOntology : getOntologies()) {
-					temp.add(getTranslator().translate(currentOntology));
+					axiomSet.add(getTranslator().translate(currentOntology));
 				}
 			} catch (CelTranslatorException e) {
 				throw new CelReasonerException(e);
 			}
-			message.add(temp);
+			message.add(axiomSet);
 			send(message, "Loading ontologies ...");
 			this.changeTracker.setOntologyChanged(false);
 		}
