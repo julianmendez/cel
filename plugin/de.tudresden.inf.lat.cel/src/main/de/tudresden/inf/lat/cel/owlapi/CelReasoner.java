@@ -164,8 +164,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
 	public Set<Set<OWLDescription>> getDomains(OWLObjectProperty property)
 			throws OWLReasonerException {
-		logger.fine("(called) " + property.getURI());
-		return getCelInterface().getDomains(property);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 
 	public Set<OWLClass> getEquivalentClasses(OWLDescription description)
@@ -208,8 +207,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
 	public Map<OWLObjectProperty, Set<OWLIndividual>> getObjectPropertyRelationships(
 			OWLIndividual individual) throws OWLReasonerException {
-		logger.fine("(called) " + individual.getURI());
-		return getCelInterface().getObjectPropertyRelationships(individual);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 
 	public OWLOntologyManager getOWLOntologyManager() {
@@ -227,17 +225,13 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
 	public Set<OWLDescription> getRanges(OWLObjectProperty property)
 			throws OWLReasonerException {
-		logger.fine("(called)");
-		return getCelInterface().getRanges(property);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 
 	public Set<OWLIndividual> getRelatedIndividuals(OWLIndividual individual,
 			OWLObjectPropertyExpression propertyExpression)
 			throws OWLReasonerException {
-		logger.fine("(called) " + individual.getURI() + " "
-				+ propertyExpression);
-		return getCelInterface().getRelatedIndividuals(individual,
-				propertyExpression);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 
 	public Set<OWLConstant> getRelatedValues(OWLIndividual individual,
@@ -294,10 +288,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 	public boolean hasObjectPropertyRelationship(OWLIndividual individual0,
 			OWLObjectPropertyExpression property, OWLIndividual individual1)
 			throws OWLReasonerException {
-		logger.fine("(called) " + individual0.getURI() + " " + property + " "
-				+ individual1.getURI());
-		return getCelInterface().hasObjectPropertyRelationship(individual0,
-				property, individual1);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 
 	public boolean hasType(OWLIndividual individual,
@@ -433,7 +424,6 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 
 	public void unloadOntologies(Set<OWLOntology> ontologySet)
 			throws OWLReasonerException {
-		logger.fine("(called)");
-		getCelInterface().unloadOntologies(ontologySet);
+		throw new UnsupportedReasonerOperationInCelException();
 	}
 }

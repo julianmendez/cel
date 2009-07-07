@@ -23,7 +23,6 @@ package de.tudresden.inf.lat.cel.translation;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -32,7 +31,6 @@ import org.semanticweb.owl.model.OWLClass;
 import org.semanticweb.owl.model.OWLDescription;
 import org.semanticweb.owl.model.OWLIndividual;
 import org.semanticweb.owl.model.OWLObjectProperty;
-import org.semanticweb.owl.model.OWLObjectPropertyExpression;
 import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLOntologyManager;
 import org.semanticweb.owl.util.ProgressMonitor;
@@ -156,11 +154,6 @@ public class CelReasonerInterface {
 		return makeEquivalentClasses(getFlattenedDescendantProperties(property));
 	}
 
-	public Set<Set<OWLDescription>> getDomains(OWLObjectProperty property)
-			throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
-	}
-
 	public Set<OWLClass> getEquivalentClasses(OWLDescription description)
 			throws CelReasonerException {
 		Set<OWLClass> ret = null;
@@ -246,11 +239,6 @@ public class CelReasonerInterface {
 		return this.ontologies;
 	}
 
-	public Map<OWLObjectProperty, Set<OWLIndividual>> getObjectPropertyRelationships(
-			OWLIndividual individual) throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
-	}
-
 	protected Set<OWLOntology> getOntologies() {
 		return this.ontologies;
 	}
@@ -265,17 +253,6 @@ public class CelReasonerInterface {
 
 	public ProgressMonitor getProgressMonitor() {
 		return this.socketManager.getProgressMonitor();
-	}
-
-	public Set<OWLDescription> getRanges(OWLObjectProperty property)
-			throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
-	}
-
-	public Set<OWLIndividual> getRelatedIndividuals(OWLIndividual individual,
-			OWLObjectPropertyExpression property)
-			throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
 	}
 
 	protected Set<OWLObjectProperty> getSetOfProperties(String command,
@@ -375,12 +352,6 @@ public class CelReasonerInterface {
 		Set<Set<OWLClass>> ret = getParser().parseSetOfSetOfClasses(response,
 				getOWLOntologyManager().getOWLDataFactory());
 		return ret;
-	}
-
-	public boolean hasObjectPropertyRelationship(OWLIndividual individual0,
-			OWLObjectPropertyExpression property, OWLIndividual individual1)
-			throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
 	}
 
 	public boolean hasTypes(OWLIndividual individual,
@@ -663,15 +634,5 @@ public class CelReasonerInterface {
 			send(message, "Loading ontologies ...");
 			this.changeTracker.setOntologyChanged(false);
 		}
-	}
-
-	/**
-	 * This function is not implemented yet.
-	 * 
-	 * @throws NotImplementedOperationException
-	 */
-	public void unloadOntologies(Set<OWLOntology> arg0)
-			throws NotImplementedOperationException {
-		throw new NotImplementedOperationException();
 	}
 }
