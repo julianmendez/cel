@@ -40,7 +40,6 @@ import org.semanticweb.owl.util.ProgressMonitor;
 import de.tudresden.inf.lat.cel.connection.CelConnectionException;
 import de.tudresden.inf.lat.cel.connection.CelSocketManager;
 import de.tudresden.inf.lat.cel.conversion.CelParser;
-import de.tudresden.inf.lat.cel.conversion.CelParserException;
 import de.tudresden.inf.lat.cel.conversion.CelTranslator;
 import de.tudresden.inf.lat.cel.conversion.CelTranslatorException;
 import de.tudresden.inf.lat.cel.conversion.LispKeyword;
@@ -158,19 +157,8 @@ public class CelReasonerInterface {
 	}
 
 	public Set<Set<OWLDescription>> getDomains(OWLObjectProperty property)
-			throws CelReasonerException {
-		Set<Set<OWLDescription>> ret = null;
-		Sexp message = SexpFactory.newNonAtomicSexp();
-		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyGetDomains));
-		message.add(getTranslator().translate(property));
-		Sexp response = sendAndConvert(message);
-		try {
-			ret = getParser().parseSetOfSetOfDescriptions(response,
-					getOWLOntologyManager().getOWLDataFactory());
-		} catch (CelParserException e) {
-			throw new CelReasonerException(e);
-		}
-		return ret;
+			throws NotImplementedOperationException {
+		throw new NotImplementedOperationException();
 	}
 
 	public Set<OWLClass> getEquivalentClasses(OWLDescription description)
@@ -280,32 +268,14 @@ public class CelReasonerInterface {
 	}
 
 	public Set<OWLDescription> getRanges(OWLObjectProperty property)
-			throws CelReasonerException {
-		Set<OWLDescription> ret = null;
-		Sexp message = SexpFactory.newNonAtomicSexp();
-		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyGetRanges));
-		message.add(getTranslator().translate(property));
-		Sexp response = sendAndConvert(message);
-		try {
-			ret = getParser().parseSetOfDescriptions(response,
-					getOWLOntologyManager().getOWLDataFactory());
-		} catch (CelParserException e) {
-			throw new CelReasonerException(e);
-		}
-		return ret;
+			throws NotImplementedOperationException {
+		throw new NotImplementedOperationException();
 	}
 
 	public Set<OWLIndividual> getRelatedIndividuals(OWLIndividual individual,
-			OWLObjectPropertyExpression property) throws CelReasonerException {
-		Sexp message = SexpFactory.newNonAtomicSexp();
-		message.add(SexpFactory
-				.newAtomicSexp(CelOwlApiKeyword.keyGetRelatedIndividuals));
-		message.add(getTranslator().translate(individual));
-		message.add(getTranslator().translate(property));
-		Sexp response = sendAndConvert(message);
-		Set<OWLIndividual> ret = getParser().parseSetOfIndividuals(response,
-				getOWLOntologyManager().getOWLDataFactory());
-		return ret;
+			OWLObjectPropertyExpression property)
+			throws NotImplementedOperationException {
+		throw new NotImplementedOperationException();
 	}
 
 	protected Set<OWLObjectProperty> getSetOfProperties(String command,
@@ -409,17 +379,8 @@ public class CelReasonerInterface {
 
 	public boolean hasObjectPropertyRelationship(OWLIndividual individual0,
 			OWLObjectPropertyExpression property, OWLIndividual individual1)
-			throws CelReasonerException {
-		Sexp message = SexpFactory.newNonAtomicSexp();
-		message
-				.add(SexpFactory
-						.newAtomicSexp(CelOwlApiKeyword.keyHasObjectPropertyRelationship));
-		message.add(getTranslator().translate(individual0));
-		message.add(getTranslator().translate(property));
-		message.add(getTranslator().translate(individual1));
-		Sexp response = send(message);
-		boolean ret = getParser().parseBoolean(response);
-		return ret;
+			throws NotImplementedOperationException {
+		throw new NotImplementedOperationException();
 	}
 
 	public boolean hasTypes(OWLIndividual individual,
@@ -530,10 +491,6 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	/**
-	 * @return true if the two classes are equivalent
-	 * @throws CelReasonerException
-	 */
 	public boolean isRealised() throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyIsRealised));
@@ -542,6 +499,11 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
+	/**
+	 * @param property
+	 * @return true if the property is reflexive
+	 * @throws CelReasonerException
+	 */
 	public boolean isReflexive(OWLObjectProperty property)
 			throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
@@ -593,6 +555,11 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
+	/**
+	 * @param property
+	 * @return true if the property is transitive
+	 * @throws CelReasonerException
+	 */
 	public boolean isTransitive(OWLObjectProperty property)
 			throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
