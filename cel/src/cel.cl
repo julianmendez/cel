@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: 2009-07-06
+;;;; Last Modified: 2009-07-07
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -189,7 +189,7 @@
       :tbox-state-error
       ))
 
-(defconstant *cel-version* "1.1.1")
+(defconstant *cel-version* "1.1.2")
 ;;_____________________________________________________________
 
 (eval-when (:load-toplevel :execute)
