@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: 2009-07-03
+;;;; Last Modified: 2009-07-07
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -430,6 +430,28 @@
 (defun owlapi.has-type-f (ind cname)
   (list :return
 	(if (q-instance-f ind cname)
+	    t
+	  nil))
+  )
+;;_____________________________________________________________________________
+      
+(defmacro owlapi.is-reflexive (rname)
+  "public boolean isReflexive (OWLDescription)"
+  `(owlapi.is-reflexive-f ',rname))
+(defun owlapi.is-reflexive-f (rname)
+  (list :return
+	(if (q-reflexive-f rname)
+	    t
+	  nil))
+  )
+;;_____________________________________________________________________________
+      
+(defmacro owlapi.is-transitive (rname)
+  "public boolean isTransitive (OWLDescription)"
+  `(owlapi.is-transitive-f ',rname))
+(defun owlapi.is-transitive-f (rname)
+  (list :return
+	(if (q-transitive-f rname)
 	    t
 	  nil))
   )
