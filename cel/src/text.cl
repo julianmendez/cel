@@ -8,7 +8,7 @@
 ;;;; Prof. Dr. Franz Baader, Prof. Dr. Carsten Lutz
 ;;;; Copyright (C) 2005-2009, Authors and the UNIVERSITY OF DRESDEN
 ;;;; Tested runtime system: Allegro CL on Linux
-;;;; Last Modified: 2009-03-12
+;;;; Last Modified: 2009-07-08
 ;;;; Note the T/C in LICENSE.txt
 ;;_____________________________________________________________________________
 
@@ -42,7 +42,7 @@ Examples:
 (defconstant *greeting-text*    
     (format nil 	    
 	    "
-   * * * * * * * * * * *  CEL Version ~A  * * * * * * * * * * * * *
+   * * * * * * * * * * *  CEL Version ~A  * * * * * * * * * * * *
    *                                                               *
    *  CEL: [C]lassifier for the Description Logic [E][L]+          *
    *  Supported description logic: EL+  (el+)                      *
