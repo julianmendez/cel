@@ -550,9 +550,6 @@ public class CelReasonerInterface {
 	 */
 	public void loadOntologies(Set<OWLOntology> setOfOntologies)
 			throws CelReasonerException {
-		// OWLImportsDeclaration declaration
-		// getOWLOntologyManager().getOntology(declaration.getImportedOntologyURI()).getAxioms());
-
 		setOntologies(setOfOntologies);
 		synchronizedIfChanged();
 	}
