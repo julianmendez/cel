@@ -22,7 +22,6 @@
 package de.tudresden.inf.lat.cel.conversion;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -96,7 +95,7 @@ public class CelTranslator {
 	protected Set<OWLAxiom> processImportAxioms(Set<OWLAxiom> axiomSet,
 			OWLOntologyManager ontologyManager) {
 		Set<OWLAxiom> ret = new HashSet<OWLAxiom>();
-		List<OWLImportsDeclaration> toVisit = new ArrayList<OWLImportsDeclaration>();
+		Set<OWLImportsDeclaration> toVisit = new HashSet<OWLImportsDeclaration>();
 		Set<OWLImportsDeclaration> visited = new HashSet<OWLImportsDeclaration>();
 		for (OWLAxiom axiom : axiomSet) {
 			if (axiom instanceof OWLImportsDeclaration) {
@@ -104,19 +103,18 @@ public class CelTranslator {
 			}
 			ret.add(axiom);
 		}
-		for (int currentIndex = 0; currentIndex < toVisit.size(); currentIndex++) {
-			OWLImportsDeclaration declaration = toVisit.get(currentIndex);
-			if (!visited.contains(declaration)) {
-				visited.add(declaration);
-				Set<OWLAxiom> currentAxiomSet = ontologyManager.getOntology(
-						declaration.getImportedOntologyURI()).getAxioms();
-				for (OWLAxiom axiom : currentAxiomSet) {
-					if (axiom instanceof OWLImportsDeclaration) {
-						toVisit.add((OWLImportsDeclaration) axiom);
-					}
-					ret.add(axiom);
+		while (!toVisit.isEmpty()) {
+			OWLImportsDeclaration declaration = toVisit.iterator().next();
+			visited.add(declaration);
+			Set<OWLAxiom> currentAxiomSet = ontologyManager.getOntology(
+					declaration.getImportedOntologyURI()).getAxioms();
+			for (OWLAxiom axiom : currentAxiomSet) {
+				if (axiom instanceof OWLImportsDeclaration) {
+					toVisit.add((OWLImportsDeclaration) axiom);
 				}
+				ret.add(axiom);
 			}
+			toVisit.removeAll(visited);
 		}
 		return ret;
 	}
