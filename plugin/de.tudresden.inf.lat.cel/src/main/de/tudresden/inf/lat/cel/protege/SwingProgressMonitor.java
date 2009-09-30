@@ -42,32 +42,39 @@ class SwingProgressMonitor implements ProgressMonitor {
 		setProgress(0);
 	}
 
+	@Override
 	public boolean isCancelled() {
 		return this.monitor.isCanceled();
 	}
 
+	@Override
 	public void setFinished() {
 		setProgress(this.monitor.getMaximum());
 		this.monitor.close();
 	}
 
+	@Override
 	public void setIndeterminate(boolean ind) {
 	}
 
+	@Override
 	public void setMessage(String msg) {
 		this.message = msg;
 	}
 
+	@Override
 	public void setProgress(long prog) {
 		this.progress = prog;
 		this.monitor.setProgress((int) prog);
 		updateTitle();
 	}
 
+	@Override
 	public void setSize(long s) {
 		this.monitor.setMaximum((int) s);
 	}
 
+	@Override
 	public void setStarted() {
 		setProgress(0);
 	}

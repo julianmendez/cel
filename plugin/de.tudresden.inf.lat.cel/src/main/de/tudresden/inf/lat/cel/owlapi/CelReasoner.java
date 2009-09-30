@@ -72,6 +72,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		this.celInterface = new CelReasonerInterface(manager, progressMonitor);
 	}
 
+	@Override
 	public void classify() throws OWLReasonerException {
 		logger.fine("(called)");
 		Date start = new Date();
@@ -85,6 +86,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		}
 	}
 
+	@Override
 	public void clearOntologies() throws OWLReasonerException {
 		logger.fine("(called)");
 		Date start = new Date();
@@ -98,6 +100,7 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		}
 	}
 
+	@Override
 	public void dispose() throws OWLReasonerException {
 		logger.fine("(called)");
 		getCelInterface().dispose();
@@ -110,17 +113,20 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		super.finalize();
 	}
 
+	@Override
 	public Set<Set<OWLClass>> getAncestorClasses(OWLDescription description)
 			throws OWLReasonerException {
 		logger.fine("(called)");
 		return getCelInterface().getAncestorClasses(description);
 	}
 
+	@Override
 	public Set<Set<OWLDataProperty>> getAncestorProperties(
 			OWLDataProperty dataProperty) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<Set<OWLObjectProperty>> getAncestorProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
 		logger.fine("(called) " + property.getURI());
@@ -131,80 +137,95 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		return this.celInterface;
 	}
 
+	@Override
 	public OWLEntity getCurrentEntity() {
 		return null;
 	}
 
+	@Override
 	public Map<OWLDataProperty, Set<OWLConstant>> getDataPropertyRelationships(
 			OWLIndividual individual) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<Set<OWLClass>> getDescendantClasses(OWLDescription description)
 			throws OWLReasonerException {
 		logger.fine("(called) " + description.toString());
 		return getCelInterface().getDescendantClasses(description);
 	}
 
+	@Override
 	public Set<Set<OWLDataProperty>> getDescendantProperties(
 			OWLDataProperty dataProperty) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<Set<OWLObjectProperty>> getDescendantProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
 		logger.fine("(called)" + property.getURI());
 		return getCelInterface().getDescendantProperties(property);
 	}
 
+	@Override
 	public Set<Set<OWLDescription>> getDomains(OWLDataProperty dataProperty)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<Set<OWLDescription>> getDomains(OWLObjectProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<OWLClass> getEquivalentClasses(OWLDescription description)
 			throws OWLReasonerException {
 		logger.fine("(called) " + description);
 		return getCelInterface().getEquivalentClasses(description);
 	}
 
+	@Override
 	public Set<OWLDataProperty> getEquivalentProperties(
 			OWLDataProperty dataProperty) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<OWLObjectProperty> getEquivalentProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
 		logger.fine("(called) " + property.getURI());
 		return getCelInterface().getEquivalentProperties(property);
 	}
 
+	@Override
 	public Set<OWLClass> getInconsistentClasses() throws OWLReasonerException {
 		logger.fine("(called)");
 		return getCelInterface().getInconsistentClasses();
 	}
 
+	@Override
 	public Set<OWLIndividual> getIndividuals(OWLDescription description,
 			boolean arg1) throws OWLReasonerException {
 		logger.fine("(called) " + description);
 		return getCelInterface().getIndividuals(description, arg1);
 	}
 
+	@Override
 	public Set<Set<OWLObjectProperty>> getInverseProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<OWLOntology> getLoadedOntologies() {
 		logger.fine("(called)");
 		return getCelInterface().getLoadedOntologies();
 	}
 
+	@Override
 	public Map<OWLObjectProperty, Set<OWLIndividual>> getObjectPropertyRelationships(
 			OWLIndividual individual) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
@@ -218,79 +239,93 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		return getCelInterface().getProgressMonitor();
 	}
 
+	@Override
 	public Set<OWLDataRange> getRanges(OWLDataProperty dataProperty)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<OWLDescription> getRanges(OWLObjectProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<OWLIndividual> getRelatedIndividuals(OWLIndividual individual,
 			OWLObjectPropertyExpression propertyExpression)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<OWLConstant> getRelatedValues(OWLIndividual individual,
 			OWLDataPropertyExpression dataProperty) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<Set<OWLClass>> getSubClasses(OWLDescription description)
 			throws OWLReasonerException {
 		logger.fine("(called) " + description);
 		return getCelInterface().getSubClasses(description);
 	}
 
+	@Override
 	public Set<Set<OWLDataProperty>> getSubProperties(
 			OWLDataProperty dataProperty) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<Set<OWLObjectProperty>> getSubProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
 		logger.fine("(called) " + property);
 		return getCelInterface().getSubProperties(property);
 	}
 
+	@Override
 	public Set<Set<OWLClass>> getSuperClasses(OWLDescription description)
 			throws OWLReasonerException {
 		logger.fine("(called) " + description);
 		return getCelInterface().getSuperClasses(description);
 	}
 
+	@Override
 	public Set<Set<OWLDataProperty>> getSuperProperties(
 			OWLDataProperty dataProperty) throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public Set<Set<OWLObjectProperty>> getSuperProperties(
 			OWLObjectProperty property) throws OWLReasonerException {
 		logger.fine("(called) " + property);
 		return getCelInterface().getSuperProperties(property);
 	}
 
+	@Override
 	public Set<Set<OWLClass>> getTypes(OWLIndividual individual, boolean arg1)
 			throws OWLReasonerException {
 		logger.fine("(called)");
 		return getCelInterface().getTypes(individual, arg1);
 	}
 
+	@Override
 	public boolean hasDataPropertyRelationship(OWLIndividual individual,
 			OWLDataPropertyExpression dataPropertyExpression, OWLConstant arg2)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean hasObjectPropertyRelationship(OWLIndividual individual0,
 			OWLObjectPropertyExpression property, OWLIndividual individual1)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean hasType(OWLIndividual individual,
 			OWLDescription description, boolean arg2)
 			throws OWLReasonerException {
@@ -298,23 +333,27 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		return getCelInterface().hasTypes(individual, description, arg2);
 	}
 
+	@Override
 	public boolean isAntiSymmetric(OWLObjectProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean isClassified() throws OWLReasonerException {
 		boolean ret = getCelInterface().isClassified();
 		logger.fine("(called) result: " + ret);
 		return ret;
 	}
 
+	@Override
 	public boolean isConsistent(OWLOntology ontology)
 			throws OWLReasonerException {
 		logger.fine("(called)");
 		return getCelInterface().isConsistent(ontology);
 	}
 
+	@Override
 	public boolean isDefined(OWLClass cls) throws OWLReasonerException {
 		boolean ret = getCelInterface().isDefined(cls);
 		logger.fine("(called) OWLClass " + cls.getURI() + " " + "result: "
@@ -322,83 +361,98 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		return ret;
 	}
 
+	@Override
 	public boolean isDefined(OWLDataProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean isDefined(OWLIndividual individual)
 			throws OWLReasonerException {
 		logger.fine("(called) OWLIndividual " + individual.getURI());
 		return getCelInterface().isDefined(individual);
 	}
 
+	@Override
 	public boolean isDefined(OWLObjectProperty property)
 			throws OWLReasonerException {
 		logger.fine("(called) OWLObjectProperty " + property.getURI());
 		return getCelInterface().isDefined(property);
 	}
 
+	@Override
 	public boolean isEquivalentClass(OWLDescription description0,
 			OWLDescription description1) throws OWLReasonerException {
 		logger.fine("(called) " + description0 + " " + description1);
 		return getCelInterface().isEquivalentClass(description0, description1);
 	}
 
+	@Override
 	public boolean isFunctional(OWLDataProperty dataProperty)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean isFunctional(OWLObjectProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean isInverseFunctional(OWLObjectProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean isIrreflexive(OWLObjectProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean isRealised() throws OWLReasonerException {
 		logger.fine("(called)");
 		return getCelInterface().isRealised();
 	}
 
+	@Override
 	public boolean isReflexive(OWLObjectProperty property)
 			throws OWLReasonerException {
 		logger.fine("(called) " + property.getURI());
 		return getCelInterface().isReflexive(property);
 	}
 
+	@Override
 	public boolean isSatisfiable(OWLDescription description)
 			throws OWLReasonerException {
 		logger.fine("(called) " + description);
 		return getCelInterface().isSatisfiable(description);
 	}
 
+	@Override
 	public boolean isSubClassOf(OWLDescription description0,
 			OWLDescription description1) throws OWLReasonerException {
 		logger.fine("(called) " + description0 + " " + description1);
 		return getCelInterface().isSubClassOf(description0, description1);
 	}
 
+	@Override
 	public boolean isSymmetric(OWLObjectProperty property)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
+	@Override
 	public boolean isTransitive(OWLObjectProperty property)
 			throws OWLReasonerException {
 		logger.fine("(called) " + property.getURI());
 		return getCelInterface().isTransitive(property);
 	}
 
+	@Override
 	public void loadOntologies(Set<OWLOntology> ontologySet)
 			throws OWLReasonerException {
 		logger.fine("(called)");
@@ -413,15 +467,18 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 		}
 	}
 
+	@Override
 	public void realise() throws OWLReasonerException {
 		logger.fine("(called)");
 		getCelInterface().realise();
 	}
 
+	@Override
 	public void setProgressMonitor(ProgressMonitor progressMonitor) {
 		getCelInterface().setProgressMonitor(progressMonitor);
 	}
 
+	@Override
 	public void unloadOntologies(Set<OWLOntology> ontologySet)
 			throws OWLReasonerException {
 		throw new UnsupportedReasonerOperationInCelException();

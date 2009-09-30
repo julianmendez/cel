@@ -96,10 +96,12 @@ public class CelSocketManager implements CelOutputListener {
 		return this.progressMonitor;
 	}
 
+	@Override
 	public void notifyCancelButtonPressed() {
 		getOutputHandler().stopExecution();
 	}
 
+	@Override
 	public void notifyExecutionFinished() {
 		if (getProcessThread() != null) {
 			getProcessThread().stopProcess();

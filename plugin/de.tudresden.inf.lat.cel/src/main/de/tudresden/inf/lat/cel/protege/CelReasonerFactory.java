@@ -41,14 +41,16 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 			.getLogger("de.tudresden.inf.lat.cel");
 
 	/**
-	 * This constructor is invoked when the CEL reasoner is selected in Protege.
+	 * This constructor is invoked when the reasoner is selected in Protege.
 	 */
+	@Override
 	public OWLReasoner createReasoner(OWLOntologyManager owlOntologyManager) {
 		OWLReasoner ret = new CelReasoner(owlOntologyManager,
 				new SwingProgressMonitor());
 		return ret;
 	}
 
+	@Override
 	public void dispose() throws Exception {
 	}
 
@@ -58,16 +60,8 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 	 * 
 	 * @see org.protege.editor.core.plugin.ProtegePluginInstance#initialise()
 	 */
+	@Override
 	public void initialise() throws Exception {
 		logger.setLevel(Level.CONFIG);
-	}
-
-	/**
-	 * This is value is hard coded to true.
-	 * 
-	 * @return always true
-	 */
-	public boolean requiresExplicitClassification() {
-		return true;
 	}
 }
