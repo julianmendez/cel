@@ -21,16 +21,11 @@
 
 package de.tudresden.inf.lat.cel.owlapi;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.semanticweb.owl.inference.MonitorableOWLReasoner;
 import org.semanticweb.owl.inference.OWLReasoner;
@@ -48,7 +43,6 @@ import org.semanticweb.owl.model.OWLObjectPropertyExpression;
 import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLOntologyManager;
 import org.semanticweb.owl.util.ProgressMonitor;
-import org.w3c.dom.DOMException;
 
 import de.tudresden.inf.lat.cel.translation.CelReasonerInterface;
 
@@ -482,15 +476,6 @@ public class CelReasoner implements OWLReasoner, MonitorableOWLReasoner {
 	@Override
 	public void setProgressMonitor(ProgressMonitor progressMonitor) {
 		getCelInterface().setProgressMonitor(progressMonitor);
-	}
-
-	public void store(OutputStream output) throws OWLReasonerException,
-			IOException, DOMException, ParserConfigurationException,
-			TransformerException {
-		OWLReasonerXMLOutput xmlDoc = new OWLReasonerXMLOutput(this,
-		getOWLOntologyManager().getOWLDataFactory().getOWLNothing(),
-				getOWLOntologyManager().getOWLDataFactory().getOWLThing());
-		xmlDoc.toXML(output);
 	}
 
 	@Override

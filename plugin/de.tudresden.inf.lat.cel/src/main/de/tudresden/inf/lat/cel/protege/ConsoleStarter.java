@@ -39,6 +39,7 @@ import org.semanticweb.owl.model.OWLOntologyManager;
 import org.w3c.dom.DOMException;
 
 import de.tudresden.inf.lat.cel.owlapi.CelReasoner;
+import de.tudresden.inf.lat.cel.owlapi.OWLReasonerXMLOutput;
 
 /**
  * This class starts the CEL Plug-in from a console.
@@ -105,7 +106,10 @@ public class ConsoleStarter {
 		this.reasoner.loadOntologies(ontologySet);
 		this.reasoner.classify();
 
-		this.reasoner.store(this.output);
+		OWLReasonerXMLOutput xmlDoc = new OWLReasonerXMLOutput(this.reasoner,
+				manager.getOWLDataFactory().getOWLNothing(), manager
+						.getOWLDataFactory().getOWLThing());
+		xmlDoc.toXML(output);
 	}
 
 	public void stop() throws OWLReasonerException {
