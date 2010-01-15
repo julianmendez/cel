@@ -39,7 +39,7 @@ How to compile this project
 In order to compile this project, the following technologies are suggested:
 
   * Development environment:
-    Eclipse 3.4.1
+    Eclipse 3.5.0
     http://www.eclipse.org
 
   * Compiler :

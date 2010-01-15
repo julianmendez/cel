@@ -49,15 +49,13 @@ import de.tudresden.inf.lat.cel.owlapi.OWLReasonerXMLOutput;
  */
 public class ConsoleStarter {
 
-	public static final String minihelp = "\nUsage:\njava -jar ... <input ontology> [<output file name>]\n";
-
 	public static void main(String[] args) throws OWLReasonerException,
 			OWLOntologyCreationException, SecurityException, IOException,
 			DOMException, ParserConfigurationException, TransformerException {
 		boolean helpNeeded = true;
+		ConsoleStarter instance = new ConsoleStarter();
 		if (args.length > 0) {
 			helpNeeded = false;
-			ConsoleStarter instance = new ConsoleStarter();
 			if (args.length > 1) {
 				instance.setOutput(new FileOutputStream(args[1]));
 			}
@@ -65,14 +63,22 @@ public class ConsoleStarter {
 			instance.stop();
 		}
 		if (helpNeeded) {
-			System.out.println(minihelp);
+			System.out.println(instance.getMiniHelp());
 		}
 	}
+
+	private String minihelp = "\nUsage:\njava -cp .:<list of jars> "
+			+ this.getClass().getCanonicalName()
+			+ " <input ontology> [<output file name>]\n";
 
 	private OutputStream output = System.out;
 	private CelReasoner reasoner = null;
 
 	public ConsoleStarter() {
+	}
+
+	public String getMiniHelp() {
+		return this.minihelp;
 	}
 
 	public OutputStream getOutput() {
