@@ -131,21 +131,21 @@ public class OWLReasonerXMLOutput {
 				propertiesToVisit.removeAll(equivProperties);
 			}
 
-			for (OWLClass cls : classSet) {
-				Set<OWLClass> subClasses = new TreeSet<OWLClass>();
-				subClasses.addAll(flattenClasses(this.reasoner
-						.getSuperClasses(cls)));
-				for (OWLClass subClass : subClasses) {
-					renderSubClassOf(cls, subClass);
+			for (OWLClass subClass : classSet) {
+				Set<OWLClass> superClasses = new TreeSet<OWLClass>();
+				superClasses.addAll(flattenClasses(this.reasoner
+						.getSuperClasses(subClass)));
+				for (OWLClass superClass : superClasses) {
+					renderSubClassOf(subClass, superClass);
 				}
 			}
 
-			for (OWLObjectProperty property : propertySet) {
-				Set<OWLObjectProperty> subProperties = new TreeSet<OWLObjectProperty>();
-				subProperties.addAll(flattenProperties(this.reasoner
-						.getSuperProperties(property)));
-				for (OWLObjectProperty subProperty : subProperties) {
-					renderSubObjectPropertyOf(property, subProperty);
+			for (OWLObjectProperty subProperty : propertySet) {
+				Set<OWLObjectProperty> superProperties = new TreeSet<OWLObjectProperty>();
+				superProperties.addAll(flattenProperties(this.reasoner
+						.getSuperProperties(subProperty)));
+				for (OWLObjectProperty superProperty : superProperties) {
+					renderSubObjectPropertyOf(subProperty, superProperty);
 				}
 			}
 
@@ -240,19 +240,19 @@ public class OWLReasonerXMLOutput {
 		this.writer.writeEndElement();
 	}
 
-	private void renderSubClassOf(OWLClass cls1, OWLClass cls2)
+	private void renderSubClassOf(OWLClass subClass, OWLClass superClass)
 			throws IOException {
 		this.writer.writeStartElement(SUB_CLASS_OF);
-		renderEntity(cls1);
-		renderEntity(cls2);
+		renderEntity(subClass);
+		renderEntity(superClass);
 		this.writer.writeEndElement();
 	}
 
-	private void renderSubObjectPropertyOf(OWLObjectProperty property1,
-			OWLObjectProperty property2) throws IOException {
+	private void renderSubObjectPropertyOf(OWLObjectProperty subProperty,
+			OWLObjectProperty superProperty) throws IOException {
 		this.writer.writeStartElement(SUB_OBJECT_PROPERTY_OF);
-		renderEntity(property1);
-		renderEntity(property2);
+		renderEntity(subProperty);
+		renderEntity(superProperty);
 		this.writer.writeEndElement();
 	}
 
