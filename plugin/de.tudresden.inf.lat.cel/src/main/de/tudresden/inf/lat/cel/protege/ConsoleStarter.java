@@ -112,9 +112,7 @@ public class ConsoleStarter {
 		this.reasoner.loadOntologies(ontologySet);
 		this.reasoner.classify();
 
-		OWLReasonerXMLOutput xmlDoc = new OWLReasonerXMLOutput(this.reasoner,
-				manager.getOWLDataFactory().getOWLNothing(), manager
-						.getOWLDataFactory().getOWLThing());
+		OWLReasonerXMLOutput xmlDoc = new OWLReasonerXMLOutput(this.reasoner);
 		xmlDoc.toXML(output);
 	}
 
