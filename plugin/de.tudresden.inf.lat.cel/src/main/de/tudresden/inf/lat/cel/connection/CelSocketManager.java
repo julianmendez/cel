@@ -59,10 +59,10 @@ public class CelSocketManager implements CelOutputListener {
 	private int closingConnectionTime = 1000;
 
 	/** First port to try to open a socket. */
-	private int firstPort = 4000;
+	private int firstPort = 40000;
 
 	/** Last port to try to open a socket. */
-	private int lastPort = 5000;
+	private int lastPort = 50000;
 
 	private CelProcessOutputHandler outputHandler = null;
 	private CelProcessThread processThread = null;
