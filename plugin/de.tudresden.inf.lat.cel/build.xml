@@ -27,8 +27,16 @@
 	<!-- 
 	For more information about this file, see http://ant.apache.org 
 	-->
-	
-	<property file="build.number" />
+
+	<!-- Imports version properties. -->
+	<property file="version.properties" />
+	<!-- 
+	Four new properties are defined at this point : 
+	  * version : has the version number of the form major.minor.patch
+	  * build.number : has the build number
+	  * requiredjars : has a space-separated list of the jars required to compile the project and run the test cases
+	  * bundlejars : has a space-separated list of the jars included in the bundle
+	-->
 
 	<property name="dist.path" value="${basedir}/dist" />
 
@@ -39,8 +47,8 @@
 	<property name="_src.img.path" value="src/img" />
 	<property name="_manifest.path" value="src/manifest/MANIFEST.MF" />
 	<property name="_src.appdata.path" value="src/data" />
-	<property name="_jarlib.path" value="../jars/lib" />
-	<property name="_lib.path" value="lib" />
+	<property name="_jars.path" value="${basedir}/.." />
+	<property name="_bundlejars.path" value="${basedir}/../cel-jars" />
 	<property name="_app.path" value="${dist.path}/app" />
 	<property name="_javadoc.path" value="${dist.path}/javadoc" />
 	<property name="_main.bin.path" value="${dist.path}/bin" />
@@ -48,12 +56,12 @@
 	<property name="_bundle.path" value="${dist.path}/bundle" />
 	<property name="_test.bin.path" value="${dist.path}/test" />
 	<property name="_test.report.path" value="${dist.path}/report" />
-	<property name="_zipfile.path" value="${basedir}/../${ant.project.name}-${version_id}.${build.number}.zip" />
+	<property name="_zipfile.path" value="${basedir}/../${ant.project.name}-${version}.${build.number}.zip" />
 	<property name="_debuglevel" value="lines,vars,source" />
+	<property name="_bundle.name" value="de.tudresden.inf.lat.cel" />
 
 	<path id="libs.path">
-		<fileset dir="${_jarlib.path}" />
-		<fileset dir="${_lib.path}" />
+		<fileset dir="${_jars.path}" includes="${requiredjars}" />
 	</path>
 
 	<patternset id="testclasses.patternset">
@@ -65,7 +73,7 @@
 		<delete dir="${dist.path}" />
 	</target>
 
-	<!-- Compiles all the project. -->
+	<!-- Compiles the whole project. -->
 	<target name="build">
 		<mkdir dir="${_main.bin.path}" />
 		<javac srcdir="${_src.main.path}" destdir="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" />
@@ -77,7 +85,7 @@
 	<target name="conf">
 		<copy todir="${_main.bin.path}">
 			<fileset dir="${_src.conf.path}" />
-			<fileset dir="${_src.img.path}" />
+			<fileset dir="${_src.img.path}" />			
 		</copy>
 	</target>
 
@@ -88,7 +96,7 @@
 			<classpath>
 				<pathelement path="${_main.bin.path}" />
 				<pathelement path="${_test.bin.path}" />
-				<fileset dir="${_jarlib.path}" />
+				<fileset dir="${_jars.path}" includes="${requiredjars}" />
 			</classpath>
 			<formatter type="plain" usefile="on" />
 			<batchtest fork="yes" todir="${_test.report.path}">
@@ -108,28 +116,31 @@
 	<!-- Creates a jar with version number. -->
 	<target name="jar" depends="build">
 		<mkdir dir="${_prjlib.path}" />
-		<jar destfile="${_prjlib.path}/${ant.project.name}-${version_id}.jar" basedir="${_main.bin.path}" manifest="${_manifest.path}" />
+		<jar destfile="${_prjlib.path}/${ant.project.name}-${version}.jar" basedir="${_main.bin.path}">
+			<manifest>
+				<attribute name="Implementation-Title" value="${ant.project.name}" />
+				<attribute name="Implementation-Version" value="${version}" />
+			</manifest>
+		</jar>
 	</target>
 
 	<!-- Creates the bundle. -->
 	<target name="bundle" depends="build">
 		<mkdir dir="${_bundle.path}" />
-		<jar destfile="${_bundle.path}/${ant.project.name}.jar" manifest="${_manifest.path}">
+		<jar destfile="${_bundle.path}/${_bundle.name}.jar" manifest="${_manifest.path}">
 			<fileset dir="${_main.bin.path}" />
-			<fileset dir="${basedir}">
-				<include name="${_lib.path}/**.jar" />
-			</fileset>
+			<fileset dir="${_bundlejars.path}" includes="${bundlejars}" />
 		</jar>
 	</target>
 
-	<!-- Creates a ZIP file containing the whole project. -->
+	<!-- Creates a compressed file containing the whole project. -->
 	<target name="zip">
 		<delete file="${_zipfile.path}" />
 		<zip destfile="${_zipfile.path}" basedir="${basedir}" />
 	</target>
 
 	<target name="dist" depends="clean, build, conf, javadoc, jar, bundle">
-		<!--buildnumber /-->
+		<!--buildnumber file="version.properties"/-->
 	</target>
 
 </project>
