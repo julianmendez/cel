@@ -30,12 +30,15 @@
 
 	<!-- Imports version properties. -->
 	<property file="version.properties" />
+
 	<!-- 
-	Four new properties are defined at this point : 
+
+	The following version properties should be defined at this point : 
 	  * version : has the version number of the form major.minor.patch
 	  * build.number : has the build number
 	  * requiredjars : has a space-separated list of the jars required to compile the project and run the test cases
 	  * bundlejars : has a space-separated list of the jars included in the bundle
+
 	-->
 
 	<property name="dist.path" value="${basedir}/dist" />

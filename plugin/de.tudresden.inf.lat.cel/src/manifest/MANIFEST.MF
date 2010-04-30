@@ -10,7 +10,7 @@ Bundle-ClassPath: .,
  lib/de.tudresden.inf.lat.jsexp/jars/jsexp-0.1.0.jar
 Import-Package: org.apache.log4j,
  org.osgi.framework
-Bundle-Version: 0.3.4
+Bundle-Version: 0.3.5
 Bundle-Activator: org.protege.editor.core.plugin.DefaultPluginActivator
 Require-Bundle: org.eclipse.equinox.registry,
  org.eclipse.equinox.common,
