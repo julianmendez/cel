@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
+Implementation-Version: 0.4.0
+Bundle-Version: 0.4.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CEL Plug-in
 Bundle-SymbolicName: de.tudresden.inf.lat.cel;singleton:=true
@@ -10,7 +12,6 @@ Bundle-ClassPath: .,
  lib/de.tudresden.inf.lat.jsexp/jars/jsexp-0.1.0.jar
 Import-Package: org.apache.log4j,
  org.osgi.framework
-Bundle-Version: 0.4.0
 Bundle-Activator: org.protege.editor.core.plugin.DefaultPluginActivator
 Require-Bundle: org.eclipse.equinox.registry,
  org.eclipse.equinox.common,
