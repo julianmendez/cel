@@ -21,7 +21,7 @@
 
 package de.tudresden.inf.lat.cel.protege;
 
-import org.semanticweb.owl.util.ProgressMonitor;
+import org.semanticweb.owlapi.util.ProgressMonitor;
 
 /**
  * This class is a progress monitor that shows the progress using Swing

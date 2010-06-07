@@ -21,18 +21,18 @@
 
 package de.tudresden.inf.lat.cel.conversion;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
-import org.semanticweb.owl.apibinding.OWLManager;
-import org.semanticweb.owl.model.OWLDataFactory;
-import org.semanticweb.owl.model.OWLDescription;
-import org.semanticweb.owl.model.OWLObjectProperty;
-import org.semanticweb.owl.model.OWLOntologyManager;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 /**
  * This class tests the parsing of OWL objects from S-expressions.
@@ -47,17 +47,19 @@ public class CelParserTest extends TestCase {
 		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
 		String concept = "(and Human (some has-child Human))";
 		CelParser parser = new CelParser();
-		OWLDescription desc1 = dataFactory.getOWLClass(new URI("Human"));
-		OWLObjectProperty role2_1 = dataFactory.getOWLObjectProperty(new URI(
-				"has-child"));
-		OWLDescription desc2_2 = dataFactory.getOWLClass(new URI("Human"));
-		OWLDescription desc2 = dataFactory.getOWLObjectSomeRestriction(role2_1,
-				desc2_2);
-		Set<OWLDescription> set = new TreeSet<OWLDescription>();
+		OWLClassExpression desc1 = dataFactory.getOWLClass(IRI.create("Human"));
+		OWLObjectProperty role2_1 = dataFactory.getOWLObjectProperty(IRI
+				.create("has-child"));
+		OWLClassExpression desc2_2 = dataFactory.getOWLClass(IRI
+				.create("Human"));
+		OWLClassExpression desc2 = dataFactory.getOWLObjectSomeValuesFrom(
+				role2_1, desc2_2);
+		Set<OWLClassExpression> set = new TreeSet<OWLClassExpression>();
 		set.add(desc1);
 		set.add(desc2);
-		OWLDescription expected = dataFactory.getOWLObjectIntersectionOf(set);
-		OWLDescription parsed = parser.parse(concept, dataFactory);
+		OWLClassExpression expected = dataFactory
+				.getOWLObjectIntersectionOf(set);
+		OWLClassExpression parsed = parser.parse(concept, dataFactory);
 		assertEquals(expected.toString(), parsed.toString());
 	}
 }

@@ -22,18 +22,18 @@
 package de.tudresden.inf.lat.cel.conversion;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
-import org.semanticweb.owl.apibinding.OWLManager;
-import org.semanticweb.owl.model.OWLDataFactory;
-import org.semanticweb.owl.model.OWLDescription;
-import org.semanticweb.owl.model.OWLObjectProperty;
-import org.semanticweb.owl.model.OWLOntologyManager;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import de.tudresden.inf.lat.jsexp.Sexp;
 import de.tudresden.inf.lat.jsexp.SexpFactory;
@@ -52,14 +52,17 @@ public class CelTranslatorTest extends TestCase {
 		OWLOntologyManager ontologyManager = OWLManager
 				.createOWLOntologyManager();
 		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
-		OWLDescription desc1 = dataFactory.getOWLClass(new URI("Friendly"));
-		OWLDescription desc2 = dataFactory.getOWLClass(new URI("Intelligent"));
-		OWLDescription desc3 = dataFactory.getOWLClass(new URI("Person"));
-		Set<OWLDescription> set = new TreeSet<OWLDescription>();
+		OWLClassExpression desc1 = dataFactory.getOWLClass(IRI
+				.create("Friendly"));
+		OWLClassExpression desc2 = dataFactory.getOWLClass(IRI
+				.create("Intelligent"));
+		OWLClassExpression desc3 = dataFactory
+				.getOWLClass(IRI.create("Person"));
+		Set<OWLClassExpression> set = new TreeSet<OWLClassExpression>();
 		set.add(desc1);
 		set.add(desc2);
 		set.add(desc3);
-		OWLDescription description = dataFactory
+		OWLClassExpression description = dataFactory
 				.getOWLObjectIntersectionOf(set);
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory
@@ -73,25 +76,29 @@ public class CelTranslatorTest extends TestCase {
 		OWLOntologyManager ontologyManager = OWLManager
 				.createOWLOntologyManager();
 		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
-		OWLDescription desc1 = dataFactory.getOWLClass(new URI("Person"));
-		OWLObjectProperty role = dataFactory.getOWLObjectProperty(new URI(
-				"has-child"));
-		OWLDescription desc2_1_1 = dataFactory.getOWLClass(new URI("Friendly"));
-		OWLDescription desc2_1_2 = dataFactory.getOWLClass(new URI(
-				"Intelligent"));
-		OWLDescription desc2_1_3 = dataFactory.getOWLClass(new URI("Person"));
-		Set<OWLDescription> set2_1 = new TreeSet<OWLDescription>();
+		OWLClassExpression desc1 = dataFactory
+				.getOWLClass(IRI.create("Person"));
+		OWLObjectProperty role = dataFactory.getOWLObjectProperty(IRI
+				.create("has-child"));
+		OWLClassExpression desc2_1_1 = dataFactory.getOWLClass(IRI
+				.create("Friendly"));
+		OWLClassExpression desc2_1_2 = dataFactory.getOWLClass(IRI
+				.create("Intelligent"));
+		OWLClassExpression desc2_1_3 = dataFactory.getOWLClass(IRI
+				.create("Person"));
+		Set<OWLClassExpression> set2_1 = new TreeSet<OWLClassExpression>();
 		set2_1.add(desc2_1_1);
 		set2_1.add(desc2_1_2);
 		set2_1.add(desc2_1_3);
-		OWLDescription desc2_1 = dataFactory.getOWLObjectIntersectionOf(set2_1);
+		OWLClassExpression desc2_1 = dataFactory
+				.getOWLObjectIntersectionOf(set2_1);
 
-		OWLDescription desc2 = dataFactory.getOWLObjectSomeRestriction(role,
+		OWLClassExpression desc2 = dataFactory.getOWLObjectSomeValuesFrom(role,
 				desc2_1);
-		Set<OWLDescription> set = new TreeSet<OWLDescription>();
+		Set<OWLClassExpression> set = new TreeSet<OWLClassExpression>();
 		set.add(desc1);
 		set.add(desc2);
-		OWLDescription description = dataFactory
+		OWLClassExpression description = dataFactory
 				.getOWLObjectIntersectionOf(set);
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory
@@ -105,11 +112,12 @@ public class CelTranslatorTest extends TestCase {
 		OWLOntologyManager ontologyManager = OWLManager
 				.createOWLOntologyManager();
 		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
-		OWLObjectProperty role = dataFactory.getOWLObjectProperty(new URI(
-				"has-child"));
-		OWLDescription desc1 = dataFactory.getOWLClass(new URI("Person"));
-		OWLDescription description = dataFactory.getOWLObjectSomeRestriction(
-				role, desc1);
+		OWLObjectProperty role = dataFactory.getOWLObjectProperty(IRI
+				.create("has-child"));
+		OWLClassExpression desc1 = dataFactory
+				.getOWLClass(IRI.create("Person"));
+		OWLClassExpression description = dataFactory
+				.getOWLObjectSomeValuesFrom(role, desc1);
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory.parse("(some |has-child| |Person|)");
 		assertEquals(expected, translated);
@@ -121,7 +129,7 @@ public class CelTranslatorTest extends TestCase {
 		OWLOntologyManager ontologyManager = OWLManager
 				.createOWLOntologyManager();
 		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
-		OWLDescription description = dataFactory.getOWLThing();
+		OWLClassExpression description = dataFactory.getOWLThing();
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory.newAtomicSexp("top");
 		assertEquals(expected, translated);

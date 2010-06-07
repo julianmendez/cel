@@ -30,13 +30,13 @@ import java.util.TreeSet;
 import org.coode.xml.XMLWriter;
 import org.coode.xml.XMLWriterImpl;
 import org.coode.xml.XMLWriterNamespaceManager;
-import org.semanticweb.owl.inference.OWLReasoner;
-import org.semanticweb.owl.inference.OWLReasonerException;
-import org.semanticweb.owl.model.OWLClass;
-import org.semanticweb.owl.model.OWLEntity;
-import org.semanticweb.owl.model.OWLIndividual;
-import org.semanticweb.owl.model.OWLObjectProperty;
-import org.semanticweb.owl.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerException;
 
 /**
  * This class makes an XML representation of the inferred data in an
@@ -75,33 +75,15 @@ public class OWLReasonerXMLOutput {
 		this.reasoner = reasoner;
 	}
 
-	private Set<OWLClass> flattenClasses(Set<Set<OWLClass>> setOfSets) {
-		Set<OWLClass> ret = new TreeSet<OWLClass>();
-		for (Set<OWLClass> set : setOfSets) {
-			ret.addAll(set);
-		}
-		return ret;
-	}
-
-	private Set<OWLObjectProperty> flattenProperties(
-			Set<Set<OWLObjectProperty>> setOfSets) {
-		Set<OWLObjectProperty> ret = new TreeSet<OWLObjectProperty>();
-		for (Set<OWLObjectProperty> set : setOfSets) {
-			ret.addAll(set);
-		}
-		return ret;
-	}
-
 	private void render() throws OWLReasonerException {
 		try {
 
-			OWLOntology ontology = this.reasoner.getLoadedOntologies()
-					.iterator().next();
+			OWLOntology ontology = this.reasoner.getRootOntology();
 			Set<OWLClass> classSet = new TreeSet<OWLClass>();
 			classSet.addAll(ontology.getClassesInSignature());
 			Set<OWLObjectProperty> propertySet = new TreeSet<OWLObjectProperty>();
 			propertySet.addAll(ontology.getObjectPropertiesInSignature());
-			Set<OWLIndividual> individualSet = new TreeSet<OWLIndividual>();
+			Set<OWLNamedIndividual> individualSet = new TreeSet<OWLNamedIndividual>();
 			individualSet.addAll(ontology.getIndividualsInSignature());
 
 			renderDeclaration(classSet);
@@ -114,7 +96,7 @@ public class OWLReasonerXMLOutput {
 				OWLClass cls = classesToVisit.iterator().next();
 				classesToVisit.remove(cls);
 				Set<OWLClass> equivClasses = this.reasoner
-						.getEquivalentClasses(cls);
+						.getEquivalentClasses(cls).getEntities();
 				renderEquivalentClasses(equivClasses);
 				classesToVisit.removeAll(equivClasses);
 			}
@@ -126,15 +108,15 @@ public class OWLReasonerXMLOutput {
 						.next();
 				propertiesToVisit.remove(property);
 				Set<OWLObjectProperty> equivProperties = this.reasoner
-						.getEquivalentProperties(property);
+						.getEquivalentObjectProperties(property).getEntities();
 				renderEquivalentObjectProperties(equivProperties);
 				propertiesToVisit.removeAll(equivProperties);
 			}
 
 			for (OWLClass subClass : classSet) {
 				Set<OWLClass> superClasses = new TreeSet<OWLClass>();
-				superClasses.addAll(flattenClasses(this.reasoner
-						.getSuperClasses(subClass)));
+				superClasses.addAll(this.reasoner.getSuperClasses(subClass,
+						true).getFlattened());
 				for (OWLClass superClass : superClasses) {
 					renderSubClassOf(subClass, superClass);
 				}
@@ -142,27 +124,30 @@ public class OWLReasonerXMLOutput {
 
 			for (OWLObjectProperty subProperty : propertySet) {
 				Set<OWLObjectProperty> superProperties = new TreeSet<OWLObjectProperty>();
-				superProperties.addAll(flattenProperties(this.reasoner
-						.getSuperProperties(subProperty)));
+				superProperties.addAll(this.reasoner.getSuperObjectProperties(
+						subProperty, true).getFlattened());
 				for (OWLObjectProperty superProperty : superProperties) {
 					renderSubObjectPropertyOf(subProperty, superProperty);
 				}
 			}
 
 			for (OWLClass cls : classSet) {
-				Set<OWLIndividual> instances = new TreeSet<OWLIndividual>();
-				instances.addAll(this.reasoner.getIndividuals(cls, true));
-				for (OWLIndividual individual : instances) {
+				Set<OWLNamedIndividual> instances = new TreeSet<OWLNamedIndividual>();
+				instances.addAll(this.reasoner.getInstances(cls, true)
+						.getFlattened());
+				for (OWLNamedIndividual individual : instances) {
 					renderClassAssertion(cls, individual);
 				}
 			}
 
 			for (OWLObjectProperty property : propertySet) {
-				for (OWLIndividual individual : individualSet) {
-					Set<OWLIndividual> propertyValues = new TreeSet<OWLIndividual>();
-					propertyValues.addAll(this.reasoner.getRelatedIndividuals(
-							individual, property.asOWLObjectProperty()));
-					for (OWLIndividual otherIndividual : propertyValues) {
+				for (OWLNamedIndividual individual : individualSet) {
+					Set<OWLNamedIndividual> propertyValues = new TreeSet<OWLNamedIndividual>();
+					propertyValues.addAll(this.reasoner
+							.getObjectPropertyValues(individual,
+									property.asOWLObjectProperty())
+							.getFlattened());
+					for (OWLNamedIndividual otherIndividual : propertyValues) {
 						renderObjectPropertyAssertion(property, individual,
 								otherIndividual);
 					}
@@ -175,8 +160,8 @@ public class OWLReasonerXMLOutput {
 		}
 	}
 
-	private void renderClassAssertion(OWLClass cls, OWLIndividual individual)
-			throws IOException {
+	private void renderClassAssertion(OWLClass cls,
+			OWLNamedIndividual individual) throws IOException {
 		this.writer.writeStartElement(CLASS_ASSERTION);
 		renderEntity(cls);
 		renderEntity(individual);
@@ -198,13 +183,13 @@ public class OWLReasonerXMLOutput {
 			this.writer.writeStartElement(CLASS);
 		} else if (entity instanceof OWLObjectProperty) {
 			this.writer.writeStartElement(OBJECT_PROPERTY);
-		} else if (entity instanceof OWLIndividual) {
+		} else if (entity instanceof OWLNamedIndividual) {
 			this.writer.writeStartElement(NAMED_INDIVIDUAL);
 		} else {
 			throw new IllegalStateException("Entity cannot be rendered : '"
 					+ entity + "'.");
 		}
-		this.writer.writeAttribute(attIRI, entity.getURI().toString());
+		this.writer.writeAttribute(attIRI, entity.getIRI().toString());
 		this.writer.writeEndElement();
 	}
 
@@ -232,7 +217,8 @@ public class OWLReasonerXMLOutput {
 	}
 
 	private void renderObjectPropertyAssertion(OWLObjectProperty property,
-			OWLIndividual subject, OWLIndividual object) throws IOException {
+			OWLNamedIndividual subject, OWLNamedIndividual object)
+			throws IOException {
 		this.writer.writeStartElement(OBJECT_PROPERTY_ASSERTION);
 		renderEntity(property);
 		renderEntity(subject);

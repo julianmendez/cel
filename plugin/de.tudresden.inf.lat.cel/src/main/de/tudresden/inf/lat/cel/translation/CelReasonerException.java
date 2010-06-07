@@ -21,15 +21,13 @@
 
 package de.tudresden.inf.lat.cel.translation;
 
-import org.semanticweb.owl.inference.OWLReasonerException;
-
 /**
  * This exception should be thrown when there is a problem trying to use the CEL
  * reasoner.
  * 
  * @author Julian Mendez
  */
-public class CelReasonerException extends OWLReasonerException {
+public class CelReasonerException extends RuntimeException {
 
 	private static final long serialVersionUID = 842029672013546393L;
 

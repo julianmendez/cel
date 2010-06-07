@@ -25,8 +25,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.protege.editor.owl.model.inference.ProtegeOWLReasonerFactoryAdapter;
-import org.semanticweb.owl.inference.OWLReasoner;
-import org.semanticweb.owl.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 
 import de.tudresden.inf.lat.cel.owlapi.CelReasoner;
 
@@ -41,13 +42,11 @@ public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
 			.getLogger("de.tudresden.inf.lat.cel");
 
 	/**
-	 * This constructor is invoked when the reasoner is selected in Protege.
+	 * This constructor is called when the reasoner is selected in Protege 4.1.
 	 */
-	@Override
-	public OWLReasoner createReasoner(OWLOntologyManager owlOntologyManager) {
-		OWLReasoner ret = new CelReasoner(owlOntologyManager,
-				new SwingProgressMonitor());
-		return ret;
+	public OWLReasoner createReasoner(OWLOntology ontology,
+			ReasonerProgressMonitor progressMonitor) {
+		return new CelReasoner(ontology, progressMonitor);
 	}
 
 	@Override

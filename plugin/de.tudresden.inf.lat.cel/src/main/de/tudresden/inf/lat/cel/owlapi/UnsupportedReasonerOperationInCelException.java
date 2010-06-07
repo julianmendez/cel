@@ -21,8 +21,6 @@
 
 package de.tudresden.inf.lat.cel.owlapi;
 
-import org.semanticweb.owl.inference.UnsupportedReasonerOperationException;
-
 /**
  * This exception should be thrown when it is invoked an operation that is not
  * supported by CEL.
@@ -30,7 +28,7 @@ import org.semanticweb.owl.inference.UnsupportedReasonerOperationException;
  * @author Julian Mendez
  */
 public class UnsupportedReasonerOperationInCelException extends
-		UnsupportedReasonerOperationException {
+		RuntimeException {
 
 	private static final long serialVersionUID = 731968259094527192L;
 

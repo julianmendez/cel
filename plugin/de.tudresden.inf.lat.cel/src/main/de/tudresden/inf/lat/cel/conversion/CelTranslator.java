@@ -21,42 +21,37 @@
 
 package de.tudresden.inf.lat.cel.conversion;
 
-import java.net.URI;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.semanticweb.owl.model.OWLAxiom;
-import org.semanticweb.owl.model.OWLAxiomAnnotationAxiom;
-import org.semanticweb.owl.model.OWLClass;
-import org.semanticweb.owl.model.OWLClassAssertionAxiom;
-import org.semanticweb.owl.model.OWLDeclarationAxiom;
-import org.semanticweb.owl.model.OWLDeprecatedClassAxiom;
-import org.semanticweb.owl.model.OWLDeprecatedObjectPropertyAxiom;
-import org.semanticweb.owl.model.OWLDescription;
-import org.semanticweb.owl.model.OWLDifferentIndividualsAxiom;
-import org.semanticweb.owl.model.OWLDisjointClassesAxiom;
-import org.semanticweb.owl.model.OWLEntityAnnotationAxiom;
-import org.semanticweb.owl.model.OWLEquivalentClassesAxiom;
-import org.semanticweb.owl.model.OWLEquivalentObjectPropertiesAxiom;
-import org.semanticweb.owl.model.OWLImportsDeclaration;
-import org.semanticweb.owl.model.OWLIndividual;
-import org.semanticweb.owl.model.OWLObjectIntersectionOf;
-import org.semanticweb.owl.model.OWLObjectProperty;
-import org.semanticweb.owl.model.OWLObjectPropertyAssertionAxiom;
-import org.semanticweb.owl.model.OWLObjectPropertyChainSubPropertyAxiom;
-import org.semanticweb.owl.model.OWLObjectPropertyDomainAxiom;
-import org.semanticweb.owl.model.OWLObjectPropertyExpression;
-import org.semanticweb.owl.model.OWLObjectPropertyRangeAxiom;
-import org.semanticweb.owl.model.OWLObjectSomeRestriction;
-import org.semanticweb.owl.model.OWLObjectSubPropertyAxiom;
-import org.semanticweb.owl.model.OWLOntology;
-import org.semanticweb.owl.model.OWLOntologyAnnotationAxiom;
-import org.semanticweb.owl.model.OWLOntologyManager;
-import org.semanticweb.owl.model.OWLReflexiveObjectPropertyAxiom;
-import org.semanticweb.owl.model.OWLSameIndividualsAxiom;
-import org.semanticweb.owl.model.OWLSubClassAxiom;
-import org.semanticweb.owl.model.OWLTransitiveObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
+import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
+import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
+import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
+import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 
 import de.tudresden.inf.lat.jsexp.Sexp;
 import de.tudresden.inf.lat.jsexp.SexpFactory;
@@ -71,51 +66,19 @@ public class CelTranslator {
 	public CelTranslator() {
 	}
 
+	protected Sexp createAtomicSymbol(IRI iri) {
+		return createAtomicSymbol(iri.toString());
+	}
+
 	protected Sexp createAtomicSymbol(String symbol) {
 		Sexp ret = SexpFactory.newAtomicSexp("" + LispKeyword.lispVBar + symbol
 				+ LispKeyword.lispVBar);
 		return ret;
 	}
 
-	protected Sexp createAtomicSymbol(URI uri) {
-		return createAtomicSymbol(uri.toString());
-	}
-
 	protected boolean isIgnoredAxiom(OWLAxiom axiom) {
-		boolean ret = (axiom instanceof OWLAxiomAnnotationAxiom)
-				|| (axiom instanceof OWLDeclarationAxiom)
-				|| (axiom instanceof OWLDeprecatedClassAxiom)
-				|| (axiom instanceof OWLDeprecatedObjectPropertyAxiom)
-				|| (axiom instanceof OWLEntityAnnotationAxiom)
-				|| (axiom instanceof OWLImportsDeclaration)
-				|| (axiom instanceof OWLOntologyAnnotationAxiom);
-		return ret;
-	}
-
-	protected Set<OWLAxiom> processImportAxioms(Set<OWLAxiom> axiomSet,
-			OWLOntologyManager ontologyManager) {
-		Set<OWLAxiom> ret = new HashSet<OWLAxiom>();
-		Set<OWLImportsDeclaration> toVisit = new HashSet<OWLImportsDeclaration>();
-		Set<OWLImportsDeclaration> visited = new HashSet<OWLImportsDeclaration>();
-		for (OWLAxiom axiom : axiomSet) {
-			if (axiom instanceof OWLImportsDeclaration) {
-				toVisit.add((OWLImportsDeclaration) axiom);
-			}
-			ret.add(axiom);
-		}
-		while (!toVisit.isEmpty()) {
-			OWLImportsDeclaration declaration = toVisit.iterator().next();
-			visited.add(declaration);
-			Set<OWLAxiom> currentAxiomSet = ontologyManager.getOntology(
-					declaration.getImportedOntologyURI()).getAxioms();
-			for (OWLAxiom axiom : currentAxiomSet) {
-				if (axiom instanceof OWLImportsDeclaration) {
-					toVisit.add((OWLImportsDeclaration) axiom);
-				}
-				ret.add(axiom);
-			}
-			toVisit.removeAll(visited);
-		}
+		boolean ret = (axiom instanceof OWLDeclarationAxiom)
+				|| (axiom instanceof OWLAnnotationAssertionAxiom);
 		return ret;
 	}
 
@@ -148,20 +111,20 @@ public class CelTranslator {
 			ret = translateAxiom((OWLEquivalentObjectPropertiesAxiom) axiom);
 		} else if (axiom instanceof OWLObjectPropertyAssertionAxiom) {
 			ret = translateAxiom((OWLObjectPropertyAssertionAxiom) axiom);
-		} else if (axiom instanceof OWLObjectPropertyChainSubPropertyAxiom) {
-			ret = translateAxiom((OWLObjectPropertyChainSubPropertyAxiom) axiom);
+		} else if (axiom instanceof OWLSubPropertyChainOfAxiom) {
+			ret = translateAxiom((OWLSubPropertyChainOfAxiom) axiom);
 		} else if (axiom instanceof OWLObjectPropertyDomainAxiom) {
 			ret = translateAxiom((OWLObjectPropertyDomainAxiom) axiom);
 		} else if (axiom instanceof OWLObjectPropertyRangeAxiom) {
 			ret = translateAxiom((OWLObjectPropertyRangeAxiom) axiom);
-		} else if (axiom instanceof OWLObjectSubPropertyAxiom) {
-			ret = translateAxiom((OWLObjectSubPropertyAxiom) axiom);
+		} else if (axiom instanceof OWLSubObjectPropertyOfAxiom) {
+			ret = translateAxiom((OWLSubObjectPropertyOfAxiom) axiom);
 		} else if (axiom instanceof OWLReflexiveObjectPropertyAxiom) {
 			ret = translateAxiom((OWLReflexiveObjectPropertyAxiom) axiom);
-		} else if (axiom instanceof OWLSameIndividualsAxiom) {
-			ret = translateAxiom((OWLSameIndividualsAxiom) axiom);
-		} else if (axiom instanceof OWLSubClassAxiom) {
-			ret = translateAxiom((OWLSubClassAxiom) axiom);
+		} else if (axiom instanceof OWLSameIndividualAxiom) {
+			ret = translateAxiom((OWLSameIndividualAxiom) axiom);
+		} else if (axiom instanceof OWLSubClassOfAxiom) {
+			ret = translateAxiom((OWLSubClassOfAxiom) axiom);
 		} else if (axiom instanceof OWLTransitiveObjectPropertyAxiom) {
 			ret = translateAxiom((OWLTransitiveObjectPropertyAxiom) axiom);
 		}
@@ -172,7 +135,7 @@ public class CelTranslator {
 		return ret;
 	}
 
-	public Sexp translate(OWLDescription description)
+	public Sexp translate(OWLClassExpression description)
 			throws CelTranslatorException {
 		Sexp ret = null;
 		if (description.isOWLThing()) {
@@ -181,20 +144,20 @@ public class CelTranslator {
 			ret = SexpFactory.newAtomicSexp(CelKeyword.keyBottom);
 		} else if (description instanceof OWLObjectIntersectionOf) {
 			ret = translateDescription((OWLObjectIntersectionOf) description);
-		} else if (description instanceof OWLObjectSomeRestriction) {
-			ret = translateDescription((OWLObjectSomeRestriction) description);
+		} else if (description instanceof OWLObjectSomeValuesFrom) {
+			ret = translateDescription((OWLObjectSomeValuesFrom) description);
 		} else if (description instanceof OWLClass) {
 			ret = translateDescription((OWLClass) description);
 		}
 		if (ret == null) {
-			throw new CelTranslatorException("OWLDescription '"
+			throw new CelTranslatorException("OWLClassExpression '"
 					+ description.toString() + "' is not supported.");
 		}
 		return ret;
 	}
 
-	public Sexp translate(OWLIndividual individual) {
-		Sexp ret = createAtomicSymbol(individual.getURI());
+	public Sexp translate(OWLNamedIndividual individual) {
+		Sexp ret = createAtomicSymbol(individual.getIRI());
 		return ret;
 	}
 
@@ -206,8 +169,7 @@ public class CelTranslator {
 	public Sexp translate(OWLOntology ontology,
 			OWLOntologyManager ontologyManager) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
-		Set<OWLAxiom> axioms = processImportAxioms(ontology.getAxioms(),
-				ontologyManager);
+		Set<OWLAxiom> axioms = ontology.getAxioms();
 		for (OWLAxiom axiom : axioms) {
 			if (!isIgnoredAxiom(axiom)) {
 				ret.add(translate(axiom));
@@ -220,8 +182,8 @@ public class CelTranslator {
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyInstance));
-		ret.add(translate(axiom.getIndividual()));
-		ret.add(translate(axiom.getDescription()));
+		ret.add(translate(axiom.getIndividual().asOWLNamedIndividual()));
+		ret.add(translate(axiom.getClassExpression()));
 		return ret;
 	}
 
@@ -230,7 +192,7 @@ public class CelTranslator {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyDifferentIndividuals));
 		for (OWLIndividual elem : axiom.getIndividuals()) {
-			ret.add(translate(elem));
+			ret.add(translate(elem.asOWLNamedIndividual()));
 		}
 		return ret;
 	}
@@ -239,7 +201,7 @@ public class CelTranslator {
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyDisjoint));
-		for (OWLDescription elem : axiom.getDescriptions()) {
+		for (OWLClassExpression elem : axiom.getClassExpressions()) {
 			ret.add(translate(elem));
 		}
 		return ret;
@@ -249,7 +211,7 @@ public class CelTranslator {
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyEquivalent));
-		for (OWLDescription desc : axiom.getDescriptions()) {
+		for (OWLClassExpression desc : axiom.getClassExpressions()) {
 			Sexp expr = translate(desc);
 			ret.add(expr);
 		}
@@ -271,25 +233,9 @@ public class CelTranslator {
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyRelated));
-		ret.add(translate(axiom.getSubject()));
-		ret.add(translate(axiom.getObject()));
+		ret.add(translate(axiom.getSubject().asOWLNamedIndividual()));
+		ret.add(translate(axiom.getObject().asOWLNamedIndividual()));
 		ret.add(translate(axiom.getProperty()));
-		return ret;
-	}
-
-	protected Sexp translateAxiom(OWLObjectPropertyChainSubPropertyAxiom axiom)
-			throws CelTranslatorException {
-		List<OWLObjectPropertyExpression> propertyList = axiom
-				.getPropertyChain();
-		Sexp translatedList = SexpFactory.newNonAtomicSexp();
-		translatedList.add(SexpFactory.newAtomicSexp(CelKeyword.keyCompose));
-		for (OWLObjectPropertyExpression expr : propertyList) {
-			translatedList.add(translate(expr));
-		}
-		Sexp ret = SexpFactory.newNonAtomicSexp();
-		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyRoleInclusion));
-		ret.add(translatedList);
-		ret.add(translate(axiom.getSuperProperty()));
 		return ret;
 	}
 
@@ -311,15 +257,6 @@ public class CelTranslator {
 		return ret;
 	}
 
-	protected Sexp translateAxiom(OWLObjectSubPropertyAxiom axiom)
-			throws CelTranslatorException {
-		Sexp ret = SexpFactory.newNonAtomicSexp();
-		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyRoleInclusion));
-		ret.add(translate(axiom.getSubProperty()));
-		ret.add(translate(axiom.getSuperProperty()));
-		return ret;
-	}
-
 	protected Sexp translateAxiom(OWLReflexiveObjectPropertyAxiom axiom)
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
@@ -328,22 +265,47 @@ public class CelTranslator {
 		return ret;
 	}
 
-	protected Sexp translateAxiom(OWLSameIndividualsAxiom axiom)
+	protected Sexp translateAxiom(OWLSameIndividualAxiom axiom)
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keySameIndividuals));
 		for (OWLIndividual elem : axiom.getIndividuals()) {
-			ret.add(translate(elem));
+			ret.add(translate(elem.asOWLNamedIndividual()));
 		}
 		return ret;
 	}
 
-	protected Sexp translateAxiom(OWLSubClassAxiom axiom)
+	protected Sexp translateAxiom(OWLSubClassOfAxiom axiom)
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyImplies));
 		ret.add(translate(axiom.getSubClass()));
 		ret.add(translate(axiom.getSuperClass()));
+		return ret;
+	}
+
+	protected Sexp translateAxiom(OWLSubObjectPropertyOfAxiom axiom)
+			throws CelTranslatorException {
+		Sexp ret = SexpFactory.newNonAtomicSexp();
+		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyRoleInclusion));
+		ret.add(translate(axiom.getSubProperty()));
+		ret.add(translate(axiom.getSuperProperty()));
+		return ret;
+	}
+
+	protected Sexp translateAxiom(OWLSubPropertyChainOfAxiom axiom)
+			throws CelTranslatorException {
+		List<OWLObjectPropertyExpression> propertyList = axiom
+				.getPropertyChain();
+		Sexp translatedList = SexpFactory.newNonAtomicSexp();
+		translatedList.add(SexpFactory.newAtomicSexp(CelKeyword.keyCompose));
+		for (OWLObjectPropertyExpression expr : propertyList) {
+			translatedList.add(translate(expr));
+		}
+		Sexp ret = SexpFactory.newNonAtomicSexp();
+		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyRoleInclusion));
+		ret.add(translatedList);
+		ret.add(translate(axiom.getSuperProperty()));
 		return ret;
 	}
 
@@ -356,7 +318,7 @@ public class CelTranslator {
 	}
 
 	protected Sexp translateDescription(OWLClass cl) {
-		Sexp ret = createAtomicSymbol(cl.getURI());
+		Sexp ret = createAtomicSymbol(cl.getIRI());
 		return ret;
 	}
 
@@ -364,13 +326,13 @@ public class CelTranslator {
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyAnd));
-		for (OWLDescription elem : description.getOperands()) {
+		for (OWLClassExpression elem : description.getOperands()) {
 			ret.add(translate(elem));
 		}
 		return ret;
 	}
 
-	protected Sexp translateDescription(OWLObjectSomeRestriction description)
+	protected Sexp translateDescription(OWLObjectSomeValuesFrom description)
 			throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keySome));
@@ -380,7 +342,7 @@ public class CelTranslator {
 	}
 
 	protected Sexp translateProperty(OWLObjectProperty property) {
-		Sexp ret = createAtomicSymbol(property.getURI());
+		Sexp ret = createAtomicSymbol(property.getIRI());
 		return ret;
 	}
 }

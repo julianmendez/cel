@@ -24,18 +24,16 @@ package de.tudresden.inf.lat.cel.protege;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.semanticweb.owl.apibinding.OWLManager;
-import org.semanticweb.owl.inference.OWLReasonerException;
-import org.semanticweb.owl.model.OWLOntology;
-import org.semanticweb.owl.model.OWLOntologyCreationException;
-import org.semanticweb.owl.model.OWLOntologyManager;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.reasoner.OWLReasonerException;
 import org.w3c.dom.DOMException;
 
 import de.tudresden.inf.lat.cel.owlapi.CelReasoner;
@@ -102,15 +100,12 @@ public class ConsoleStarter {
 		initialise();
 
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		URI physicalURI = URI.create("file:" + ontologyFilename);
-		OWLOntology ontology = manager.loadOntologyFromPhysicalURI(physicalURI);
+		IRI physicalIRI = IRI.create("file:" + ontologyFilename);
+		OWLOntology ontology = manager
+				.loadOntologyFromOntologyDocument(physicalIRI);
 
-		this.reasoner = new CelReasoner(manager);
-
-		Set<OWLOntology> ontologySet = new HashSet<OWLOntology>();
-		ontologySet.add(ontology);
-		this.reasoner.loadOntologies(ontologySet);
-		this.reasoner.classify();
+		this.reasoner = new CelReasoner(ontology);
+		this.reasoner.prepareReasoner();
 
 		OWLReasonerXMLOutput xmlDoc = new OWLReasonerXMLOutput(this.reasoner);
 		xmlDoc.toXML(output);

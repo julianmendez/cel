@@ -24,17 +24,17 @@ package de.tudresden.inf.lat.cel.conversion;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.semanticweb.owl.model.OWLClass;
-import org.semanticweb.owl.model.OWLDataFactory;
-import org.semanticweb.owl.model.OWLDescription;
-import org.semanticweb.owl.model.OWLIndividual;
-import org.semanticweb.owl.model.OWLObjectProperty;
-import org.semanticweb.owl.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
 import de.tudresden.inf.lat.jsexp.Sexp;
 import de.tudresden.inf.lat.jsexp.SexpFactory;
@@ -50,9 +50,9 @@ public class CelParser {
 	public CelParser() {
 	}
 
-	public OWLDescription parse(String str, OWLDataFactory dataFactory)
+	public OWLClassExpression parse(String str, OWLDataFactory dataFactory)
 			throws CelParserException {
-		OWLDescription ret = null;
+		OWLClassExpression ret = null;
 		BufferedInputStream in = new BufferedInputStream(
 				new ByteArrayInputStream(str.getBytes()));
 		try {
@@ -86,14 +86,14 @@ public class CelParser {
 			ret = tryToParseTop(cleanExpr, dataFactory);
 		}
 		if (ret == null) {
-			ret = dataFactory.getOWLClass(URI.create(cleanExpr.toString()));
+			ret = dataFactory.getOWLClass(IRI.create(cleanExpr.toString()));
 		}
 		return ret;
 	}
 
-	protected OWLDescription parseDescription(Sexp expr,
+	protected OWLClassExpression parseDescription(Sexp expr,
 			OWLDataFactory dataFactory) throws CelParserException {
-		OWLDescription ret = null;
+		OWLClassExpression ret = null;
 		if (expr.isAtomic()) {
 			ret = parseClass(expr, dataFactory);
 		} else {
@@ -117,21 +117,21 @@ public class CelParser {
 		return ret;
 	}
 
-	public Set<OWLDescription> parseSetOfDescriptions(Sexp expr,
+	public Set<OWLClassExpression> parseSetOfDescriptions(Sexp expr,
 			OWLDataFactory dataFactory) throws CelParserException {
-		Set<OWLDescription> ret = new HashSet<OWLDescription>();
+		Set<OWLClassExpression> ret = new HashSet<OWLClassExpression>();
 		for (Sexp elem : expr) {
 			ret.add(parseDescription(elem, dataFactory));
 		}
 		return ret;
 	}
 
-	public Set<OWLIndividual> parseSetOfIndividuals(Sexp expr,
+	public Set<OWLNamedIndividual> parseSetOfIndividuals(Sexp expr,
 			OWLDataFactory dataFactory) {
-		Set<OWLIndividual> ret = new HashSet<OWLIndividual>();
+		Set<OWLNamedIndividual> ret = new HashSet<OWLNamedIndividual>();
 		for (Sexp elem : expr) {
 			Sexp cleanexpr = removeVbars(elem);
-			ret.add(dataFactory.getOWLIndividual(URI.create(cleanexpr
+			ret.add(dataFactory.getOWLNamedIndividual(IRI.create(cleanexpr
 					.toString())));
 		}
 		return ret;
@@ -142,7 +142,7 @@ public class CelParser {
 		Set<OWLObjectProperty> ret = new HashSet<OWLObjectProperty>();
 		for (Sexp elem : expr) {
 			Sexp cleanexpr = removeVbars(elem);
-			ret.add(dataFactory.getOWLObjectProperty(URI.create(cleanexpr
+			ret.add(dataFactory.getOWLObjectProperty(IRI.create(cleanexpr
 					.toString())));
 		}
 		return ret;
@@ -161,11 +161,11 @@ public class CelParser {
 		return ret;
 	}
 
-	public Set<Set<OWLDescription>> parseSetOfSetOfDescriptions(Sexp expr,
+	public Set<Set<OWLClassExpression>> parseSetOfSetOfDescriptions(Sexp expr,
 			OWLDataFactory dataFactory) throws CelParserException {
-		Set<Set<OWLDescription>> ret = new HashSet<Set<OWLDescription>>();
+		Set<Set<OWLClassExpression>> ret = new HashSet<Set<OWLClassExpression>>();
 		for (Sexp subexpr : expr) {
-			Set<OWLDescription> part = new HashSet<OWLDescription>();
+			Set<OWLClassExpression> part = new HashSet<OWLClassExpression>();
 			for (Sexp elem : subexpr) {
 				part.add(parseDescription(elem, dataFactory));
 			}
@@ -181,7 +181,7 @@ public class CelParser {
 			Set<OWLObjectProperty> part = new HashSet<OWLObjectProperty>();
 			for (Sexp elem : subexpr) {
 				Sexp cleanexpr = removeVbars(elem);
-				part.add(dataFactory.getOWLObjectProperty(URI.create(cleanexpr
+				part.add(dataFactory.getOWLObjectProperty(IRI.create(cleanexpr
 						.toString())));
 			}
 			ret.add(part);
@@ -203,15 +203,15 @@ public class CelParser {
 		return ret;
 	}
 
-	protected OWLDescription tryToParseAnd(Sexp expr, OWLDataFactory dataFactory)
-			throws CelParserException {
-		OWLDescription ret = null;
+	protected OWLClassExpression tryToParseAnd(Sexp expr,
+			OWLDataFactory dataFactory) throws CelParserException {
+		OWLClassExpression ret = null;
 		if (!expr.isAtomic()) {
 			Iterator<Sexp> it = expr.iterator();
 			Sexp current = it.next();
 			if (current.isAtomic()
 					&& current.toString().equalsIgnoreCase(CelKeyword.keyAnd)) {
-				Set<OWLDescription> set = new HashSet<OWLDescription>();
+				Set<OWLClassExpression> set = new HashSet<OWLClassExpression>();
 				while (it.hasNext()) {
 					current = it.next();
 					set.add(parseDescription(current, dataFactory));
@@ -231,9 +231,9 @@ public class CelParser {
 		return ret;
 	}
 
-	protected OWLDescription tryToParseSome(Sexp expr,
+	protected OWLClassExpression tryToParseSome(Sexp expr,
 			OWLDataFactory dataFactory) throws CelParserException {
-		OWLDescription ret = null;
+		OWLClassExpression ret = null;
 		if (!expr.isAtomic()) {
 			Iterator<Sexp> it = expr.iterator();
 			Sexp current = it.next();
@@ -246,14 +246,14 @@ public class CelParser {
 				}
 				Sexp cleanexpr = removeVbars(role);
 				OWLObjectPropertyExpression re = dataFactory
-						.getOWLObjectProperty(URI.create(cleanexpr.toString()));
+						.getOWLObjectProperty(IRI.create(cleanexpr.toString()));
 				Sexp concept = it.next();
 				if (it.hasNext()) {
 					throw new CelParserException("'" + expr
 							+ "' 'some' has too many parameters.");
 				}
-				OWLDescription ce = parseDescription(concept, dataFactory);
-				ret = dataFactory.getOWLObjectSomeRestriction(re, ce);
+				OWLClassExpression ce = parseDescription(concept, dataFactory);
+				ret = dataFactory.getOWLObjectSomeValuesFrom(re, ce);
 			}
 		}
 		return ret;

@@ -24,9 +24,9 @@ package de.tudresden.inf.lat.cel.translation;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.semanticweb.owl.model.OWLException;
-import org.semanticweb.owl.model.OWLOntologyChange;
-import org.semanticweb.owl.model.OWLOntologyChangeListener;
+import org.semanticweb.owlapi.model.OWLException;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 
 /**
  * This class is a listener that keeps track about if a particular ontology has

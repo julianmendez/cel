@@ -27,7 +27,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.semanticweb.owl.util.ProgressMonitor;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 
 import de.tudresden.inf.lat.jsexp.Sexp;
 
@@ -66,7 +66,7 @@ public class CelSocketManager implements CelOutputListener {
 
 	private CelProcessOutputHandler outputHandler = null;
 	private CelProcessThread processThread = null;
-	private ProgressMonitor progressMonitor = null;
+	private ReasonerProgressMonitor progressMonitor = null;
 	/**
 	 * Timeout in milliseconds used to determine whether there is client (the
 	 * CEL reasoner in Lisp) trying to connect to the server (a Java thread).
@@ -92,7 +92,7 @@ public class CelSocketManager implements CelOutputListener {
 		return this.processThread;
 	}
 
-	public ProgressMonitor getProgressMonitor() {
+	public ReasonerProgressMonitor getProgressMonitor() {
 		return this.progressMonitor;
 	}
 
@@ -122,21 +122,11 @@ public class CelSocketManager implements CelOutputListener {
 		if (getCelSocket() == null) {
 			start();
 		}
-		try {
-			response = getCelSocket().send(message);
-		} catch (CelConnectionException e) {
-			if (getOutputHandler() != null
-					&& getOutputHandler().getProgressMonitor() != null
-					&& getOutputHandler().getProgressMonitor().isCancelled()) {
-				throw new CelConnectionException("Process interrupted by user.");
-			} else {
-				throw e;
-			}
-		}
+		response = getCelSocket().send(message);
 		return response;
 	}
 
-	public void setProgressMonitor(ProgressMonitor monitor) {
+	public void setProgressMonitor(ReasonerProgressMonitor monitor) {
 		this.progressMonitor = monitor;
 		if (getOutputHandler() != null) {
 			getOutputHandler().setProgressMonitor(progressMonitor);
