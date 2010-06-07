@@ -43,8 +43,8 @@ public class CelSocketManager implements CelOutputListener {
 	/** Greeting message presented when the program starts. */
 	public static final String greetingMessage = ""
 			+ "\nCEL: [C]lassifier for the Description Logic [E][L]+ "
-			+ "\nCopyright (C) 2005-2009: B. Suntisrivaraporn and TU Dresden."
-			+ "\nOWL API - Copyright (C) 2009: Julian Mendez."
+			+ "\nCopyright (C) 2005-2010: B. Suntisrivaraporn and TU Dresden."
+			+ "\nOWL API - Copyright (C) 2009-2010: Julian Mendez."
 			+ "\nCEL comes with ABSOLUTELY NO WARRANTY; use at your own risk."
 			+ "\nThis is free software for research and evaluation purposes."
 			+ "\nCommercial use is prohibited; please contact the author."
