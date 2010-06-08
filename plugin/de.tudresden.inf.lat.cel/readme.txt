@@ -50,7 +50,7 @@ In order to compile this project, the following technologies are suggested:
     Apache Ant 1.7.1
     http://ant.apache.org
 
-It is also necessary to check out subproject "jars". It has the necessary libraries
+It is also necessary to check out subproject "cel-jars". It has the necessary libraries
 to compile this project. 
 
 Once Java and Apache Ant are installed, it is enough to write "ant" in the main 
@@ -61,7 +61,7 @@ The plug-in jar will be generated in "dist/bundle".
 The directories have the following structure.
 
   Source directories: (src)
-    * src/conf : configuration files for creating a plug-in
+    * src/conf : configuration files for the plug-in
     * src/doc : text for the javadocs
     * src/img/native : compiled version of CEL
     * src/main : source code of the main part
