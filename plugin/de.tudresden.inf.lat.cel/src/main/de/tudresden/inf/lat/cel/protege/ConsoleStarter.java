@@ -21,20 +21,18 @@
 
 package de.tudresden.inf.lat.cel.protege;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.io.OWLRendererException;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.reasoner.OWLReasonerException;
-import org.w3c.dom.DOMException;
 
 import de.tudresden.inf.lat.cel.owlapi.CelReasoner;
 import de.tudresden.inf.lat.cel.owlapi.OWLReasonerXMLOutput;
@@ -47,29 +45,44 @@ import de.tudresden.inf.lat.cel.owlapi.OWLReasonerXMLOutput;
  */
 public class ConsoleStarter {
 
-	public static void main(String[] args) throws OWLReasonerException,
-			OWLOntologyCreationException, SecurityException, IOException,
-			DOMException, ParserConfigurationException, TransformerException {
+	private static final Logger logger = Logger
+			.getLogger("de.tudresden.inf.lat.cel");
+
+	/**
+	 * Starts a classifier instance from the command line.
+	 * 
+	 * @param args
+	 *            a list containing the command line parameters, they are first
+	 *            parameter: input file (required), second parameter: output
+	 *            file (required), third parameter: log level (optional)
+	 * @throws FileNotFoundException
+	 * @throws OWLOntologyCreationException
+	 * @throws OWLRendererException
+	 */
+	public static void main(String[] args) throws OWLRendererException,
+			OWLOntologyCreationException, FileNotFoundException {
 		boolean helpNeeded = true;
 		ConsoleStarter instance = new ConsoleStarter();
-		if (args.length > 0) {
+		if (args.length > 1) {
 			helpNeeded = false;
-			if (args.length > 1) {
-				instance.setOutput(new FileOutputStream(args[1]));
+			Level logLevel = Level.FINE;
+			if (args.length > 2) {
+				logLevel = Level.parse(args[2]);
 			}
-			instance.start(args[0]);
+			instance.start(new File(args[0]), new File(args[1]), logLevel,
+					System.out);
 			instance.stop();
 		}
 		if (helpNeeded) {
-			System.out.println(instance.getMiniHelp());
+			System.out.println(instance.minihelp);
 		}
 	}
 
+	/** A very small help about how to start a new instance. */
 	private String minihelp = "\nUsage:\njava -cp .:<list of jars> "
 			+ this.getClass().getCanonicalName()
-			+ " <input ontology> [<output file name>]\n";
+			+ " <input ontology file name> <inferred data file name> [<log level>]\n";
 
-	private OutputStream output = System.out;
 	private CelReasoner reasoner = null;
 
 	public ConsoleStarter() {
@@ -79,39 +92,35 @@ public class ConsoleStarter {
 		return this.minihelp;
 	}
 
-	public OutputStream getOutput() {
-		return this.output;
-	}
-
 	/**
-	 * @throws IOException
-	 * @throws SecurityException
+	 * Executes the classifier on a given ontology.
+	 * 
+	 * @param ontologyFile
+	 *            ontology file to be classified
+	 * @param inferredFile
+	 *            file to write the inferred data
+	 * @param logLevel
+	 *            log level
+	 * @throws OWLOntologyCreationException
+	 * @throws OWLRendererException
+	 * @throws FileNotFoundException
 	 */
-	public void initialise() throws SecurityException, IOException {
-	}
-
-	public void setOutput(OutputStream out) {
-		this.output = out;
-	}
-
-	public void start(String ontologyFilename) throws OWLReasonerException,
-			OWLOntologyCreationException, SecurityException, IOException,
-			DOMException, ParserConfigurationException, TransformerException {
-		initialise();
-
+	public void start(File ontologyFile, File inferredFile, Level logLevel,
+			OutputStream logOutput) throws OWLOntologyCreationException,
+			OWLRendererException, FileNotFoundException {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		IRI physicalIRI = IRI.create("file:" + ontologyFilename);
 		OWLOntology ontology = manager
-				.loadOntologyFromOntologyDocument(physicalIRI);
+				.loadOntologyFromOntologyDocument(ontologyFile);
 
+		logger.setLevel(logLevel);
 		this.reasoner = new CelReasoner(ontology);
 		this.reasoner.prepareReasoner();
 
 		OWLReasonerXMLOutput xmlDoc = new OWLReasonerXMLOutput(this.reasoner);
-		xmlDoc.toXML(output);
+		xmlDoc.toXML(new FileOutputStream(inferredFile));
 	}
 
-	public void stop() throws OWLReasonerException {
+	public void stop() {
 		this.reasoner.dispose();
 	}
 }

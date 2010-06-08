@@ -21,180 +21,148 @@
 
 package de.tudresden.inf.lat.cel.owlapi;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.coode.xml.XMLWriter;
-import org.coode.xml.XMLWriterImpl;
-import org.coode.xml.XMLWriterNamespaceManager;
+import org.coode.owlapi.owlxml.renderer.OWLXMLWriter;
+import org.semanticweb.owlapi.io.OWLRendererException;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.OWLReasonerException;
+import org.semanticweb.owlapi.vocab.OWLXMLVocabulary;
 
 /**
- * This class makes an XML representation of the inferred data in an
+ * This class makes an XML representation of the inferred data by an
  * OWLReasoner.
  * 
  * @author Julian Mendez
  */
 public class OWLReasonerXMLOutput {
 
-	private static final String attIRI = "IRI";
-	private static final String CLASS = "Class";
-	private static final String CLASS_ASSERTION = "ClassAssertion";
-	private static final String DECLARATION = "Declaration";
-	private static final String EQUIVALENT_CLASSES = "EquivalentClasses";
-	private static final String EQUIVALENT_OBJECT_PROPERTIES = "EquivalentObjectProperties";
-	private static final String NAMED_INDIVIDUAL = "NamedIndividual";
-	private static final String OBJECT_PROPERTY = "ObjectProperty";
-	private static final String OBJECT_PROPERTY_ASSERTION = "ObjectPropertyAssertion";
-	private static final String ONTOLOGY = "Ontology";
-	private static final String SUB_CLASS_OF = "SubClassOf";
-	private static final String SUB_OBJECT_PROPERTY_OF = "SubObjectPropertyOf";
-	private static final String xmlns = "http://www.w3.org/2002/07/owl#";
-	private static final String xmlnsRdfKey = "rdf";
-	private static final String xmlnsRdfPrefix = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-	private static final String xmlnsRdfsKey = "rdfs";
-	private static final String xmlnsRdfsPrefix = "http://www.w3.org/2000/01/rdf-schema#";
-	private static final String xmlnsXmlKey = "xml";
-	private static final String xmlnsXmlPrefix = "http://www.w3.org/XML/1998/namespace";
-	private static final String xmlnsXsdKey = "xsd";
-	private static final String xmlnsXsdPrefix = "http://www.w3.org/2001/XMLSchema#";
-
 	private OWLReasoner reasoner = null;
-	private XMLWriter writer = null;
+	private OWLXMLWriter writer = null;
 
 	public OWLReasonerXMLOutput(OWLReasoner reasoner) {
 		this.reasoner = reasoner;
 	}
 
-	private void render() throws OWLReasonerException {
-		try {
+	private void render() {
+		Set<OWLClass> classSet = new TreeSet<OWLClass>();
+		classSet
+				.addAll(this.reasoner.getRootOntology().getClassesInSignature());
+		Set<OWLObjectProperty> propertySet = new TreeSet<OWLObjectProperty>();
+		propertySet.addAll(this.reasoner.getRootOntology()
+				.getObjectPropertiesInSignature());
+		Set<OWLNamedIndividual> individualSet = new TreeSet<OWLNamedIndividual>();
+		individualSet.addAll(this.reasoner.getRootOntology()
+				.getIndividualsInSignature());
 
-			OWLOntology ontology = this.reasoner.getRootOntology();
-			Set<OWLClass> classSet = new TreeSet<OWLClass>();
-			classSet.addAll(ontology.getClassesInSignature());
-			Set<OWLObjectProperty> propertySet = new TreeSet<OWLObjectProperty>();
-			propertySet.addAll(ontology.getObjectPropertiesInSignature());
-			Set<OWLNamedIndividual> individualSet = new TreeSet<OWLNamedIndividual>();
-			individualSet.addAll(ontology.getIndividualsInSignature());
+		renderDeclaration(classSet);
+		renderDeclaration(propertySet);
+		renderDeclaration(individualSet);
 
-			renderDeclaration(classSet);
-			renderDeclaration(propertySet);
-			renderDeclaration(individualSet);
+		Set<OWLClass> classesToVisit = new TreeSet<OWLClass>();
+		classesToVisit.addAll(classSet);
+		while (!classesToVisit.isEmpty()) {
+			OWLClass cls = classesToVisit.iterator().next();
+			classesToVisit.remove(cls);
+			Set<OWLClass> equivClasses = this.reasoner
+					.getEquivalentClasses(cls).getEntities();
+			renderEquivalentClasses(equivClasses);
+			classesToVisit.removeAll(equivClasses);
+		}
 
-			Set<OWLClass> classesToVisit = new TreeSet<OWLClass>();
-			classesToVisit.addAll(classSet);
-			while (!classesToVisit.isEmpty()) {
-				OWLClass cls = classesToVisit.iterator().next();
-				classesToVisit.remove(cls);
-				Set<OWLClass> equivClasses = this.reasoner
-						.getEquivalentClasses(cls).getEntities();
-				renderEquivalentClasses(equivClasses);
-				classesToVisit.removeAll(equivClasses);
+		Set<OWLObjectProperty> propertiesToVisit = new TreeSet<OWLObjectProperty>();
+		propertiesToVisit.addAll(propertySet);
+		while (!propertiesToVisit.isEmpty()) {
+			OWLObjectProperty property = propertiesToVisit.iterator().next();
+			propertiesToVisit.remove(property);
+			Set<OWLObjectProperty> equivProperties = this.reasoner
+					.getEquivalentObjectProperties(property).getEntities();
+			renderEquivalentObjectProperties(equivProperties);
+			propertiesToVisit.removeAll(equivProperties);
+		}
+
+		for (OWLClass subClass : classSet) {
+			Set<OWLClass> superClasses = new TreeSet<OWLClass>();
+			superClasses.addAll(this.reasoner.getSuperClasses(subClass, true)
+					.getFlattened());
+			for (OWLClass superClass : superClasses) {
+				renderSubClassOf(subClass, superClass);
 			}
+		}
 
-			Set<OWLObjectProperty> propertiesToVisit = new TreeSet<OWLObjectProperty>();
-			propertiesToVisit.addAll(propertySet);
-			while (!propertiesToVisit.isEmpty()) {
-				OWLObjectProperty property = propertiesToVisit.iterator()
-						.next();
-				propertiesToVisit.remove(property);
-				Set<OWLObjectProperty> equivProperties = this.reasoner
-						.getEquivalentObjectProperties(property).getEntities();
-				renderEquivalentObjectProperties(equivProperties);
-				propertiesToVisit.removeAll(equivProperties);
+		for (OWLObjectProperty subProperty : propertySet) {
+			Set<OWLObjectProperty> superProperties = new TreeSet<OWLObjectProperty>();
+			superProperties.addAll(this.reasoner.getSuperObjectProperties(
+					subProperty, true).getFlattened());
+			for (OWLObjectProperty superProperty : superProperties) {
+				renderSubObjectPropertyOf(subProperty, superProperty);
 			}
+		}
 
-			for (OWLClass subClass : classSet) {
-				Set<OWLClass> superClasses = new TreeSet<OWLClass>();
-				superClasses.addAll(this.reasoner.getSuperClasses(subClass,
-						true).getFlattened());
-				for (OWLClass superClass : superClasses) {
-					renderSubClassOf(subClass, superClass);
-				}
+		for (OWLClass cls : classSet) {
+			Set<OWLNamedIndividual> instances = new TreeSet<OWLNamedIndividual>();
+			instances.addAll(this.reasoner.getInstances(cls, true)
+					.getFlattened());
+			for (OWLNamedIndividual individual : instances) {
+				renderClassAssertion(cls, individual);
 			}
+		}
 
-			for (OWLObjectProperty subProperty : propertySet) {
-				Set<OWLObjectProperty> superProperties = new TreeSet<OWLObjectProperty>();
-				superProperties.addAll(this.reasoner.getSuperObjectProperties(
-						subProperty, true).getFlattened());
-				for (OWLObjectProperty superProperty : superProperties) {
-					renderSubObjectPropertyOf(subProperty, superProperty);
-				}
-			}
-
-			for (OWLClass cls : classSet) {
-				Set<OWLNamedIndividual> instances = new TreeSet<OWLNamedIndividual>();
-				instances.addAll(this.reasoner.getInstances(cls, true)
+		for (OWLObjectProperty property : propertySet) {
+			for (OWLNamedIndividual individual : individualSet) {
+				Set<OWLNamedIndividual> propertyValues = new TreeSet<OWLNamedIndividual>();
+				propertyValues.addAll(this.reasoner.getObjectPropertyValues(
+						individual, property.asOWLObjectProperty())
 						.getFlattened());
-				for (OWLNamedIndividual individual : instances) {
-					renderClassAssertion(cls, individual);
+				for (OWLNamedIndividual otherIndividual : propertyValues) {
+					renderObjectPropertyAssertion(property, individual,
+							otherIndividual);
 				}
 			}
-
-			for (OWLObjectProperty property : propertySet) {
-				for (OWLNamedIndividual individual : individualSet) {
-					Set<OWLNamedIndividual> propertyValues = new TreeSet<OWLNamedIndividual>();
-					propertyValues.addAll(this.reasoner
-							.getObjectPropertyValues(individual,
-									property.asOWLObjectProperty())
-							.getFlattened());
-					for (OWLNamedIndividual otherIndividual : propertyValues) {
-						renderObjectPropertyAssertion(property, individual,
-								otherIndividual);
-					}
-				}
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (RuntimeException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
 	private void renderClassAssertion(OWLClass cls,
-			OWLNamedIndividual individual) throws IOException {
-		this.writer.writeStartElement(CLASS_ASSERTION);
+			OWLNamedIndividual individual) {
+		this.writer.writeStartElement(OWLXMLVocabulary.CLASS_ASSERTION);
 		renderEntity(cls);
 		renderEntity(individual);
 		this.writer.writeEndElement();
 
 	}
 
-	private void renderDeclaration(Set<? extends OWLEntity> entities)
-			throws IOException {
+	private void renderDeclaration(Set<? extends OWLEntity> entities) {
 		for (OWLEntity elem : entities) {
-			this.writer.writeStartElement(DECLARATION);
+			this.writer.writeStartElement(OWLXMLVocabulary.DECLARATION);
 			renderEntity(elem);
 			this.writer.writeEndElement();
 		}
 	}
 
-	private void renderEntity(OWLEntity entity) throws IOException {
+	private void renderEntity(OWLEntity entity) {
 		if (entity instanceof OWLClass) {
-			this.writer.writeStartElement(CLASS);
+			this.writer.writeStartElement(OWLXMLVocabulary.CLASS);
 		} else if (entity instanceof OWLObjectProperty) {
-			this.writer.writeStartElement(OBJECT_PROPERTY);
+			this.writer.writeStartElement(OWLXMLVocabulary.OBJECT_PROPERTY);
 		} else if (entity instanceof OWLNamedIndividual) {
-			this.writer.writeStartElement(NAMED_INDIVIDUAL);
+			this.writer.writeStartElement(OWLXMLVocabulary.NAMED_INDIVIDUAL);
 		} else {
 			throw new IllegalStateException("Entity cannot be rendered : '"
 					+ entity + "'.");
 		}
-		this.writer.writeAttribute(attIRI, entity.getIRI().toString());
+		this.writer.writeIRIAttribute(entity.getIRI());
 		this.writer.writeEndElement();
 	}
 
-	private void renderEntitySet(Set<? extends OWLEntity> entitySet)
-			throws IOException {
+	private void renderEntitySet(Set<? extends OWLEntity> entitySet) {
 		Set<OWLEntity> set = new TreeSet<OWLEntity>();
 		set.addAll(entitySet);
 		for (OWLEntity entity : set) {
@@ -202,68 +170,51 @@ public class OWLReasonerXMLOutput {
 		}
 	}
 
-	private void renderEquivalentClasses(Set<OWLClass> classSet)
-			throws IOException {
-		this.writer.writeStartElement(EQUIVALENT_CLASSES);
+	private void renderEquivalentClasses(Set<OWLClass> classSet) {
+		this.writer.writeStartElement(OWLXMLVocabulary.EQUIVALENT_CLASSES);
 		renderEntitySet(classSet);
 		this.writer.writeEndElement();
 	}
 
 	private void renderEquivalentObjectProperties(
-			Set<OWLObjectProperty> propertySet) throws IOException {
-		this.writer.writeStartElement(EQUIVALENT_OBJECT_PROPERTIES);
+			Set<OWLObjectProperty> propertySet) {
+		this.writer
+				.writeStartElement(OWLXMLVocabulary.EQUIVALENT_OBJECT_PROPERTIES);
 		renderEntitySet(propertySet);
 		this.writer.writeEndElement();
 	}
 
 	private void renderObjectPropertyAssertion(OWLObjectProperty property,
-			OWLNamedIndividual subject, OWLNamedIndividual object)
-			throws IOException {
-		this.writer.writeStartElement(OBJECT_PROPERTY_ASSERTION);
+			OWLNamedIndividual subject, OWLNamedIndividual object) {
+		this.writer
+				.writeStartElement(OWLXMLVocabulary.OBJECT_PROPERTY_ASSERTION);
 		renderEntity(property);
 		renderEntity(subject);
 		renderEntity(object);
 		this.writer.writeEndElement();
 	}
 
-	private void renderSubClassOf(OWLClass subClass, OWLClass superClass)
-			throws IOException {
-		this.writer.writeStartElement(SUB_CLASS_OF);
+	private void renderSubClassOf(OWLClass subClass, OWLClass superClass) {
+		this.writer.writeStartElement(OWLXMLVocabulary.SUB_CLASS_OF);
 		renderEntity(subClass);
 		renderEntity(superClass);
 		this.writer.writeEndElement();
 	}
 
 	private void renderSubObjectPropertyOf(OWLObjectProperty subProperty,
-			OWLObjectProperty superProperty) throws IOException {
-		this.writer.writeStartElement(SUB_OBJECT_PROPERTY_OF);
+			OWLObjectProperty superProperty) {
+		this.writer.writeStartElement(OWLXMLVocabulary.SUB_OBJECT_PROPERTY_OF);
 		renderEntity(subProperty);
 		renderEntity(superProperty);
 		this.writer.writeEndElement();
 	}
 
-	public void toXML(OutputStream out) {
-		try {
-			XMLWriterNamespaceManager manager = new XMLWriterNamespaceManager(
-					xmlns);
-			OutputStreamWriter output = new OutputStreamWriter(out);
-
-			manager.setPrefix(xmlnsRdfsKey, xmlnsRdfsPrefix);
-			manager.setPrefix(xmlnsXsdKey, xmlnsXsdPrefix);
-			manager.setPrefix(xmlnsRdfKey, xmlnsRdfPrefix);
-			manager.setPrefix(xmlnsXmlKey, xmlnsXmlPrefix);
-
-			this.writer = new XMLWriterImpl(output, manager);
-			this.writer.setEncoding("UTF-8");
-			this.writer.setWrapAttributes(false);
-			this.writer.startDocument(ONTOLOGY);
-			render();
-			output.flush();
-			this.writer.endDocument();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (OWLReasonerException e) {
-			throw new RuntimeException(e);
-		}
+	public void toXML(OutputStream out) throws OWLRendererException {
+		OWLOntology ontology = this.reasoner.getRootOntology();
+		Writer writer = new OutputStreamWriter(out);
+		this.writer = new OWLXMLWriter(writer, ontology);
+		this.writer.startDocument(ontology);
+		render();
+		this.writer.endDocument();
 	}
 }
