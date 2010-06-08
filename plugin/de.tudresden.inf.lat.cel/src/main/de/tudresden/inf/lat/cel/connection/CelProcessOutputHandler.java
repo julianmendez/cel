@@ -42,8 +42,8 @@ class CelProcessOutputHandler extends Thread {
 
 	private static final Logger logger = Logger
 			.getLogger(CelProcessOutputHandler.class.getName());
-	
-	private static final int maxProgress=100;
+
+	private static final int maxProgress = 100;
 
 	private boolean active = false;
 	private InputStream input = null;
@@ -99,13 +99,10 @@ class CelProcessOutputHandler extends Thread {
 						ch = this.input.read();
 						if (ch != -1) {
 							if (getProgressMonitor() != null) {
-//								if (getProgressMonitor().isCancelled()
-//										&& getOutputListener() != null) {
-//									getOutputListener()
-//											.notifyCancelButtonPressed();
-//								}
 								if (ch == countingChar) {
-									getProgressMonitor().reasonerTaskProgressChanged(progress, maxProgress);
+									getProgressMonitor()
+											.reasonerTaskProgressChanged(
+													progress, maxProgress);
 									progress++;
 								}
 							}
