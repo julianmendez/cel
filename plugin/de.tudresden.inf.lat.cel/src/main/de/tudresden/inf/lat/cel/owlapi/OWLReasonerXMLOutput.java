@@ -74,7 +74,9 @@ public class OWLReasonerXMLOutput {
 			classesToVisit.remove(cls);
 			Set<OWLClass> equivClasses = this.reasoner
 					.getEquivalentClasses(cls).getEntities();
-			renderEquivalentClasses(equivClasses);
+			if (equivClasses.size() > 1) {
+				renderEquivalentClasses(equivClasses);
+			}
 			classesToVisit.removeAll(equivClasses);
 		}
 
@@ -85,7 +87,9 @@ public class OWLReasonerXMLOutput {
 			propertiesToVisit.remove(property);
 			Set<OWLObjectProperty> equivProperties = this.reasoner
 					.getEquivalentObjectProperties(property).getEntities();
-			renderEquivalentObjectProperties(equivProperties);
+			if (equivProperties.size() > 1) {
+				renderEquivalentObjectProperties(equivProperties);
+			}
 			propertiesToVisit.removeAll(equivProperties);
 		}
 
