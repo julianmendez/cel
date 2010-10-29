@@ -114,7 +114,7 @@ public class ConsoleStarter {
 
 		logger.setLevel(logLevel);
 		this.reasoner = new CelReasoner(ontology);
-		this.reasoner.prepareReasoner();
+		this.reasoner.precomputeInferences();
 
 		OWLReasonerXMLOutput xmlDoc = new OWLReasonerXMLOutput(this.reasoner);
 		xmlDoc.toXML(new FileOutputStream(inferredFile));

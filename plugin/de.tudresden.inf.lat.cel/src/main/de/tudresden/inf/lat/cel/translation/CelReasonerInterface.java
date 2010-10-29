@@ -21,21 +21,26 @@
 
 package de.tudresden.inf.lat.cel.translation;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
-import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.impl.NodeFactory;
 import org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLNamedIndividualNodeSet;
@@ -77,9 +82,9 @@ public class CelReasonerInterface {
 	}
 
 	public CelReasonerInterface(OWLOntology ontology,
-			ReasonerProgressMonitor progressMonitor) {
+			OWLReasonerConfiguration config) {
 		this(ontology);
-		getSocketManager().setProgressMonitor(progressMonitor);
+		getSocketManager().setReasonerConfiguration(config);
 	}
 
 	protected void assertSupportedClassExpression(OWLClassExpression description)
@@ -131,13 +136,20 @@ public class CelReasonerInterface {
 		return new OWLNamedIndividualNodeSet(nodeSet);
 	}
 
-	protected NodeSet<OWLObjectProperty> convertToNodeSetOfOWLObjectProperty(
-			Set<Set<OWLObjectProperty>> setOfSets) {
-		Set<Node<OWLObjectProperty>> nodeSet = new HashSet<Node<OWLObjectProperty>>();
-		for (Set<OWLObjectProperty> elem : setOfSets) {
+	protected NodeSet<OWLObjectPropertyExpression> convertToNodeSetOfOWLObjectPropertyExpression(
+			Set<Set<OWLObjectPropertyExpression>> setOfSets) {
+		Set<Node<OWLObjectPropertyExpression>> nodeSet = new HashSet<Node<OWLObjectPropertyExpression>>();
+		for (Set<OWLObjectPropertyExpression> elem : setOfSets) {
 			nodeSet.add(NodeFactory.getOWLObjectPropertyNode(elem));
 		}
 		return new OWLObjectPropertyNodeSet(nodeSet);
+	}
+
+	protected Set<OWLObjectPropertyExpression> convertToOWLObjectPropertyExpression(
+			Set<OWLObjectProperty> set) {
+		Set<OWLObjectPropertyExpression> ret = new HashSet<OWLObjectPropertyExpression>();
+		ret.addAll(set);
+		return ret;
 	}
 
 	public void dispose() {
@@ -152,7 +164,7 @@ public class CelReasonerInterface {
 		return getEquivalentClasses(getOWLNothing());
 	}
 
-	public Node<OWLObjectProperty> getBottomObjectPropertyNode() {
+	public Node<OWLObjectPropertyExpression> getBottomObjectPropertyNode() {
 		return getEquivalentObjectProperties(getOWLBottomObjectProperty());
 	}
 
@@ -173,18 +185,19 @@ public class CelReasonerInterface {
 		return NodeFactory.getOWLClassNode(ret);
 	}
 
-	public Node<OWLObjectProperty> getEquivalentObjectProperties(
+	public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
 			OWLObjectPropertyExpression propertyExpression)
 			throws CelReasonerException {
-		Set<OWLObjectProperty> ret = null;
+		Set<OWLObjectPropertyExpression> ret = null;
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory
 				.newAtomicSexp(CelOwlApiKeyword.keyGetEquivalentProperties));
 		message.add(getTranslator().translate(
 				propertyExpression.asOWLObjectProperty()));
 		Sexp response = sendAndConvert(message);
-		ret = getParser().parseSetOfProperties(response,
-				getOWLOntologyManager().getOWLDataFactory());
+		ret = convertToOWLObjectPropertyExpression(getParser()
+				.parseSetOfProperties(response,
+						getOWLOntologyManager().getOWLDataFactory()));
 		return NodeFactory.getOWLObjectPropertyNode(ret);
 	}
 
@@ -250,8 +263,24 @@ public class CelReasonerInterface {
 		return this.parser;
 	}
 
-	public ReasonerProgressMonitor getProgressMonitor() {
-		return this.socketManager.getProgressMonitor();
+	public Set<OWLAxiom> getPendingAxiomAdditions() {
+		return Collections.emptySet();
+	}
+
+	public Set<OWLAxiom> getPendingAxiomRemovals() {
+		return Collections.emptySet();
+	}
+
+	public List<OWLOntologyChange> getPendingChanges() {
+		return Collections.emptyList();
+	}
+
+	public Set<InferenceType> getPrecomputableInferenceTypes() {
+		return Collections.singleton(InferenceType.CLASS_HIERARCHY);
+	}
+
+	public OWLReasonerConfiguration getReasonerConfiguration() {
+		return this.socketManager.getReasonerConfiguration();
 	}
 
 	public String getReasonerName() {
@@ -339,9 +368,9 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	public NodeSet<OWLObjectProperty> getSubObjectProperties(
+	public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
 			OWLObjectPropertyExpression propertyExpression, boolean direct) {
-		NodeSet<OWLObjectProperty> ret = null;
+		NodeSet<OWLObjectPropertyExpression> ret = null;
 		if (direct) {
 			ReachabilityGraph<OWLObjectProperty> graph = new ReachabilityGraph<OWLObjectProperty>();
 			Set<OWLObjectProperty> reachableVertices = getFlattenedDescendantProperties(propertyExpression
@@ -352,12 +381,12 @@ public class CelReasonerInterface {
 				graph.addReachable(vertex,
 						getFlattenedDescendantProperties(vertex));
 			}
-			ret = convertToNodeSetOfOWLObjectProperty(makeEquivalentClasses(graph
+			ret = convertToNodeSetOfOWLObjectPropertyExpression(makeEquivalentClasses(convertToOWLObjectPropertyExpression(graph
 					.getDirectSuccessors(propertyExpression
-							.asOWLObjectProperty())));
+							.asOWLObjectProperty()))));
 		} else {
-			ret = convertToNodeSetOfOWLObjectProperty(makeEquivalentClasses(getFlattenedDescendantProperties(propertyExpression
-					.asOWLObjectProperty())));
+			ret = convertToNodeSetOfOWLObjectPropertyExpression(makeEquivalentClasses(convertToOWLObjectPropertyExpression(getFlattenedDescendantProperties(propertyExpression
+					.asOWLObjectProperty()))));
 		}
 		return ret;
 	}
@@ -375,9 +404,9 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	public NodeSet<OWLObjectProperty> getSuperObjectProperties(
+	public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
 			OWLObjectPropertyExpression propertyExpression, boolean direct) {
-		NodeSet<OWLObjectProperty> ret = null;
+		NodeSet<OWLObjectPropertyExpression> ret = null;
 		if (direct) {
 			ReachabilityGraph<OWLObjectProperty> graph = new ReachabilityGraph<OWLObjectProperty>();
 			Set<OWLObjectProperty> reachableVertices = getFlattenedAncestorProperties(propertyExpression
@@ -388,12 +417,12 @@ public class CelReasonerInterface {
 				graph.addReachable(vertex,
 						getFlattenedAncestorProperties(vertex));
 			}
-			ret = convertToNodeSetOfOWLObjectProperty(makeEquivalentClasses(graph
+			ret = convertToNodeSetOfOWLObjectPropertyExpression(makeEquivalentClasses(convertToOWLObjectPropertyExpression(graph
 					.getDirectSuccessors(propertyExpression
-							.asOWLObjectProperty())));
+							.asOWLObjectProperty()))));
 		} else {
-			ret = convertToNodeSetOfOWLObjectProperty(makeEquivalentClasses(getFlattenedAncestorProperties(propertyExpression
-					.asOWLObjectProperty())));
+			ret = convertToNodeSetOfOWLObjectPropertyExpression(makeEquivalentClasses(convertToOWLObjectPropertyExpression(getFlattenedAncestorProperties(propertyExpression
+					.asOWLObjectProperty()))));
 		}
 
 		return ret;
@@ -407,7 +436,7 @@ public class CelReasonerInterface {
 		return getEquivalentClasses(getOWLThing());
 	}
 
-	public Node<OWLObjectProperty> getTopObjectPropertyNode() {
+	public Node<OWLObjectPropertyExpression> getTopObjectPropertyNode() {
 		return getEquivalentObjectProperties(getOWLTopObjectProperty());
 	}
 
@@ -618,13 +647,14 @@ public class CelReasonerInterface {
 		synchronizedIfChanged();
 	}
 
-	protected Set<Set<OWLObjectProperty>> makeEquivalentClasses(
-			Set<OWLObjectProperty> flattenedSet) throws CelReasonerException {
-		Set<Set<OWLObjectProperty>> ret = new HashSet<Set<OWLObjectProperty>>();
-		Set<OWLObjectProperty> visited = new HashSet<OWLObjectProperty>();
-		for (OWLObjectProperty property : flattenedSet) {
+	protected Set<Set<OWLObjectPropertyExpression>> makeEquivalentClasses(
+			Set<OWLObjectPropertyExpression> flattenedSet)
+			throws CelReasonerException {
+		Set<Set<OWLObjectPropertyExpression>> ret = new HashSet<Set<OWLObjectPropertyExpression>>();
+		Set<OWLObjectPropertyExpression> visited = new HashSet<OWLObjectPropertyExpression>();
+		for (OWLObjectPropertyExpression property : flattenedSet) {
 			if (!visited.contains(property)) {
-				Set<OWLObjectProperty> equivalentProperties = getEquivalentObjectProperties(
+				Set<OWLObjectPropertyExpression> equivalentProperties = getEquivalentObjectProperties(
 						property).getEntities();
 				ret.add(equivalentProperties);
 				visited.addAll(equivalentProperties);
@@ -633,7 +663,7 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
-	public void prepareReasoner() throws CelReasonerException {
+	public void precomputeInferences() throws CelReasonerException {
 		synchronizedIfChanged();
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyClassify));
@@ -661,12 +691,16 @@ public class CelReasonerInterface {
 
 	protected Sexp send(Sexp message, String title) throws CelReasonerException {
 		logger.fine(title);
-		if (getProgressMonitor() != null) {
-			getProgressMonitor().reasonerTaskStarted(title);
+		if (getReasonerConfiguration() != null
+				&& getReasonerConfiguration().getProgressMonitor() != null) {
+			getReasonerConfiguration().getProgressMonitor()
+					.reasonerTaskStarted(title);
 		}
 		Sexp ret = send(message);
-		if (getProgressMonitor() != null) {
-			getProgressMonitor().reasonerTaskStopped();
+		if (getReasonerConfiguration() != null
+				&& getReasonerConfiguration().getProgressMonitor() != null) {
+			getReasonerConfiguration().getProgressMonitor()
+					.reasonerTaskStopped();
 		}
 		return ret;
 	}
@@ -680,8 +714,8 @@ public class CelReasonerInterface {
 		this.changeTracker.setOntologyChanged(true);
 	}
 
-	public void setProgressMonitor(ReasonerProgressMonitor progressMonitor) {
-		getSocketManager().setProgressMonitor(progressMonitor);
+	public void setProgressMonitor(OWLReasonerConfiguration config) {
+		getSocketManager().setReasonerConfiguration(config);
 	}
 
 	public void synchronizedIfChanged() throws CelReasonerException {
@@ -705,4 +739,5 @@ public class CelReasonerInterface {
 			this.changeTracker.setOntologyChanged(false);
 		}
 	}
+
 }

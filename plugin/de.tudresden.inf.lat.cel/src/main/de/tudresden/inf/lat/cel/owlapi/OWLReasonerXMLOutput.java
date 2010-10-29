@@ -33,6 +33,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.vocab.OWLXMLVocabulary;
@@ -85,10 +86,10 @@ public class OWLReasonerXMLOutput {
 		while (!propertiesToVisit.isEmpty()) {
 			OWLObjectProperty property = propertiesToVisit.iterator().next();
 			propertiesToVisit.remove(property);
-			Set<OWLObjectProperty> equivProperties = this.reasoner
+			Set<OWLObjectPropertyExpression> equivProperties = this.reasoner
 					.getEquivalentObjectProperties(property).getEntities();
 			if (equivProperties.size() > 1) {
-				renderEquivalentObjectProperties(equivProperties);
+				renderEquivalentObjectPropertyExpressions(equivProperties);
 			}
 			propertiesToVisit.removeAll(equivProperties);
 		}
@@ -103,11 +104,12 @@ public class OWLReasonerXMLOutput {
 		}
 
 		for (OWLObjectProperty subProperty : propertySet) {
-			Set<OWLObjectProperty> superProperties = new TreeSet<OWLObjectProperty>();
+			Set<OWLObjectPropertyExpression> superProperties = new TreeSet<OWLObjectPropertyExpression>();
 			superProperties.addAll(this.reasoner.getSuperObjectProperties(
 					subProperty, true).getFlattened());
-			for (OWLObjectProperty superProperty : superProperties) {
-				renderSubObjectPropertyOf(subProperty, superProperty);
+			for (OWLObjectPropertyExpression superProperty : superProperties) {
+				renderSubObjectPropertyOf(subProperty.asOWLObjectProperty(),
+						superProperty.asOWLObjectProperty());
 			}
 		}
 
@@ -180,11 +182,15 @@ public class OWLReasonerXMLOutput {
 		this.writer.writeEndElement();
 	}
 
-	private void renderEquivalentObjectProperties(
-			Set<OWLObjectProperty> propertySet) {
+	private void renderEquivalentObjectPropertyExpressions(
+			Set<OWLObjectPropertyExpression> propertySet) {
 		this.writer
 				.writeStartElement(OWLXMLVocabulary.EQUIVALENT_OBJECT_PROPERTIES);
-		renderEntitySet(propertySet);
+		Set<OWLObjectPropertyExpression> set = new TreeSet<OWLObjectPropertyExpression>();
+		set.addAll(propertySet);
+		for (OWLObjectPropertyExpression propertyExpression : set) {
+			renderEntity(propertyExpression.asOWLObjectProperty());
+		}
 		this.writer.writeEndElement();
 	}
 

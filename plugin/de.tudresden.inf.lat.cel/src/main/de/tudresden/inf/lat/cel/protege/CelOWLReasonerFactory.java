@@ -21,13 +21,11 @@
 
 package de.tudresden.inf.lat.cel.protege;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.protege.editor.owl.model.inference.ProtegeOWLReasonerFactoryAdapter;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.reasoner.IllegalConfigurationException;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import de.tudresden.inf.lat.cel.owlapi.CelReasoner;
 
@@ -36,31 +34,35 @@ import de.tudresden.inf.lat.cel.owlapi.CelReasoner;
  * 
  * @author Julian Mendez
  */
-public class CelReasonerFactory extends ProtegeOWLReasonerFactoryAdapter {
+public class CelOWLReasonerFactory implements OWLReasonerFactory {
 
-	private static final Logger logger = Logger
-			.getLogger("de.tudresden.inf.lat.cel");
+	@Override
+	public OWLReasoner createNonBufferingReasoner(OWLOntology ontology) {
+		return new CelReasoner(ontology);
+	}
 
-	/**
-	 * This constructor is called when the reasoner is selected in Protege 4.1.
-	 */
+	@Override
+	public OWLReasoner createNonBufferingReasoner(OWLOntology ontology,
+			OWLReasonerConfiguration configuration)
+			throws IllegalConfigurationException {
+		return new CelReasoner(ontology, configuration);
+	}
+
+	@Override
+	public OWLReasoner createReasoner(OWLOntology ontology) {
+		return new CelReasoner(ontology);
+	}
+
+	@Override
 	public OWLReasoner createReasoner(OWLOntology ontology,
-			ReasonerProgressMonitor progressMonitor) {
-		return new CelReasoner(ontology, progressMonitor);
+			OWLReasonerConfiguration configuration)
+			throws IllegalConfigurationException {
+		return new CelReasoner(ontology, configuration);
 	}
 
 	@Override
-	public void dispose() throws Exception {
+	public String getReasonerName() {
+		return getClass().getPackage().getImplementationTitle();
 	}
 
-	/**
-	 * This function is invoked when protege starts its execution. The logger
-	 * and logging level is defined here.
-	 * 
-	 * @see org.protege.editor.core.plugin.ProtegePluginInstance#initialise()
-	 */
-	@Override
-	public void initialise() throws Exception {
-		logger.setLevel(Level.CONFIG);
-	}
 }

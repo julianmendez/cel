@@ -27,7 +27,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 
 import de.tudresden.inf.lat.jsexp.Sexp;
 
@@ -58,6 +58,9 @@ public class CelSocketManager implements CelOutputListener {
 	/** Time given to CEL to finish the connection. */
 	private int closingConnectionTime = 1000;
 
+	/** Reasoner configuration, it contains the progress monitor. */
+	private OWLReasonerConfiguration configuration = null;
+
 	/** First port to try to open a socket. */
 	private int firstPort = 40000;
 
@@ -65,8 +68,9 @@ public class CelSocketManager implements CelOutputListener {
 	private int lastPort = 50000;
 
 	private CelProcessOutputHandler outputHandler = null;
+
 	private CelProcessThread processThread = null;
-	private ReasonerProgressMonitor progressMonitor = null;
+
 	/**
 	 * Timeout in milliseconds used to determine whether there is client (the
 	 * CEL reasoner in Lisp) trying to connect to the server (a Java thread).
@@ -92,8 +96,8 @@ public class CelSocketManager implements CelOutputListener {
 		return this.processThread;
 	}
 
-	public ReasonerProgressMonitor getProgressMonitor() {
-		return this.progressMonitor;
+	public OWLReasonerConfiguration getReasonerConfiguration() {
+		return this.configuration;
 	}
 
 	@Override
@@ -126,10 +130,10 @@ public class CelSocketManager implements CelOutputListener {
 		return response;
 	}
 
-	public void setProgressMonitor(ReasonerProgressMonitor monitor) {
-		this.progressMonitor = monitor;
+	public void setReasonerConfiguration(OWLReasonerConfiguration config) {
+		this.configuration = config;
 		if (getOutputHandler() != null) {
-			getOutputHandler().setProgressMonitor(progressMonitor);
+			getOutputHandler().setReasonerConfiguration(this.configuration);
 		}
 	}
 
@@ -167,7 +171,8 @@ public class CelSocketManager implements CelOutputListener {
 			}
 			this.outputHandler = new CelProcessOutputHandler(getProcess()
 					.getInputStream(), System.out);
-			getOutputHandler().setProgressMonitor(getProgressMonitor());
+			getOutputHandler().setReasonerConfiguration(
+					getReasonerConfiguration());
 			getOutputHandler().setOutputListener(this);
 			getOutputHandler().start();
 		} catch (IOException e) {
