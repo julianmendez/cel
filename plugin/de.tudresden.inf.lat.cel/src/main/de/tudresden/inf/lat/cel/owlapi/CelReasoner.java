@@ -133,9 +133,7 @@ public class CelReasoner implements OWLReasoner {
 			boolean direct) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException,
 			TimeOutException {
-		logger
-				.finer("getDataPropertyDomains(" + property + ", " + direct
-						+ ")");
+		logger.finer("getDataPropertyDomains(" + property + ", " + direct + ")");
 		throw new UnsupportedReasonerOperationInCelException();
 	}
 
@@ -362,9 +360,7 @@ public class CelReasoner implements OWLReasoner {
 			throws InconsistentOntologyException,
 			ClassExpressionNotInProfileException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
-		logger
-				.finer("getSuperClasses(" + classExpression + ", " + direct
-						+ ")");
+		logger.finer("getSuperClasses(" + classExpression + ", " + direct + ")");
 		return getCelInterface().getSuperClasses(classExpression, direct);
 	}
 
@@ -463,7 +459,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public boolean isEntailmentCheckingSupported(AxiomType<?> axiomType) {
 		logger.finer("isEntailmentCheckingSupported(" + axiomType + ")");
-		throw new UnsupportedReasonerOperationInCelException();
+		return false;
 	}
 
 	@Override
