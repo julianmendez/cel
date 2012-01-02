@@ -79,9 +79,9 @@
 	<!-- Compiles the whole project. -->
 	<target name="build">
 		<mkdir dir="${_main.bin.path}" />
-		<javac srcdir="${_src.main.path}" destdir="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" />
+		<javac srcdir="${_src.main.path}" destdir="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" includeantruntime="false" />
 		<mkdir dir="${_test.bin.path}" />
-		<javac srcdir="${_src.test.path}" destdir="${_test.bin.path}" classpath="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" />
+		<javac srcdir="${_src.test.path}" destdir="${_test.bin.path}" classpath="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" includeantruntime="false" />
 	</target>
 
 	<!-- Copies the configuration files and the binaries. -->

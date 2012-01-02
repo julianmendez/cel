@@ -22,12 +22,16 @@
 package de.tudresden.inf.lat.cel.translation;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -63,12 +67,19 @@ import de.tudresden.inf.lat.jsexp.SexpFactory;
  */
 public class CelReasonerInterface {
 
+	private static final String auxClassPrefix = "http://lat.inf.tu-dresden.de/systems/cel/auxClass";
 	private static final Logger logger = Logger
 			.getLogger(CelReasonerInterface.class.getName());
 	private static final String nothing = "Nothing";
 	public static final String reasonerName = "CEL";
 	private static final String thing = "Thing";
+
+	private int auxClassCount = 0;
+	private Map<OWLClassExpression, OWLClass> auxClassInvMap = new HashMap<OWLClassExpression, OWLClass>();
+	private Map<OWLClass, OWLClassExpression> auxClassMap = new HashMap<OWLClass, OWLClassExpression>();
 	private OntologyChangeTracker changeTracker = new OntologyChangeTracker();
+	private OntologyEntailmentChecker entailmentChecker = new OntologyEntailmentChecker(
+			this);
 	private OWLOntology ontology = null;
 	private CelParser parser = new CelParser();
 	private CelSocketManager socketManager = new CelSocketManager();
@@ -87,10 +98,10 @@ public class CelReasonerInterface {
 		getSocketManager().setReasonerConfiguration(config);
 	}
 
-	protected void assertSupportedClassExpression(OWLClassExpression description)
+	protected void assertSupportedClassExpression(OWLClassExpression expression)
 			throws CelReasonerException {
 		try {
-			getTranslator().translate(description);
+			getTranslator().translate(expression);
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -152,12 +163,43 @@ public class CelReasonerInterface {
 		return ret;
 	}
 
+	private OWLClass createAuxiliaryClass() {
+		IRI iri = IRI.create(auxClassPrefix + this.auxClassCount);
+		this.auxClassCount++;
+		OWLClass ret = getRootOntology().getOWLOntologyManager()
+				.getOWLDataFactory().getOWLClass(iri);
+		return ret;
+	}
+
 	public void dispose() {
 		if (getSocketManager() != null) {
 			Sexp message = SexpFactory.newNonAtomicSexp();
 			message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyDispose));
 			getSocketManager().stopExecution(message);
 		}
+	}
+
+	protected OWLClass flattenClassExpression(OWLClassExpression ce) {
+		OWLClass ret = null;
+		if (ce instanceof OWLClass) {
+			ret = (OWLClass) ce;
+		} else {
+			ret = this.auxClassInvMap.get(ce);
+			if (ret == null) {
+				ret = createAuxiliaryClass();
+				this.auxClassMap.put(ret, ce);
+				this.auxClassInvMap.put(ce, ret);
+				Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+				classExpressions.add(ce);
+				classExpressions.add(ret);
+				OWLAxiom newAxiom = getRootOntology().getOWLOntologyManager()
+						.getOWLDataFactory()
+						.getOWLEquivalentClassesAxiom(classExpressions);
+				getRootOntology().getOWLOntologyManager().addAxiom(
+						getRootOntology(), newAxiom);
+			}
+		}
+		return ret;
 	}
 
 	public Node<OWLClass> getBottomClassNode() {
@@ -168,14 +210,14 @@ public class CelReasonerInterface {
 		return getEquivalentObjectProperties(getOWLBottomObjectProperty());
 	}
 
-	public Node<OWLClass> getEquivalentClasses(OWLClassExpression description)
+	public Node<OWLClass> getEquivalentClasses(OWLClassExpression expression)
 			throws CelReasonerException {
 		Set<OWLClass> ret = null;
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		try {
 			message.add(SexpFactory
 					.newAtomicSexp(CelOwlApiKeyword.keyGetEquivalentClasses));
-			message.add(getTranslator().translate(description));
+			message.add(getTranslator().translate(expression));
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -214,14 +256,14 @@ public class CelReasonerInterface {
 	}
 
 	public NodeSet<OWLNamedIndividual> getInstances(
-			OWLClassExpression description, boolean direct)
+			OWLClassExpression expression, boolean direct)
 			throws CelReasonerException {
 		Set<OWLNamedIndividual> ret = new HashSet<OWLNamedIndividual>();
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory
 				.newAtomicSexp(CelOwlApiKeyword.keyGetIndividuals));
 		try {
-			message.add(getTranslator().translate(description));
+			message.add(getTranslator().translate(expression));
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -311,11 +353,11 @@ public class CelReasonerInterface {
 	}
 
 	protected Set<OWLObjectProperty> getSetOfProperties(String command,
-			OWLClassExpression description) throws CelReasonerException {
+			OWLClassExpression expression) throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		try {
 			message.add(SexpFactory.newAtomicSexp(command));
-			message.add(getTranslator().translate(description));
+			message.add(getTranslator().translate(expression));
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -337,11 +379,11 @@ public class CelReasonerInterface {
 	}
 
 	protected Set<Set<OWLClass>> getSetOfSetOfClasses(String command,
-			OWLClassExpression description) throws CelReasonerException {
+			OWLClassExpression expression) throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		try {
 			message.add(SexpFactory.newAtomicSexp(command));
-			message.add(getTranslator().translate(description));
+			message.add(getTranslator().translate(expression));
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -480,9 +522,7 @@ public class CelReasonerInterface {
 	 */
 	public boolean isClassified() throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
-		message
-				.add(SexpFactory
-						.newAtomicSexp(CelOwlApiKeyword.keyIsClassified));
+		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyIsClassified));
 		Sexp response = send(message);
 		boolean ret = getParser().parseBoolean(response);
 		return ret;
@@ -494,9 +534,7 @@ public class CelReasonerInterface {
 	 */
 	public boolean isConsistent() throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
-		message
-				.add(SexpFactory
-						.newAtomicSexp(CelOwlApiKeyword.keyIsConsistent));
+		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyIsConsistent));
 		Sexp response = send(message);
 		boolean ret = getParser().parseBoolean(response);
 		return ret;
@@ -535,18 +573,27 @@ public class CelReasonerInterface {
 						.getIRI());
 	}
 
+	public boolean isEntailed(Set<OWLAxiom> axioms) {
+		boolean ret = true;
+		for (Iterator<OWLAxiom> it = axioms.iterator(); ret && it.hasNext();) {
+			OWLAxiom axiom = it.next();
+			ret = ret && axiom.accept(this.entailmentChecker);
+		}
+		return ret;
+	}
+
 	/**
 	 * @return true if the two classes are equivalent
 	 * @throws CelReasonerException
 	 */
-	public boolean isEquivalentClass(OWLClassExpression description0,
-			OWLClassExpression description1) throws CelReasonerException {
+	public boolean isEquivalentClass(OWLClassExpression expression0,
+			OWLClassExpression expression1) throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		try {
 			message.add(SexpFactory
 					.newAtomicSexp(CelOwlApiKeyword.keyIsEquivalentClass));
-			message.add(getTranslator().translate(description0));
-			message.add(getTranslator().translate(description1));
+			message.add(getTranslator().translate(expression0));
+			message.add(getTranslator().translate(expression1));
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -579,17 +626,17 @@ public class CelReasonerInterface {
 	}
 
 	/**
-	 * @return true if the description is satisfiable
+	 * @return true if the expression is satisfiable
 	 * @throws CelReasonerException
 	 */
-	public boolean isSatisfiable(OWLClassExpression description)
+	public boolean isSatisfiable(OWLClassExpression expression)
 			throws CelReasonerException {
 		boolean ret = false;
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		try {
 			message.add(SexpFactory
 					.newAtomicSexp(CelOwlApiKeyword.keyIsSatisfiable));
-			message.add(getTranslator().translate(description));
+			message.add(getTranslator().translate(expression));
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -599,18 +646,18 @@ public class CelReasonerInterface {
 	}
 
 	/**
-	 * @return true if the first description is a subclass of the second
-	 *         description
+	 * @return true if the first expression is a subclass of the second
+	 *         expression
 	 * @throws CelReasonerException
 	 */
-	public boolean isSubClassOf(OWLClassExpression description0,
-			OWLClassExpression description1) throws CelReasonerException {
+	public boolean isSubClassOf(OWLClassExpression expression0,
+			OWLClassExpression expression1) throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		try {
 			message.add(SexpFactory
 					.newAtomicSexp(CelOwlApiKeyword.keyIsSubClassOf));
-			message.add(getTranslator().translate(description0));
-			message.add(getTranslator().translate(description1));
+			message.add(getTranslator().translate(expression0));
+			message.add(getTranslator().translate(expression1));
 		} catch (CelTranslatorException e) {
 			throw new CelReasonerException(e);
 		}
@@ -627,9 +674,7 @@ public class CelReasonerInterface {
 	public boolean isTransitive(OWLObjectProperty property)
 			throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
-		message
-				.add(SexpFactory
-						.newAtomicSexp(CelOwlApiKeyword.keyIsTransitive));
+		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyIsTransitive));
 		message.add(getTranslator().translate(property));
 		Sexp response = send(message);
 		boolean ret = getParser().parseBoolean(response);

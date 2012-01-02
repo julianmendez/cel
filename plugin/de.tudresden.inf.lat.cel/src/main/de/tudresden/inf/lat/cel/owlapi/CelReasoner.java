@@ -21,7 +21,9 @@
 
 package de.tudresden.inf.lat.cel.owlapi;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -70,15 +72,18 @@ public class CelReasoner implements OWLReasoner {
 			.getName());
 	private CelReasonerInterface celInterface = null;
 	private Date instanceStart = new Date();
+	private final Set<AxiomType<?>> supportedAxiomTypes;
 
 	public CelReasoner(OWLOntology ontology) {
 		this.instanceStart = new Date();
 		this.celInterface = new CelReasonerInterface(ontology);
+		this.supportedAxiomTypes = getSupportedTypes();
 	}
 
 	public CelReasoner(OWLOntology ontology, OWLReasonerConfiguration config) {
 		this.instanceStart = new Date();
 		this.celInterface = new CelReasonerInterface(ontology, config);
+		this.supportedAxiomTypes = getSupportedTypes();
 	}
 
 	@Override
@@ -385,6 +390,14 @@ public class CelReasoner implements OWLReasoner {
 				objectPropertyExpression, direct);
 	}
 
+	private Set<AxiomType<?>> getSupportedTypes() {
+		Set<AxiomType<?>> ret = new HashSet<AxiomType<?>>();
+		ret.add(AxiomType.EQUIVALENT_CLASSES);
+		ret.add(AxiomType.SUBCLASS_OF);
+		ret.add(AxiomType.SUB_OBJECT_PROPERTY);
+		return Collections.unmodifiableSet(ret);
+	}
+
 	@Override
 	public long getTimeOut() {
 		logger.finer("getTimeOut()");
@@ -444,22 +457,34 @@ public class CelReasoner implements OWLReasoner {
 			UnsupportedEntailmentTypeException, TimeOutException,
 			AxiomNotInProfileException, FreshEntitiesException {
 		logger.finer("isEntailed((OWLAxiom) " + axiom + ")");
-		throw new UnsupportedReasonerOperationInCelException();
+		boolean ret = getCelInterface()
+				.isEntailed(Collections.singleton(axiom));
+		logger.finer("" + ret);
+		return ret;
 	}
 
 	@Override
-	public boolean isEntailed(Set<? extends OWLAxiom> axiom)
+	public boolean isEntailed(Set<? extends OWLAxiom> axiomSet)
 			throws ReasonerInterruptedException,
 			UnsupportedEntailmentTypeException, TimeOutException,
 			AxiomNotInProfileException, FreshEntitiesException {
-		logger.finer("isEntailed((Set<? extends OWLAxiom>) " + axiom + ")");
-		throw new UnsupportedReasonerOperationInCelException();
+		logger.finer("isEntailed((Set<? extends OWLAxiom>) " + axiomSet + ")");
+		Set<OWLAxiom> set = new HashSet<OWLAxiom>();
+		for (OWLAxiom axiom : axiomSet) {
+			set.add(axiom);
+		}
+		boolean ret = getCelInterface().isEntailed(set);
+		logger.finer("" + ret);
+		return ret;
 	}
 
 	@Override
 	public boolean isEntailmentCheckingSupported(AxiomType<?> axiomType) {
 		logger.finer("isEntailmentCheckingSupported(" + axiomType + ")");
-		return false;
+		boolean ret = this.supportedAxiomTypes.contains(axiomType);
+		logger.finer("" + ret);
+		return ret;
+
 	}
 
 	@Override
