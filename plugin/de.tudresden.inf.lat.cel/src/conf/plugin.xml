@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<plugin>
+	<extension id="de.tudresden.inf.lat.cel.protege.CelProtegeReasonerFactory" point="org.protege.editor.owl.inference_reasonerfactory">
+		<name value="CEL"/>
+		<class value="de.tudresden.inf.lat.cel.protege.CelProtegeReasonerFactory"/>
+	</extension>
+</plugin>
