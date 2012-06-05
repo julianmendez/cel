@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+ *
+ * Copyright 2009 Julian Mendez
+ *
+ *
+ * This file is part of CEL Plug-in.
+ *
+ * CEL Plug-in is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CEL Plug-in is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with CEL Plug-in.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+-->
+<head>
+<title>CEL Plug-in</title>
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii" />
+<meta name="author" content="Julian Mendez" />
+</head>
+<body>
+<div>
+<h2>Overview</h2>
+This program provides an implementation of the OWL API for the CEL
+system. The CEL system is known for its scalability of reasoning in
+the lightweight description logic EL<sup>++</sup>. This logic has
+been proved suitable for several ontology applications, most
+notably from the life science domain. The description logic
+EL<sup>++</sup> has been adopted as the logical basis of the OWL 2
+EL profile of the new Web Ontology Language, integrating the
+reasoner to the OWL user community.
+<h2>Architecture</h2>
+This program is organized in layers. They are:
+<ul>
+<li>OWL API interface</li>
+<li>OWL API CEL translator</li>
+<li>Connection manager + S-expression parser</li>
+</ul>
+They are organized according to the following diagram.<br />
+<br />
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+summary="main diagram">
+<tr>
+<td>
+<table border="1" cellspacing="0" cellpadding="8" width="100%"
+summary="protege">
+<tr>
+<td><a href="#protege">Protege</a></td>
+</tr>
+</table>
+</td>
+<td>==</td>
+<td>
+<table border="1" cellspacing="0" cellpadding="8" width="100%"
+summary="CEL plug-in">
+<tr>
+<td>
+<table border="0" cellspacing="0" cellpadding="4" width="100%"
+summary="protege">
+<tr>
+<td></td>
+<td>CEL plug-in</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>==</td>
+<td>
+<table border="1" cellspacing="0" cellpadding="4" width="100%"
+summary="main interface">
+<tr>
+<td><a href="#owlapiinterface">OWL API interface</a></td>
+</tr>
+</table>
+</td>
+<td>==</td>
+<td>
+<table border="1" cellspacing="0" cellpadding="4" width="100%"
+summary="translator">
+<tr>
+<td><a href="#owlceltranslator">OWL-CEL CEL-OWL translator</a></td>
+</tr>
+</table>
+</td>
+<td>==</td>
+<td>
+<table border="1" cellspacing="0" cellpadding="4" width="100%"
+summary="connection manager">
+<tr>
+<td><a href="#connman">Connection manager</a></td>
+</tr>
+</table>
+</td>
+<td>==</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>
+<table border="1" cellspacing="0" cellpadding="4" width="100%"
+summary="S-expression parser">
+<tr>
+<td><a href="#sexpparser">S-expression parser</a></td>
+</tr>
+</table>
+</td>
+<td></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+<td>==</td>
+<td>
+<table border="1" cellspacing="0" cellpadding="8" width="100%"
+summary="reasoner">
+<tr>
+<td><a href="#celreasoner">CEL reasoner</a></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br />
+<h2>Components</h2>
+<ul>
+<li><a name="owlapiinterface" id="owlapiinterface"></a><big>OWL API
+interface</big>: Its main function is to filter all the
+unimplemented functions. Only the supported ones are forwarded to
+the next layer. This is implemented by package
+<code>de.tudresden.inf.lat.cel.protege</code> and package
+<code>de.tudresden.inf.lat.cel.owlapi</code> .</li>
+<li><a name="owlceltranslator" id="owlceltranslator"></a><big>OWL
+API CEL translator</big>: This is composed by two parts: a
+translator from OWL API into CEL S-expressions and a translator in
+the opposite direction. This is implemented by package
+<code>de.tudresden.inf.lat.cel.translation</code> and package
+<code>de.tudresden.inf.lat.cel.conversion</code> .</li>
+<li><a name="connman" id="connman"></a><big>Connection
+manager</big>: This layer manages the connection with the CEL
+reasoner. This is implemented by package
+<code>de.tudresden.inf.lat.cel.connection</code> .</li>
+<li><a name="celreasoner" id="celreasoner"></a><big>CEL
+reasoner</big>: Compiled version of the CEL system. This is
+included as compiled Lisp program.</li>
+<li><a name="sexpparser" id="sexpparser"></a><big>S-expression
+parser</big>: Parses and writes Lisp S-expressions in Java. This is
+included as a library (project jsexp).</li>
+</ul>
+If we think each package as a node, and each dependency between two
+packages as a directed edge, the structure of package dependency
+should be a directed acyclic graph (DAG). The packages should only
+make public those classes that are or could be used by another
+package preserving the DAG structure.
+<h2><a name="references" id="references"></a>References</h2>
+For more information about the referred projects, follow the links
+below.
+<ul>
+<li><a name="cel" id="cel"></a><big>CEL</big>: <a href=
+"http://lat.inf.tu-dresden.de/systems/cel">main page</a> &mdash;
+<a href="http://code.google.com/p/cel/">source code</a></li>
+<li><a name="jsexp" id="jsexp"></a><big>jsexp</big> (S-expression
+parser): <a href="http://sourceforge.net/projects/jsexp">main
+page</a> &mdash; <a href=
+"http://jsexp.svn.sourceforge.net/viewvc/jsexp">source
+code</a></li>
+<li><a name="protege" id="protege"></a><big>Protege</big>: <a href=
+"http://protege.stanford.edu/">main page</a> &mdash; <a href=
+"http://protegewiki.stanford.edu/index.php/Main_Page">wiki</a>
+&mdash; <a href=
+"http://protegewiki.stanford.edu/index.php/Protege4DevDocs">developer
+documentation</a> &mdash; <a href=
+"http://protegewiki.stanford.edu/index.php/PluginTypes">plugin
+types</a><br />
+<a href=
+"http://smi-protege.stanford.edu/repos/protege/protege4/">repository</a>
+&mdash; <a href=
+"http://smi-protege.stanford.edu/svn/protege4/">source code</a>
+&mdash; <a href=
+"http://protege.stanford.edu/download/registered.html">download</a></li>
+<li><a name="owlapi" id="owlapi"></a><big>OWL API</big>: <a href=
+"http://owlapi.sourceforge.net/">main page</a> &mdash; <a href=
+"http://owlapi.sourceforge.net/documentation.html">examples</a>
+&mdash; <a href=
+"http://www.co-ode.org/resources/tutorials/">tutorials</a> &mdash;
+<a href=
+"http://owl.cs.manchester.ac.uk/2007/05/api/javadoc">javadoc</a></li>
+<li><a name="owltwo" id="owltwo"></a><big>OWL 2</big>: <a href=
+"http://www.w3.org/2007/OWL/wiki/OWL_Working_Group">OWL Working
+Group</a> &mdash; <a href=
+"http://www.co-ode.org/resources/reference/manchester_syntax/">manchester
+syntax</a></li>
+</ul>
+</div>
+</body>
+</html>
