@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="src" path="src/conf"/>
+	<classpathentry kind="src" path="src/manifest"/>
+	<classpathentry kind="src" path="src/img"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/cel-jars/lib/de.tudresden.inf.lat.jsexp/jars/jsexp-0.1.0.jar"/>
+	<classpathentry kind="lib" path="/cel-jars/lib/org.semanticweb.owlapi/jars/owlapi-bin-3.1.0.jar"/>
+	<classpathentry kind="lib" path="/cel-jars/lib/org.protege.editor/jars/org.protege.editor.core.application-4.1.jar"/>
+	<classpathentry kind="lib" path="/cel-jars/lib/org.protege.editor/jars/org.protege.editor.owl-4.1.jar"/>
+	<classpathentry kind="lib" path="/cel-jars/lib/junit/jars/junit-4.3.1.jar"/>
+	<classpathentry kind="output" path="dist/bin"/>
+</classpath>
