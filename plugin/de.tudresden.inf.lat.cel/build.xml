@@ -24,16 +24,16 @@
  *
 -->
 
-	<!-- 
-	For more information about this file, see http://ant.apache.org 
+	<!--
+	For more information about this file, see http://ant.apache.org
 	-->
 
 	<!-- Imports version properties. -->
 	<property file="version.properties" />
 
-	<!-- 
+	<!--
 
-	The following version properties should be defined at this point : 
+	The following version properties should be defined at this point :
 	  * version : has the version number of the form major.minor.patch
 	  * build.number : has the build number
 	  * requiredjars : has a space-separated list of the jars required to compile the project and run the test cases
@@ -41,24 +41,23 @@
 
 	-->
 
-	<property name="dist.path" value="${basedir}/dist" />
+	<property name="dist.path" value="${basedir}/target" />
 
-	<property name="_src.doc.path" value="src/doc" />
-	<property name="_src.main.path" value="src/main" />
-	<property name="_src.test.path" value="src/test" />
-	<property name="_src.conf.path" value="src/conf" />
-	<property name="_src.img.path" value="src/img" />
-	<property name="_manifest.path" value="src/manifest/MANIFEST.MF" />
-	<property name="_src.appdata.path" value="src/data" />
+	<property name="_src.doc.path" value="src/main/javadoc" />
+	<property name="_src.main.path" value="src/main/java" />
+	<property name="_src.test.path" value="src/test/java" />
+	<property name="_src.conf.path" value="src/main/resources/conf" />
+	<property name="_src.img.path" value="src/main/resources/img" />
+	<property name="_manifest.path" value="src/main/manifest/MANIFEST.MF" />
 	<property name="_jars.path" value="${basedir}/.." />
 	<property name="_bundlejars.path" value="${basedir}/../cel-jars" />
 	<property name="_app.path" value="${dist.path}/app" />
 	<property name="_javadoc.path" value="${dist.path}/javadoc" />
-	<property name="_main.bin.path" value="${dist.path}/bin" />
+	<property name="_main.bin.path" value="${dist.path}/classes" />
 	<property name="_prjlib.path" value="${dist.path}/lib" />
 	<property name="_bundle.path" value="${dist.path}/bundle" />
-	<property name="_test.bin.path" value="${dist.path}/test" />
-	<property name="_test.report.path" value="${dist.path}/report" />
+	<property name="_test.bin.path" value="${dist.path}/test-classes" />
+	<property name="_test.report.path" value="${dist.path}/test-reports" />
 	<property name="_zipfile.path" value="${basedir}/../${ant.project.name}-${version}.${build.number}.zip" />
 	<property name="_debuglevel" value="lines,vars,source" />
 	<property name="_bundle.name" value="de.tudresden.inf.lat.cel" />
@@ -88,7 +87,7 @@
 	<target name="conf">
 		<copy todir="${_main.bin.path}">
 			<fileset dir="${_src.conf.path}" />
-			<fileset dir="${_src.img.path}" />			
+			<fileset dir="${_src.img.path}" />
 		</copy>
 	</target>
 
