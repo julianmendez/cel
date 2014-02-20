@@ -1,0 +1,155 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+	<!--
+ *
+ * Copyright 2009 Julian Mendez
+ *
+ *
+ * This file is part of CEL Plug-in.
+ *
+ * CEL Plug-in is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CEL Plug-in is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with CEL Plug-in.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+-->
+
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.tudresden.inf.lat</groupId>
+	<artifactId>de.tudresden.inf.lat.cel</artifactId>
+	<version>0.5.1</version>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>jsexp</groupId>
+			<artifactId>jsexp</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-distribution</artifactId>
+			<version>3.4.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.protege</groupId>
+			<artifactId>protege-editor-owl</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.protege</groupId>
+			<artifactId>protege-editor-core-application</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+
+		<finalName>de.tudresden.inf.lat.cel</finalName>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.4</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>de.tudresden.inf.lat.cel;singleton:=true</Bundle-SymbolicName>
+						<Bundle-Name>CEL Plug-in</Bundle-Name>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Bundle-Activator>org.protege.editor.core.plugin.DefaultPluginActivator</Bundle-Activator>
+						<Bundle-Category>protege</Bundle-Category>
+						<Bundle-Description>Plugin that connects to CEL Server.</Bundle-Description>
+						<Bundle-Vendor>Chair of Automata Theory - TU Dresden</Bundle-Vendor>
+						<Bundle-DocURL>http://lat.inf.tu-dresden.de</Bundle-DocURL>
+						<Bundle-ClassPath>., lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</Bundle-ClassPath>
+						<Import-Package>javax.accessibility, javax.swing, javax.swing.border, org.osgi.framework, org.protege.editor.core.ui.workspace, *</Import-Package>
+						<Include-Resource>
+						{maven-resources}, {maven-dependencies},
+						@target/classes/, lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=../cel-jars/lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
+						</Include-Resource>
+						<Require-Bundle>
+ 						org.eclipse.equinox.registry,
+ 						org.eclipse.equinox.common,
+ 						org.protege.editor.core.application,
+ 						org.protege.editor.owl,
+ 						org.semanticweb.owl.owlapi
+						</Require-Bundle>
+					</instructions>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<name>CEL Plug-in</name>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License version 3</name>
+			<url>http://www.gnu.org/licenses/lgpl.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Julian Mendez</name>
+			<email>mendez@tcs.inf.tu-dresden.de</email>
+		</developer>
+	</developers>
+
+	<repositories>
+		<repository>
+			<id>localrepo</id>
+			<name>local Maven repository</name>
+			<url>file:../cel-jars/lib</url>
+		</repository>
+	</repositories>
+
+</project>

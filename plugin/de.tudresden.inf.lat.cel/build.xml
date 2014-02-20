@@ -46,7 +46,7 @@
 	<property name="_src.doc.path" value="src/main/javadoc" />
 	<property name="_src.main.path" value="src/main/java" />
 	<property name="_src.test.path" value="src/test/java" />
-	<property name="_src.conf.path" value="src/main/resources/conf" />
+	<property name="_src.conf.path" value="src/main/resources" />
 	<property name="_src.img.path" value="src/main/resources/img" />
 	<property name="_manifest.path" value="src/main/manifest/MANIFEST.MF" />
 	<property name="_jars.path" value="${basedir}/.." />
