@@ -112,7 +112,7 @@
 	<!-- Creates the javadoc. -->
 	<target name="javadoc">
 		<mkdir dir="${_javadoc.path}" />
-		<javadoc packagenames="*" sourcepath="${_src.doc.path}:${_src.main.path}" destdir="${_javadoc.path}" version="true" use="true" windowtitle="${ant.project.name}" overview="${_src.doc.path}/overview.html" classpathref="libs.path" access="package" />
+		<javadoc packagenames="*" sourcepath="${_src.main.path}" destdir="${_javadoc.path}" version="true" use="true" windowtitle="${ant.project.name}" overview="${_src.doc.path}/overview.html" classpathref="libs.path" access="package" />
 	</target>
 
 	<!-- Creates a jar with version number. -->
