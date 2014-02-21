@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<!--
+/*
  *
  * Copyright 2009 Julian Mendez
  *
@@ -23,14 +19,10 @@
  * along with CEL Plug-in.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
--->
-<head>
-<title>protege</title>
-<meta http-equiv="content-type" content=
-"text/html; charset=us-ascii" />
-<meta name="author" content="Julian Mendez" />
-</head>
-<body>
-<p>Provides the entry point of the plug-in for Protege.</p>
-</body>
-</html>
+ */
+
+ /**
+  * Provides classes and interfaces for doing the conversion between
+  * OWL objects and S-expressions.
+  */
+package de.tudresden.inf.lat.cel.conversion;
