@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+
+	<info organisation="de.tudresden.inf.lat" module="de.tudresden.inf.lat.cel" />
+
+	<configurations defaultconfmapping="compile->default">
+		<conf name="compile" />
+		<conf name="runtime" extends="compile" />
+		<conf name="test" extends="runtime" />
+		<conf name="sources" />
+		<conf name="javadoc" />
+	</configurations>
+
+	<dependencies>
+		<dependency org="jsexp" name="jsexp" rev="0.1.0" />
+		<dependency org="net.sourceforge.owlapi" name="owlapi-distribution" rev="3.4.10" />
+		<dependency org="org.protege" name="protege-editor-owl" rev="4.1.0" />
+		<dependency org="org.protege" name="protege-editor-core-application" rev="4.1.0" />
+		<dependency org="junit" name="junit" rev="4.11" />
+	</dependencies>
+
+</ivy-module>
+
+
