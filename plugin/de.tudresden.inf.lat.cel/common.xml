@@ -63,6 +63,7 @@
 	<property name="_src.javadoc.directory" value="${_src.directory}/main/javadoc" />
 	<property name="project.build.sourceDirectory" value="${_src.directory}/main/java" />
 	<property name="project.build.testSourceDirectory" value="${_src.directory}/test/java" />
+	<property name="_project.build.resourcesDirectory" value="${_src.directory}/main/resources" />
 	<property name="_javadoc.directory" value="${project.build.directory}/site/apidocs" />
 	<property name="project.build.outputDirectory" value="${project.build.directory}/classes" />
 	<property name="project.build.testOutputDirectory" value="${project.build.directory}/test-classes" />
@@ -124,16 +125,16 @@
 	<target name="source" depends="clean">
 		<mkdir dir="${project.build.directory}" />
 		<jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-sources.jar">
-			<manifest>
-				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
-				<attribute name="Implementation-Version" value="${project.version}" />
-			</manifest>
 			<fileset dir="${_project.directory}">
 				<include name="${_src.subdirectory}/**" />
 				<include name="*.xml" />
 				<include name="*.txt" />
 				<include name="*.md" />
 			</fileset>
+			<manifest>
+				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
+				<attribute name="Implementation-Version" value="${project.version}" />
+			</manifest>
 		</jar>
 	</target>
 
@@ -174,7 +175,7 @@
 			</classpath>
 			<formatter type="plain" usefile="on" />
 			<batchtest fork="yes" todir="${project.reporting.outputDirectory}">
-				<fileset dir="${project.build.testSourceDirectory}">
+				<fileset dir="${project.build.testSourceDirectory}" erroronmissingdir="false">
 					<include name="**/*Test*.java" />
 				</fileset>
 			</batchtest>
@@ -184,7 +185,9 @@
 	<!-- Creates a jar with the binaries. -->
 	<target name="jar" depends="compile">
 		<mkdir dir="${project.build.directory}" />
-		<jar destfile="${project.build.directory}/${project.artifactId}-${project.version}.jar" basedir="${project.build.outputDirectory}">
+		<jar destfile="${project.build.directory}/${project.artifactId}-${project.version}.jar">
+			<fileset dir="${project.build.outputDirectory}" />
+			<fileset dir="${_project.build.resourcesDirectory}" erroronmissingdir="false" />
 			<manifest>
 				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
 				<attribute name="Implementation-Version" value="${project.version}" />
