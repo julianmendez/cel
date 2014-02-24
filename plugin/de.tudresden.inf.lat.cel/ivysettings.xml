@@ -6,7 +6,7 @@
 			<filesystem name="local">
 				<artifact pattern="${ivy.settings.dir}/jars/lib/[orgPath]/[module]/[revision]/[artifact]-[revision].[ext]" />
 				<artifact pattern="${ivy.settings.dir}/../[artifact]/target/[artifact]-[revision].[ext]" />
-				<artifact pattern="${ivy.settings.dir}/../cel-jars/lib/[orgPath]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<artifact pattern="${ivy.settings.dir}/lib/[orgPath]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</filesystem>
 			<ibiblio name="central" m2compatible="true" />
 		</chain>

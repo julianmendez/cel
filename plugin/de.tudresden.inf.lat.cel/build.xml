@@ -40,8 +40,8 @@
 	<property name="project.build.directory" value="${basedir}/target" />
 	<property name="project.build.outputDirectory" value="${project.build.directory}/classes" />
 	<property name="javadocsrc" value="src/main/java" />
-	<property name="_bundlejars.directory" value="${basedir}/../cel-jars" />
-	<property name="_resources.directory" value="${basedir}/src/main/resources" />
+	<property name="_bundlejars.directory" value="${basedir}" />
+	<property name="_project.build.resourcesDirectory" value="${basedir}/src/main/resources" />
 
 	<!-- Cleans compiled files. -->
 	<target name="clean">
@@ -53,7 +53,7 @@
 		<jar destfile="${project.build.directory}/${project.artifactId}.jar">
 			<fileset dir="${project.build.outputDirectory}" />
 			<fileset dir="${_bundlejars.directory}" includes="${bundlejars}" />
-			<fileset dir="${_resources.directory}" includes="**/*" />
+			<fileset dir="${_project.build.resourcesDirectory}" />
 			<manifest>
 				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
 				<attribute name="Implementation-Version" value="${project.version}" />
