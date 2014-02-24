@@ -1,148 +1,87 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="de.tudresden.inf.lat.cel" default="dist" basedir=".">
 
-<!--
+	<!--
  *
  * Copyright 2009 Julian Mendez
  *
  *
  * This file is part of CEL Plug-in.
  *
- * CEL Plug-in is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * CEL Plug-in is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with CEL Plug-in.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
 -->
 
-	<!--
-	For more information about this file, see http://ant.apache.org
-	-->
+	<!-- For more information about this file, see http://ant.apache.org -->
 
-	<!-- Imports version properties. -->
-	<property file="version.properties" />
+	<!-- Imports 'project.groupId', 'project.artifactId', and 'project.version' properties. -->
+	<xmlproperty file="pom.xml" />
 
-	<!--
+	<!-- Imports build properties. -->
+	<property file="build.properties" />
 
-	The following version properties should be defined at this point :
-	  * version : has the version number of the form major.minor.patch
-	  * build.number : has the build number
-	  * requiredjars : has a space-separated list of the jars required to compile the project and run the test cases
-	  * bundlejars : has a space-separated list of the jars included in the bundle
+	<!-- Project-specific properties. -->
+	<fail unless="project.groupId">Error: 'project.groupId' is undefined. This property is the group identifier.</fail>
+	<fail unless="project.artifactId">Error: 'project.artifactId' is undefined. This property is the artifact identifier.</fail>
+	<fail unless="project.version">Error: 'project.version' is undefined. This property is the version number in the form major.minor.patch.</fail>
 
-	-->
+	<property name="project.build.directory" value="${basedir}/target" />
+	<property name="project.build.outputDirectory" value="${project.build.directory}/classes" />
+	<property name="javadocsrc" value="src/main/java" />
+	<property name="_bundlejars.directory" value="${basedir}/../cel-jars" />
+	<property name="_resources.directory" value="${basedir}/src/main/resources" />
 
-	<property name="dist.path" value="${basedir}/target" />
-
-	<property name="_src.doc.path" value="src/main/javadoc" />
-	<property name="_src.main.path" value="src/main/java" />
-	<property name="_src.test.path" value="src/test/java" />
-	<property name="_src.conf.path" value="src/main/resources" />
-	<property name="_src.img.path" value="src/main/resources/img" />
-	<property name="_manifest.path" value="src/main/manifest/MANIFEST.MF" />
-	<property name="_jars.path" value="${basedir}/.." />
-	<property name="_bundlejars.path" value="${basedir}/../cel-jars" />
-	<property name="_app.path" value="${dist.path}/app" />
-	<property name="_javadoc.path" value="${dist.path}/javadoc" />
-	<property name="_main.bin.path" value="${dist.path}/classes" />
-	<property name="_prjlib.path" value="${dist.path}/lib" />
-	<property name="_bundle.path" value="${dist.path}/bundle" />
-	<property name="_test.bin.path" value="${dist.path}/test-classes" />
-	<property name="_test.report.path" value="${dist.path}/test-reports" />
-	<property name="_zipfile.path" value="${basedir}/../${ant.project.name}-${version}.${build.number}.zip" />
-	<property name="_debuglevel" value="lines,vars,source" />
-	<property name="_bundle.name" value="de.tudresden.inf.lat.cel" />
-
-	<path id="libs.path">
-		<fileset dir="${_jars.path}" includes="${requiredjars}" />
-	</path>
-
-	<patternset id="testclasses.patternset">
-		<include name="**/*Test.java" />
-	</patternset>
-
-	<!-- Cleans everything. -->
+	<!-- Cleans compiled files. -->
 	<target name="clean">
-		<delete dir="${dist.path}" />
+		<delete dir="${project.build.directory}" />
 	</target>
 
-	<!-- Compiles the whole project. -->
-	<target name="build">
-		<mkdir dir="${_main.bin.path}" />
-		<javac srcdir="${_src.main.path}" destdir="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" includeantruntime="false" />
-		<mkdir dir="${_test.bin.path}" />
-		<javac srcdir="${_src.test.path}" destdir="${_test.bin.path}" classpath="${_main.bin.path}" classpathref="libs.path" debug="on" debuglevel="${_debuglevel}" includeantruntime="false" />
-	</target>
-
-	<!-- Copies the configuration files and the binaries. -->
-	<target name="conf">
-		<copy todir="${_main.bin.path}">
-			<fileset dir="${_src.conf.path}" />
-			<fileset dir="${_src.img.path}" />
-		</copy>
-	</target>
-
-	<!-- Performs the unit tests. -->
-	<target name="test" depends="build">
-		<mkdir dir="${_test.report.path}" />
-		<junit printsummary="on" haltonfailure="yes" fork="yes">
-			<classpath>
-				<pathelement path="${_main.bin.path}" />
-				<pathelement path="${_test.bin.path}" />
-				<fileset dir="${_jars.path}" includes="${requiredjars}" />
-			</classpath>
-			<formatter type="plain" usefile="on" />
-			<batchtest fork="yes" todir="${_test.report.path}">
-				<fileset dir="${_src.test.path}">
-					<patternset refid="testclasses.patternset" />
-				</fileset>
-			</batchtest>
-		</junit>
-	</target>
-
-	<!-- Creates the javadoc. -->
-	<target name="javadoc">
-		<mkdir dir="${_javadoc.path}" />
-		<javadoc packagenames="*" sourcepath="${_src.main.path}" destdir="${_javadoc.path}" version="true" use="true" windowtitle="${ant.project.name}" overview="${_src.doc.path}/overview.html" classpathref="libs.path" access="package" />
-	</target>
-
-	<!-- Creates a jar with version number. -->
-	<target name="jar" depends="build">
-		<mkdir dir="${_prjlib.path}" />
-		<jar destfile="${_prjlib.path}/${ant.project.name}-${version}.jar" basedir="${_main.bin.path}">
+	<!-- Creates the bundle. -->
+	<target name="bundle">
+		<jar destfile="${project.build.directory}/${project.artifactId}.jar">
+			<fileset dir="${project.build.outputDirectory}" />
+			<fileset dir="${_bundlejars.directory}" includes="${bundlejars}" />
+			<fileset dir="${_resources.directory}" includes="**/*" />
 			<manifest>
-				<attribute name="Implementation-Title" value="${ant.project.name}" />
-				<attribute name="Implementation-Version" value="${version}" />
+				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
+				<attribute name="Implementation-Version" value="${project.version}" />
+				<attribute name="Bundle-Version" value="${project.version}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Name" value="CEL Plug-in" />
+				<attribute name="Bundle-SymbolicName" value="${project.artifactId};singleton:=true" />
+				<attribute name="Bundle-Category" value="protege" />
+				<attribute name="Bundle-Description" value="Plugin that connects to CEL Server." />
+				<attribute name="Bundle-Vendor" value="Chair of Automata Theory - TU Dresden" />
+				<attribute name="Bundle-DocURL" value="http://lat.inf.tu-dresden.de" />
+				<attribute name="Bundle-ClassPath" value="., ${bundlejars}" />
+				<attribute name="Import-Package" value="org.apache.log4j, org.osgi.framework" />
+				<attribute name="Bundle-Activator" value="org.protege.editor.core.plugin.DefaultPluginActivator" />
+				<attribute name="Require-Bundle" value="org.eclipse.equinox.registry, org.eclipse.equinox.common, org.protege.editor.core.application, org.protege.editor.owl, org.semanticweb.owl.owlapi" />
 			</manifest>
 		</jar>
 	</target>
 
-	<!-- Creates the bundle. -->
-	<target name="bundle" depends="build">
-		<mkdir dir="${_bundle.path}" />
-		<jar destfile="${_bundle.path}/${_bundle.name}.jar" manifest="${_manifest.path}">
-			<fileset dir="${_main.bin.path}" />
-			<fileset dir="${_bundlejars.path}" includes="${bundlejars}" />
-		</jar>
-	</target>
-
-	<!-- Creates a compressed file containing the whole project. -->
-	<target name="zip">
-		<delete file="${_zipfile.path}" />
-		<zip destfile="${_zipfile.path}" basedir="${basedir}" />
-	</target>
-
-	<target name="dist" depends="clean, build, conf, javadoc, jar, bundle">
-		<!--buildnumber file="version.properties"/-->
+	<!-- Compiles this module. -->
+	<target name="dist">
+		<subant genericantfile="common.xml" buildpath=".">
+			<property name="project.groupId" value="${project.groupId}" />
+			<property name="project.artifactId" value="${project.artifactId}" />
+			<property name="project.version" value="${project.version}" />
+			<property name="javadocsrc" value="${javadocsrc}" />
+		</subant>
+		<antcall target="bundle" />
 	</target>
 
 </project>
