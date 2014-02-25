@@ -104,7 +104,7 @@
 						<Import-Package>javax.accessibility, javax.swing, javax.swing.border, org.osgi.framework, org.protege.editor.core.ui.workspace, *</Import-Package>
 						<Include-Resource>
 						{maven-resources}, {maven-dependencies},
-						@target/classes/, lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=jars/lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
+						lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
 						</Include-Resource>
 						<Require-Bundle>
  						org.eclipse.equinox.registry,
