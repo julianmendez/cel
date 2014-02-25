@@ -29,7 +29,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.tudresden.inf.lat</groupId>
+	<groupId>de.tudresden.inf.lat.cel</groupId>
 	<artifactId>de.tudresden.inf.lat.cel</artifactId>
 	<version>0.5.1</version>
 	<packaging>bundle</packaging>
@@ -37,7 +37,7 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>jsexp</groupId>
+			<groupId>de.tudresden.inf.lat.jsexp</groupId>
 			<artifactId>jsexp</artifactId>
 			<version>0.1.0</version>
 		</dependency>
@@ -100,11 +100,11 @@
 						<Bundle-Description>Plugin that connects to CEL Server.</Bundle-Description>
 						<Bundle-Vendor>Chair of Automata Theory - TU Dresden</Bundle-Vendor>
 						<Bundle-DocURL>http://lat.inf.tu-dresden.de</Bundle-DocURL>
-						<Bundle-ClassPath>., lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</Bundle-ClassPath>
+						<Bundle-ClassPath>., lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</Bundle-ClassPath>
 						<Import-Package>javax.accessibility, javax.swing, javax.swing.border, org.osgi.framework, org.protege.editor.core.ui.workspace, *</Import-Package>
 						<Include-Resource>
 						{maven-resources}, {maven-dependencies},
-						lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=lib/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
+						lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
 						</Include-Resource>
 						<Require-Bundle>
  						org.eclipse.equinox.registry,
