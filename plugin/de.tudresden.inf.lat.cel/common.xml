@@ -68,7 +68,7 @@
 	<property name="project.build.outputDirectory" value="${project.build.directory}/classes" />
 	<property name="project.build.testOutputDirectory" value="${project.build.directory}/test-classes" />
 	<property name="project.reporting.outputDirectory" value="${project.build.directory}/test-reports" />
-	<property name="_jars.subdirectory" value="jars/lib" />
+	<property name="_jars.subdirectory" value="target/jars/lib" />
 	<property name="_debuglevel" value="lines,vars,source" />
 
 	<!-- Beginning of snippet for Ivy. -->
