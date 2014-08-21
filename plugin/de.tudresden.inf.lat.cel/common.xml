@@ -141,7 +141,7 @@
 	<!-- Compiles the project. -->
 	<target name="compile">
 		<mkdir dir="${project.build.outputDirectory}" />
-		<javac srcdir="${project.build.sourceDirectory}" destdir="${project.build.outputDirectory}" debug="true" debuglevel="${_debuglevel}" includeantruntime="false">
+		<javac srcdir="${project.build.sourceDirectory}" destdir="${project.build.outputDirectory}" debug="true" debuglevel="${_debuglevel}" includeantruntime="false" createMissingPackageInfoClass="false">
 			<classpath>
 				<path refid="compile.path" />
 			</classpath>
@@ -156,7 +156,7 @@
 	<!-- Compiles the tests. -->
 	<target name="compiletests" depends="compile, checktestsources" if="testSourceDirectory.available">
 		<mkdir dir="${project.build.testOutputDirectory}" />
-		<javac srcdir="${project.build.testSourceDirectory}" destdir="${project.build.testOutputDirectory}" classpath="${project.build.outputDirectory}" debug="true" debuglevel="${_debuglevel}" includeantruntime="false">
+		<javac srcdir="${project.build.testSourceDirectory}" destdir="${project.build.testOutputDirectory}" classpath="${project.build.outputDirectory}" debug="true" debuglevel="${_debuglevel}" includeantruntime="false" createMissingPackageInfoClass="false">
 			<classpath>
 				<path refid="test.path" />
 				<pathelement path="${project.build.directory}" />
