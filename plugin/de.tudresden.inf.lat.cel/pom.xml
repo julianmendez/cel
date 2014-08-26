@@ -75,9 +75,84 @@
 
 	<build>
 
-		<finalName>de.tudresden.inf.lat.cel</finalName>
+		<finalName>${project.artifactId}</finalName>
 
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>javadoc</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+
+					<execution>
+						<id>classes</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>${basedir}/src/assembly/classes.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>javadoc</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}-${project.version}</finalName>
+							<descriptors>
+								<descriptor>${basedir}/src/assembly/javadoc.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -100,18 +175,21 @@
 						<Bundle-Description>Plugin that connects to CEL Server.</Bundle-Description>
 						<Bundle-Vendor>Chair of Automata Theory - TU Dresden</Bundle-Vendor>
 						<Bundle-DocURL>http://lat.inf.tu-dresden.de</Bundle-DocURL>
-						<Bundle-ClassPath>., lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</Bundle-ClassPath>
-						<Import-Package>javax.accessibility, javax.swing, javax.swing.border, org.osgi.framework, org.protege.editor.core.ui.workspace, *</Import-Package>
+						<Bundle-ClassPath>.,
+							lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</Bundle-ClassPath>
+						<Import-Package>javax.accessibility, javax.swing,
+							javax.swing.border, org.osgi.framework,
+							org.protege.editor.core.ui.workspace, *</Import-Package>
 						<Include-Resource>
-						{maven-resources}, {maven-dependencies},
-						lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
+							{maven-resources}, {maven-dependencies},
+							lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
 						</Include-Resource>
 						<Require-Bundle>
- 						org.eclipse.equinox.registry,
- 						org.eclipse.equinox.common,
- 						org.protege.editor.core.application,
- 						org.protege.editor.owl,
- 						org.semanticweb.owl.owlapi
+							org.eclipse.equinox.registry,
+							org.eclipse.equinox.common,
+							org.protege.editor.core.application,
+							org.protege.editor.owl,
+							org.semanticweb.owl.owlapi
 						</Require-Bundle>
 					</instructions>
 				</configuration>
