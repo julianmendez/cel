@@ -195,14 +195,26 @@
 		</jar>
 	</target>
 
-	<!-- Creates the javadoc. -->
+	<!-- Creates the Javadoc. -->
 	<target name="javadoc" if="javadocsrc">
 		<mkdir dir="${_javadoc.directory}" />
 		<javadoc packagenames="*" sourcepath="${javadocsrc}" destdir="${_javadoc.directory}" version="true" use="true" windowtitle="${project.groupId}-${project.artifactId}" overview="${_src.javadoc.directory}/overview.html" access="package" useexternalfile="true" />
 	</target>
 
+	<!-- Creates a jar with the Javadoc. -->
+	<target name="javadocjar" depends="javadoc" if="javadocsrc">
+		<mkdir dir="${project.build.directory}" />
+		<jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-javadoc.jar">
+			<fileset dir="${_javadoc.directory}" />
+			<manifest>
+				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
+				<attribute name="Implementation-Version" value="${project.version}" />
+			</manifest>
+		</jar>
+	</target>
+
 	<!-- Executes all the tasks. -->
-	<target name="dist" depends="clean, source, retrieve, compile, checktestsources, compiletests, test, jar, javadoc" />
+	<target name="dist" depends="clean, source, retrieve, compile, checktestsources, compiletests, test, jar, javadoc, javadocjar" />
 
 </project>
 
