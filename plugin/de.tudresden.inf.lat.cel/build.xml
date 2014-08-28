@@ -39,7 +39,6 @@
 
 	<property name="project.build.directory" value="${basedir}/target" />
 	<property name="project.build.outputDirectory" value="${project.build.directory}/classes" />
-	<property name="javadocsrc" value="src/main/java" />
 	<property name="_bundlejars.directory" value="${basedir}" />
 	<property name="_project.build.resourcesDirectory" value="${basedir}/src/main/resources" />
 
@@ -79,7 +78,6 @@
 			<property name="project.groupId" value="${project.groupId}" />
 			<property name="project.artifactId" value="${project.artifactId}" />
 			<property name="project.version" value="${project.version}" />
-			<property name="javadocsrc" value="${javadocsrc}" />
 		</subant>
 		<antcall target="bundle" />
 	</target>
