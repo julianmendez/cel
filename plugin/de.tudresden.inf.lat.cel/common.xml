@@ -54,14 +54,16 @@
 	<fail unless="project.artifactId">Error: 'project.artifactId' is undefined. This property is the artifact identifier.</fail>
 	<fail unless="project.version">Error: 'project.version' is undefined. This property is the version number in the form major.minor.patch.</fail>
 
-	<!-- Default definition of Javadoc source path. -->
+	<!-- Default value for Javadoc source path. -->
 	<property name="javadoc.sourcepath" value="src/main/java:src/main/javadoc" />
 
+	<!-- Default value for project directory. -->
+	<property name="project.directory" value="${basedir}" />
+
 	<!-- General properties. -->
-	<property name="_project.directory" value="${basedir}" />
-	<property name="project.build.directory" value="${_project.directory}/target" />
+	<property name="project.build.directory" value="${project.directory}/target" />
 	<property name="_src.subdirectory" value="src" />
-	<property name="_src.directory" value="${_project.directory}/${_src.subdirectory}" />
+	<property name="_src.directory" value="${project.directory}/${_src.subdirectory}" />
 	<property name="_src.javadoc.directory" value="${_src.directory}/main/javadoc" />
 	<property name="project.build.sourceDirectory" value="${_src.directory}/main/java" />
 	<property name="project.build.testSourceDirectory" value="${_src.directory}/test/java" />
@@ -84,6 +86,8 @@
 	<property name="ivy.home" value="${user.home}/.ant" />
 	<property name="ivy.jar.directory" value="${ivy.home}/lib/org/apache/ivy/ivy/${ivy.install.version}" />
 	<property name="ivy.jar.file" value="${ivy.jar.directory}/ivy-${ivy.install.version}.jar" />
+
+	<!-- Default value for directory of dependency jars. -->
 	<property name="jars.directory" value="${ivy.settings.dir}/target/jars/lib" />
 
 	<!-- Downloads Ivy. -->
@@ -127,7 +131,7 @@
 	<target name="source" depends="clean">
 		<mkdir dir="${project.build.directory}" />
 		<jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-sources.jar">
-			<fileset dir="${_project.directory}">
+			<fileset dir="${project.directory}">
 				<include name="${_src.subdirectory}/**" />
 				<include name="*.xml" />
 				<include name="*.txt" />
@@ -169,7 +173,7 @@
 	<!-- Performs the unit tests. -->
 	<target name="test" depends="compiletests" if="testSourceDirectory.available">
 		<mkdir dir="${project.reporting.outputDirectory}" />
-		<junit printsummary="on" haltonfailure="yes" fork="yes" dir="${_project.directory}">
+		<junit printsummary="on" haltonfailure="yes" fork="yes" dir="${project.directory}">
 			<classpath>
 				<path refid="test.path" />
 				<pathelement path="${project.build.outputDirectory}" />
