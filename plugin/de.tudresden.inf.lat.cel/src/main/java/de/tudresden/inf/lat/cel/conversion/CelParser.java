@@ -42,7 +42,7 @@ import de.tudresden.inf.lat.jsexp.SexpParserException;
 
 /**
  * This class has the methods to parse CEL S-expressions and return OWL objects.
- * 
+ *
  * @author Julian Mendez
  */
 public class CelParser {
@@ -69,8 +69,9 @@ public class CelParser {
 	/**
 	 * Note: This function returns false for every S-expression which is not
 	 * shown as 't' or 'T'.
-	 * 
+	 *
 	 * @param expr
+	 *            S-expression
 	 * @return true if the S-expression is 't' or 'T'
 	 */
 	public boolean parseBoolean(Sexp expr) {
@@ -193,7 +194,7 @@ public class CelParser {
 		Sexp ret = symbolWithVbars;
 		if (symbolWithVbars.isAtomic()) {
 			String text = symbolWithVbars.toString();
-			if (text.length() >= 2
+			if ((text.length() >= 2)
 					&& text.startsWith("" + LispKeyword.lispVBar)
 					&& text.endsWith("" + LispKeyword.lispVBar)) {
 				ret = SexpFactory.newAtomicSexp(text.substring(1,

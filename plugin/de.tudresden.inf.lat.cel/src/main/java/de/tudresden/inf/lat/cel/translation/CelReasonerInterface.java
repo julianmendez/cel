@@ -62,7 +62,7 @@ import de.tudresden.inf.lat.jsexp.SexpFactory;
 
 /**
  * This class provides all the implemented methods for using the CEL reasoner.
- * 
+ *
  * @author Julian Mendez
  */
 public class CelReasonerInterface {
@@ -75,16 +75,16 @@ public class CelReasonerInterface {
 	private static final String thing = "Thing";
 
 	private int auxClassCount = 0;
-	private Map<OWLClassExpression, OWLClass> auxClassInvMap = new HashMap<OWLClassExpression, OWLClass>();
-	private Map<OWLClass, OWLClassExpression> auxClassMap = new HashMap<OWLClass, OWLClassExpression>();
-	private OntologyChangeTracker changeTracker = new OntologyChangeTracker();
-	private OntologyEntailmentChecker entailmentChecker = new OntologyEntailmentChecker(
+	private final Map<OWLClassExpression, OWLClass> auxClassInvMap = new HashMap<OWLClassExpression, OWLClass>();
+	private final Map<OWLClass, OWLClassExpression> auxClassMap = new HashMap<OWLClass, OWLClassExpression>();
+	private final OntologyChangeTracker changeTracker = new OntologyChangeTracker();
+	private final OntologyEntailmentChecker entailmentChecker = new OntologyEntailmentChecker(
 			this);
 	private OWLOntology ontology = null;
-	private CelParser parser = new CelParser();
-	private CelSocketManager socketManager = new CelSocketManager();
-	private Long timeOut = Long.MAX_VALUE;
-	private CelTranslator translator = new CelTranslator();
+	private final CelParser parser = new CelParser();
+	private final CelSocketManager socketManager = new CelSocketManager();
+	private final Long timeOut = Long.MAX_VALUE;
+	private final CelTranslator translator = new CelTranslator();
 
 	public CelReasonerInterface(OWLOntology ontology) {
 		this.ontology = ontology;
@@ -109,8 +109,9 @@ public class CelReasonerInterface {
 
 	/**
 	 * Converts a NIL into a (), and a (NIL) into a (()).
-	 * 
+	 *
 	 * @param expr
+	 *            S-expression
 	 * @return the () list if NIL is found, and (()) if (NIL) is found.
 	 */
 	protected Sexp convertNil(Sexp expr) {
@@ -501,6 +502,7 @@ public class CelReasonerInterface {
 	/**
 	 * @return the set of inconsistent classes
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public Node<OWLClass> getUnsatisfiableClasses() throws CelReasonerException {
 		Set<OWLClass> ret = new HashSet<OWLClass>();
@@ -519,6 +521,7 @@ public class CelReasonerInterface {
 	/**
 	 * @return true if the ontology is classified
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public boolean isClassified() throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
@@ -531,6 +534,7 @@ public class CelReasonerInterface {
 	/**
 	 * @return true if the current ontology is consistent
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public boolean isConsistent() throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
@@ -541,6 +545,8 @@ public class CelReasonerInterface {
 	}
 
 	/**
+	 * @param cls
+	 *            OWL class
 	 * @return true if it is defined
 	 */
 	public boolean isDefined(OWLClass cls) {
@@ -548,27 +554,31 @@ public class CelReasonerInterface {
 		if (cls.toString().equals(thing) || cls.toString().equals(nothing)) {
 			ret = true;
 		} else {
-			ret = this.ontology != null
+			ret = (this.ontology != null)
 					&& this.ontology.containsClassInSignature(cls.getIRI());
 		}
 		return ret;
 	}
 
 	/**
+	 * @param individual
+	 *            OWL named individual
 	 * @return true if it is defined
 	 */
 	public boolean isDefined(OWLNamedIndividual individual) {
-		return this.ontology != null
+		return (this.ontology != null)
 				&& this.ontology.containsIndividualInSignature(individual
 						.getIRI());
 
 	}
 
 	/**
+	 * @param property
+	 *            OWL object property
 	 * @return true if it is defined
 	 */
 	public boolean isDefined(OWLObjectProperty property) {
-		return this.ontology != null
+		return (this.ontology != null)
 				&& this.ontology.containsObjectPropertyInSignature(property
 						.getIRI());
 	}
@@ -583,8 +593,13 @@ public class CelReasonerInterface {
 	}
 
 	/**
+	 * @param expression0
+	 *            OWL class expression
+	 * @param expression1
+	 *            OWL class expression
 	 * @return true if the two classes are equivalent
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public boolean isEquivalentClass(OWLClassExpression expression0,
 			OWLClassExpression expression1) throws CelReasonerException {
@@ -612,8 +627,10 @@ public class CelReasonerInterface {
 
 	/**
 	 * @param property
+	 *            OWL object property
 	 * @return true if the property is reflexive
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public boolean isReflexive(OWLObjectProperty property)
 			throws CelReasonerException {
@@ -626,8 +643,11 @@ public class CelReasonerInterface {
 	}
 
 	/**
+	 * @param expression
+	 *            OWL class expression
 	 * @return true if the expression is satisfiable
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public boolean isSatisfiable(OWLClassExpression expression)
 			throws CelReasonerException {
@@ -646,9 +666,14 @@ public class CelReasonerInterface {
 	}
 
 	/**
+	 * @param expression0
+	 *            OWL class expression
+	 * @param expression1
+	 *            OWL class expression
 	 * @return true if the first expression is a subclass of the second
 	 *         expression
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public boolean isSubClassOf(OWLClassExpression expression0,
 			OWLClassExpression expression1) throws CelReasonerException {
@@ -668,8 +693,10 @@ public class CelReasonerInterface {
 
 	/**
 	 * @param property
+	 *            OWL object property
 	 * @return true if the property is transitive
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public boolean isTransitive(OWLObjectProperty property)
 			throws CelReasonerException {
@@ -683,8 +710,12 @@ public class CelReasonerInterface {
 
 	/**
 	 * Loads the ontology.
-	 * 
+	 *
+	 * @param setOfOntologies
+	 *            set of OWL ontologies
+	 *
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public void loadOntologies(Set<OWLOntology> setOfOntologies)
 			throws CelReasonerException {
@@ -717,6 +748,7 @@ public class CelReasonerInterface {
 
 	/**
 	 * @throws CelReasonerException
+	 *             if a CEL reasoner error occurs
 	 */
 	public void realise() throws CelReasonerException {
 		Sexp message = SexpFactory.newNonAtomicSexp();
@@ -736,14 +768,14 @@ public class CelReasonerInterface {
 
 	protected Sexp send(Sexp message, String title) throws CelReasonerException {
 		logger.fine(title);
-		if (getReasonerConfiguration() != null
-				&& getReasonerConfiguration().getProgressMonitor() != null) {
+		if ((getReasonerConfiguration() != null)
+				&& (getReasonerConfiguration().getProgressMonitor() != null)) {
 			getReasonerConfiguration().getProgressMonitor()
 					.reasonerTaskStarted(title);
 		}
 		Sexp ret = send(message);
-		if (getReasonerConfiguration() != null
-				&& getReasonerConfiguration().getProgressMonitor() != null) {
+		if ((getReasonerConfiguration() != null)
+				&& (getReasonerConfiguration().getProgressMonitor() != null)) {
 			getReasonerConfiguration().getProgressMonitor()
 					.reasonerTaskStopped();
 		}

@@ -34,9 +34,9 @@ import de.tudresden.inf.lat.jsexp.Sexp;
 /**
  * This class initializes the Java server for CEL. In the process, it creates
  * the corresponding socket for communicating with the reasoner in Lisp.
- * 
+ *
  * @author Julian Mendez
- * 
+ *
  */
 public class CelSocketManager implements CelOutputListener {
 
@@ -44,7 +44,7 @@ public class CelSocketManager implements CelOutputListener {
 	public static final String greetingMessage = ""
 			+ "\nCEL: [C]lassifier for the Description Logic [E][L]+ "
 			+ "\nCopyright (C) 2005-2010: B. Suntisrivaraporn and TU Dresden."
-			+ "\nCEL Plug-in - Copyright (C) 2009-2012: Julian Mendez."
+			+ "\nCEL Plug-in - Copyright (C) 2009-2014: Julian Mendez."
 			+ "\nCEL comes with ABSOLUTELY NO WARRANTY; use at your own risk."
 			+ "\nThis is free software for research and evaluation purposes."
 			+ "\nCommercial use is prohibited; please contact the author."
@@ -56,16 +56,16 @@ public class CelSocketManager implements CelOutputListener {
 	private CelSocket celSocket = null;
 
 	/** Time given to CEL to finish the connection. */
-	private int closingConnectionTime = 1000;
+	private final int closingConnectionTime = 1000;
 
 	/** Reasoner configuration, it contains the progress monitor. */
 	private OWLReasonerConfiguration configuration = null;
 
 	/** First port to try to open a socket. */
-	private int firstPort = 40000;
+	private final int firstPort = 40000;
 
 	/** Last port to try to open a socket. */
-	private int lastPort = 50000;
+	private final int lastPort = 50000;
 
 	private CelProcessOutputHandler outputHandler = null;
 
@@ -75,7 +75,7 @@ public class CelSocketManager implements CelOutputListener {
 	 * Timeout in milliseconds used to determine whether there is client (the
 	 * CEL reasoner in Lisp) trying to connect to the server (a Java thread).
 	 */
-	private int timeoutForServer = 10000;
+	private final int timeoutForServer = 10000;
 
 	public CelSocketManager() {
 	}
@@ -115,11 +115,12 @@ public class CelSocketManager implements CelOutputListener {
 	/**
 	 * Sends an S-expression to the CEL reasoner, starting this manager if
 	 * necessary.
-	 * 
+	 *
 	 * @param message
 	 *            message to be sent.
 	 * @return the answer given by the CEL reasoner.
 	 * @throws CelConnectionException
+	 *             if the plug-in cannot communicate with the CEL reasoner
 	 */
 	public Sexp send(Sexp message) throws CelConnectionException {
 		Sexp response = null;
@@ -144,7 +145,7 @@ public class CelSocketManager implements CelOutputListener {
 		int port = -1;
 		ServerSocket server = null;
 		boolean found = false;
-		for (int index = this.firstPort; !found && index < this.lastPort; index++) {
+		for (int index = this.firstPort; !found && (index < this.lastPort); index++) {
 			try {
 				server = new ServerSocket(index);
 				port = index;
@@ -154,12 +155,12 @@ public class CelSocketManager implements CelOutputListener {
 		}
 		if (!found) {
 			throw new RuntimeException("No available ports between "
-					+ firstPort + " and " + lastPort + ".");
+					+ this.firstPort + " and " + this.lastPort + ".");
 		}
 		try {
-			server.setSoTimeout(timeoutForServer);
+			server.setSoTimeout(this.timeoutForServer);
 			logger.fine("Java CEL server waits for Lisp CEL clients on port "
-					+ port + " for " + timeoutForServer + " milliseconds.");
+					+ port + " for " + this.timeoutForServer + " milliseconds.");
 			this.processThread = new CelProcessThread(port);
 			this.processThread.start();
 			Socket connection = server.accept();
@@ -185,12 +186,12 @@ public class CelSocketManager implements CelOutputListener {
 
 	/**
 	 * Stops the execution.
-	 * 
+	 *
 	 * @param endMessage
 	 *            command required by the CEL reasoner to finish its execution.
 	 */
 	public void stopExecution(Sexp endMessage) {
-		if (getCelSocket() != null && !getCelSocket().getSocket().isClosed()) {
+		if ((getCelSocket() != null) && !getCelSocket().getSocket().isClosed()) {
 			try {
 				try {
 					send(endMessage);
@@ -198,7 +199,7 @@ public class CelSocketManager implements CelOutputListener {
 					logger.log(Level.WARNING,
 							"CEL server rejected dispose command.", e);
 				}
-				Thread.sleep(closingConnectionTime);
+				Thread.sleep(this.closingConnectionTime);
 				getCelSocket().getSocket().close();
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, "IO exception", e);

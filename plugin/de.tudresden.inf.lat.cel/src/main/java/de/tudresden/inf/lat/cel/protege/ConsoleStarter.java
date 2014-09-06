@@ -24,7 +24,6 @@ package de.tudresden.inf.lat.cel.protege;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,9 +38,9 @@ import de.tudresden.inf.lat.cel.owlapi.OWLReasonerXMLOutput;
 
 /**
  * This class starts the CEL Plug-in from a console.
- * 
+ *
  * @author Julian Mendez
- * 
+ *
  */
 public class ConsoleStarter {
 
@@ -50,17 +49,20 @@ public class ConsoleStarter {
 
 	/**
 	 * Starts a classifier instance from the command line.
-	 * 
+	 *
 	 * @param args
 	 *            a list containing the command line parameters, they are first
 	 *            parameter: input file (required), second parameter: output
 	 *            file (required), third parameter: log level (optional)
-	 * @throws FileNotFoundException
 	 * @throws OWLOntologyCreationException
+	 *             if the ontology could not be created
 	 * @throws OWLRendererException
+	 *             if a renderer error occurs
+	 * @throws FileNotFoundException
+	 *             if a file was not found
 	 */
 	public static void main(String[] args) throws OWLRendererException,
-			OWLOntologyCreationException, FileNotFoundException {
+	OWLOntologyCreationException, FileNotFoundException {
 		boolean helpNeeded = true;
 		ConsoleStarter instance = new ConsoleStarter();
 		if (args.length > 1) {
@@ -69,8 +71,7 @@ public class ConsoleStarter {
 			if (args.length > 2) {
 				logLevel = Level.parse(args[2]);
 			}
-			instance.start(new File(args[0]), new File(args[1]), logLevel,
-					System.out);
+			instance.start(new File(args[0]), new File(args[1]), logLevel);
 			instance.stop();
 		}
 		if (helpNeeded) {
@@ -79,7 +80,7 @@ public class ConsoleStarter {
 	}
 
 	/** A very small help about how to start a new instance. */
-	private String minihelp = "\nUsage:\njava -cp .:<list of jars> "
+	private final String minihelp = "\nUsage:\njava -cp .:<list of jars> "
 			+ this.getClass().getCanonicalName()
 			+ " <input ontology file name> <inferred data file name> [<log level>]\n";
 
@@ -94,7 +95,7 @@ public class ConsoleStarter {
 
 	/**
 	 * Executes the classifier on a given ontology.
-	 * 
+	 *
 	 * @param ontologyFile
 	 *            ontology file to be classified
 	 * @param inferredFile
@@ -102,12 +103,15 @@ public class ConsoleStarter {
 	 * @param logLevel
 	 *            log level
 	 * @throws OWLOntologyCreationException
+	 *             if the ontology could not be created
 	 * @throws OWLRendererException
+	 *             if a renderer error occurs
 	 * @throws FileNotFoundException
+	 *             if a file was not found
 	 */
-	public void start(File ontologyFile, File inferredFile, Level logLevel,
-			OutputStream logOutput) throws OWLOntologyCreationException,
-			OWLRendererException, FileNotFoundException {
+	public void start(File ontologyFile, File inferredFile, Level logLevel)
+			throws OWLOntologyCreationException, OWLRendererException,
+			FileNotFoundException {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 		OWLOntology ontology = manager
 				.loadOntologyFromOntologyDocument(ontologyFile);
@@ -123,4 +127,5 @@ public class ConsoleStarter {
 	public void stop() {
 		this.reasoner.dispose();
 	}
+
 }

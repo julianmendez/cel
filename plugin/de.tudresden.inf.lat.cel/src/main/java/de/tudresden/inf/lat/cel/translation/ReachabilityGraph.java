@@ -35,16 +35,18 @@ import java.util.Set;
 public class ReachabilityGraph<T> {
 
 	/** This map stores for each vertex s which vertices are reachable from s. */
-	private Map<T, Set<T>> reachableMap = new HashMap<T, Set<T>>();
+	private final Map<T, Set<T>> reachableMap = new HashMap<T, Set<T>>();
 
 	public ReachabilityGraph() {
 	}
 
 	/**
 	 * Defines that the vertices in set dest are reachable from orig.
-	 * 
+	 *
 	 * @param orig
+	 *            orig
 	 * @param dest
+	 *            dest
 	 */
 	public void addReachable(T orig, Set<T> dest) {
 		addVertices(Collections.singleton(orig));
@@ -71,9 +73,11 @@ public class ReachabilityGraph<T> {
 
 	/**
 	 * Defines that dest is reachable from orig.
-	 * 
+	 *
 	 * @param orig
+	 *            orig
 	 * @param dest
+	 *            dest
 	 */
 	public void addReachable(T orig, T dest) {
 		addReachable(orig, Collections.singleton(dest));
@@ -81,7 +85,7 @@ public class ReachabilityGraph<T> {
 
 	/**
 	 * Add vertices to the graph.
-	 * 
+	 *
 	 * @param newVertices
 	 *            vertices to be added.
 	 */
@@ -108,7 +112,7 @@ public class ReachabilityGraph<T> {
 			changed = false;
 			T otherVertex = null;
 			Iterator<T> it = connectedVertices.iterator();
-			while (otherVertex == null && it.hasNext()) {
+			while ((otherVertex == null) && it.hasNext()) {
 				T elem = it.next();
 				if (count.get(elem) == 0) {
 					otherVertex = elem;
@@ -135,7 +139,7 @@ public class ReachabilityGraph<T> {
 	/**
 	 * Two vertices s,t are called "equivalent" if s can be reached from t and
 	 * vice versa.
-	 * 
+	 *
 	 * @return equivalent classes of vertices
 	 */
 	public Set<Set<T>> getEquivalentClasses() {
@@ -152,9 +156,10 @@ public class ReachabilityGraph<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see ReachabilityGraph#getEquivalentClasses()
 	 * @param orig
+	 *            orig
 	 * @return the equivalent vertices of a particular vertex
 	 */
 	public Set<T> getEquivalentVertices(T orig) {
@@ -189,6 +194,7 @@ public class ReachabilityGraph<T> {
 		return ret;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
 		for (T vertex : getVertices()) {
@@ -200,4 +206,5 @@ public class ReachabilityGraph<T> {
 		}
 		return ret.toString();
 	}
+
 }
