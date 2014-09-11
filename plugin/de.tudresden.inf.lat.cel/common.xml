@@ -69,6 +69,7 @@
 	<property name="project.build.testSourceDirectory" value="${_src.directory}/test/java" />
 	<property name="_project.build.resourcesDirectory" value="${_src.directory}/main/resources" />
 	<property name="_javadoc.destDir" value="${project.build.directory}/apidocs" />
+	<property name="_javadoc.show" value="protected" />
 	<property name="project.build.outputDirectory" value="${project.build.directory}/classes" />
 	<property name="project.build.testOutputDirectory" value="${project.build.directory}/test-classes" />
 	<property name="project.reporting.outputDirectory" value="${project.build.directory}/test-reports" />
@@ -204,7 +205,7 @@
 	<!-- Creates the Javadoc. -->
 	<target name="javadoc">
 		<mkdir dir="${_javadoc.destDir}" />
-		<javadoc packagenames="*" sourcepath="${javadoc.sourcepath}" destdir="${_javadoc.destDir}" version="true" use="true" windowtitle="${project.groupId}-${project.artifactId}" overview="${_src.javadoc.directory}/overview.html" access="package" useexternalfile="true" />
+		<javadoc packagenames="*" sourcepath="${javadoc.sourcepath}" destdir="${_javadoc.destDir}" version="true" use="true" windowtitle="${project.groupId}-${project.artifactId}" overview="${_src.javadoc.directory}/overview.html" access="${_javadoc.show}" useexternalfile="true" />
 	</target>
 
 	<!-- Creates a jar with the Javadoc. -->
