@@ -209,7 +209,7 @@
 		<repository>
 			<id>celrepository</id>
 			<name>CEL local Maven repository</name>
-			<url>file:lib</url>
+			<url>file:${project.basedir}/lib</url>
 		</repository>
 	</repositories>
 
