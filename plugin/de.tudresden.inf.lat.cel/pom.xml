@@ -207,8 +207,8 @@
 
 	<repositories>
 		<repository>
-			<id>localrepo</id>
-			<name>local Maven repository</name>
+			<id>celrepository</id>
+			<name>CEL local Maven repository</name>
 			<url>file:lib</url>
 		</repository>
 	</repositories>
