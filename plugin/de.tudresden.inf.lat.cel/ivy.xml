@@ -13,7 +13,7 @@
 
 	<dependencies>
 		<dependency org="de.tudresden.inf.lat.jsexp" name="jsexp" rev="0.1.0" />
-		<dependency org="net.sourceforge.owlapi" name="owlapi-distribution" rev="3.5.0" />
+		<dependency org="net.sourceforge.owlapi" name="owlapi-distribution" rev="4.0.2" />
 		<dependency org="org.protege" name="protege-editor-owl" rev="4.1.0" />
 		<dependency org="org.protege" name="protege-editor-core-application" rev="4.1.0" />
 		<dependency org="junit" name="junit" rev="4.11" />

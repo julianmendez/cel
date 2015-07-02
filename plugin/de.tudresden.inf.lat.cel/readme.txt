@@ -50,9 +50,6 @@ In order to compile this project, the following technologies are suggested:
     Apache Ant 1.7.1
     http://ant.apache.org
 
-It is also necessary to check out subproject "cel-jars". It has the necessary libraries
-to compile this project. 
-
 Once Java and Apache Ant are installed, it is enough to write "ant" in the main 
 directory. Apache Ant reads the "build.xml" file and builds the project.
 
@@ -85,5 +82,5 @@ Contact information
 
   If you have any question or suggestion, please contact:
     Julian Mendez
-    julian.mendez@gmail.com
+    mendez@tcs.inf.tu-dresden.de
 
