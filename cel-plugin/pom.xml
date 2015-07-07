@@ -45,19 +45,19 @@
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>4.0.2</version>
+			<version>3.5.1</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.protege</groupId>
-			<artifactId>protege-editor-owl</artifactId>
-			<version>4.1.0</version>
+			<groupId>edu.stanford.protege</groupId>
+			<artifactId>org.protege.editor.owl</artifactId>
+			<version>5.0.0-beta-17</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.protege</groupId>
-			<artifactId>protege-editor-core-application</artifactId>
-			<version>4.1.0</version>
+			<groupId>edu.stanford.protege</groupId>
+			<artifactId>org.protege.editor.core.application</artifactId>
+			<version>5.0.0-beta-17</version>
 		</dependency>
 
 		<dependency>
@@ -84,8 +84,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -121,6 +121,20 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
 			</plugin>
 
 			<plugin>

@@ -34,9 +34,17 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.owlxml.renderer.OWLXMLWriter;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.vocab.OWLXMLVocabulary;
+
+
+// for OWL API 3.5.1
+import org.coode.owlapi.owlxml.renderer.OWLXMLWriter;
+
+
+// for OWL API 4.0.2
+//import org.semanticweb.owlapi.owlxml.renderer.OWLXMLWriter;
+
 
 /**
  * This class makes an XML representation of the inferred data by an
