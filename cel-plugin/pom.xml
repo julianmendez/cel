@@ -1,7 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 
 	<!--
  *
@@ -26,12 +24,11 @@
  *
 -->
 
-
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.tudresden.inf.lat.cel</groupId>
 	<artifactId>de.tudresden.inf.lat.cel</artifactId>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<packaging>bundle</packaging>
 
 	<dependencies>
@@ -71,6 +68,12 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<bundle.activator>org.protege.editor.core.plugin.DefaultPluginActivator</bundle.activator>
+		<bundle.jars>lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</bundle.jars>
+		<bundle.classpath>.,lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</bundle.classpath>
+		<import.package>javax.accessibility,javax.swing,javax.swing.border,org.osgi.framework,org.protege.editor.core.ui.workspace,*</import.package>
+		<require.bundle>org.eclipse.equinox.registry,org.eclipse.equinox.common,org.protege.editor.core.application,org.protege.editor.owl,org.semanticweb.owl.owlapi</require.bundle>
 	</properties>
 
 	<build>
@@ -175,27 +178,18 @@
 						<Bundle-SymbolicName>de.tudresden.inf.lat.cel;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Name>CEL Plug-in</Bundle-Name>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Bundle-Activator>org.protege.editor.core.plugin.DefaultPluginActivator</Bundle-Activator>
+						<Bundle-Activator>${bundle.activator}</Bundle-Activator>
 						<Bundle-Category>protege</Bundle-Category>
 						<Bundle-Description>Plugin that connects to CEL Server.</Bundle-Description>
 						<Bundle-Vendor>Chair of Automata Theory - TU Dresden</Bundle-Vendor>
 						<Bundle-DocURL>http://lat.inf.tu-dresden.de</Bundle-DocURL>
-						<Bundle-ClassPath>.,
-							lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</Bundle-ClassPath>
-						<Import-Package>javax.accessibility, javax.swing,
-							javax.swing.border, org.osgi.framework,
-							org.protege.editor.core.ui.workspace, *</Import-Package>
+						<Bundle-ClassPath>${bundle.classpath}</Bundle-ClassPath>
+						<Import-Package>${import.package}</Import-Package>
 						<Include-Resource>
 							{maven-resources}, {maven-dependencies},
 							lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
 						</Include-Resource>
-						<Require-Bundle>
-							org.eclipse.equinox.registry,
-							org.eclipse.equinox.common,
-							org.protege.editor.core.application,
-							org.protege.editor.owl,
-							org.semanticweb.owl.owlapi
-						</Require-Bundle>
+						<Require-Bundle>${require.bundle}</Require-Bundle>
 					</instructions>
 				</configuration>
 			</plugin>
