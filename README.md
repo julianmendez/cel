@@ -1,6 +1,8 @@
 CEL
 ===
 
+[![Build Status](https://travis-ci.org/julianmendez/cel.png?branch=master)](https://travis-ci.org/julianmendez/cel)
+
 CEL is a lightweight Description Logic reasoner for large-scale biomedical ontologies. The CEL Plug-ing uses the [OWL API](http://owlcs.github.io/owlapi/) and let CEL be used as a plug-in for [Protege](http://protege.stanford.edu/).
 
 Documentation: [CEL home page](http://lat.inf.tu-dresden.de/systems/cel/)
