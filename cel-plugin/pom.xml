@@ -28,7 +28,7 @@
 
 	<groupId>de.tudresden.inf.lat.cel</groupId>
 	<artifactId>de.tudresden.inf.lat.cel</artifactId>
-	<version>0.5.2</version>
+	<version>0.5.3</version>
 	<packaging>bundle</packaging>
 
 	<dependencies>
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>de.tudresden.inf.lat.jsexp</groupId>
 			<artifactId>jsexp</artifactId>
-			<version>0.1.0</version>
+			<version>0.2.1</version>
 		</dependency>
 
 		<dependency>
@@ -73,8 +73,8 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 
 		<bundle.activator>org.protege.editor.core.plugin.DefaultPluginActivator</bundle.activator>
-		<bundle.jars>lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</bundle.jars>
-		<bundle.classpath>.,lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar</bundle.classpath>
+		<bundle.jars>lib/de/tudresden/inf/lat/jsexp/jsexp/0.2.1/jsexp-0.2.1.jar</bundle.jars>
+		<bundle.classpath>.,lib/de/tudresden/inf/lat/jsexp/jsexp/0.2.1/jsexp-0.2.1.jar</bundle.classpath>
 		<import.package>javax.accessibility,javax.swing,javax.swing.border,org.osgi.framework,org.protege.editor.core.ui.workspace,*</import.package>
 		<require.bundle>org.eclipse.equinox.registry,org.eclipse.equinox.common,org.protege.editor.core.application,org.protege.editor.owl,org.semanticweb.owl.owlapi</require.bundle>
 	</properties>
@@ -100,9 +100,10 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>sources-jar</id>
 						<phase>package</phase>
 						<goals>
-							<goal>jar</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -117,6 +118,7 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>javadoc-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>jar</goal>
@@ -186,7 +188,7 @@
 						<Import-Package>${import.package}</Import-Package>
 						<Include-Resource>
 							{maven-resources}, {maven-dependencies},
-							lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar=lib/de/tudresden/inf/lat/jsexp/jsexp/0.1.0/jsexp-0.1.0.jar
+							lib/de/tudresden/inf/lat/jsexp/jsexp/0.2.1/jsexp-0.2.1.jar=jsexp-0.2.1.jar
 						</Include-Resource>
 						<Require-Bundle>${require.bundle}</Require-Bundle>
 					</instructions>
@@ -198,27 +200,41 @@
 
 	<name>CEL Plug-in</name>
 
+	<description>A lightweight Description Logic reasoner for large-scale biomedical ontologies.</description>
+
+	<url>https://github.com/julianmendez/cel</url>
+
+	<inceptionYear>2009</inceptionYear>
+
 	<licenses>
+
 		<license>
-			<name>GNU Lesser General Public License version 3</name>
-			<url>http://www.gnu.org/licenses/lgpl.txt</url>
+			<name>GNU Lesser General Public License, Version 3</name>
+			<url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
 		</license>
+
 	</licenses>
 
+	<organization>
+		<name>Chair of Automata Theory - TU Dresden</name>
+		<url>http://lat.inf.tu-dresden.de</url>
+	</organization>
+
 	<developers>
+
 		<developer>
+			<id>julianmendez</id>
 			<name>Julian Mendez</name>
 			<email>mendez@tcs.inf.tu-dresden.de</email>
 		</developer>
+
 	</developers>
 
-	<repositories>
-		<repository>
-			<id>celrepository</id>
-			<name>CEL local Maven repository</name>
-			<url>file:${project.basedir}/lib</url>
-		</repository>
-	</repositories>
+	<scm>
+		<url>https://github.com/julianmendez/cel.git</url>
+		<connection>scm:git:https://github.com/julianmendez/cel.git</connection>
+		<developerConnection>scm:git:https://github.com/julianmendez/cel.git</developerConnection>
+	</scm>
 
 </project>
 
