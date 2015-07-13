@@ -38,10 +38,10 @@
 	<fail unless="project.properties.bundle.classpath">Error: 'project.properties.bundle.classpath' is undefined.</fail>
 	<fail unless="project.properties.import.package">Error: 'project.properties.import.package' is undefined.</fail>
 	<fail unless="project.properties.require.bundle">Error: 'project.properties.require.bundle' is undefined.</fail>
-	
+
 	<property name="project.build.directory" value="${basedir}/target" />
 	<property name="project.build.outputDirectory" value="${project.build.directory}/classes" />
-	<property name="_bundle.jars.directory" value="${basedir}" />
+	<property name="_bundle.jars.directory" value="${project.build.directory}/jars" />
 	<property name="_project.build.resourcesDirectory" value="${basedir}/src/main/resources" />
 
 	<!-- Cleans compiled files. -->
