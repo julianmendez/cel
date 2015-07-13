@@ -6,10 +6,9 @@
     <title>CEL by julianmendez</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -17,14 +16,18 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>CEL</h1>
-        <p>Automatically exported from code.google.com/p/cel</p>
-        <p class="view"><a href="https://github.com/julianmendez/cel">View the Project on GitHub <small>julianmendez/cel</small></a></p>
+        <h1 class="header">CEL</h1>
+        <p class="header">A lightweight Description Logic reasoner for large-scale biomedical ontologies</p>
+
         <ul>
-          <li><a href="https://github.com/julianmendez/cel/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/julianmendez/cel/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/julianmendez/cel">View On <strong>GitHub</strong></a></li>
+          <li class="download"><a class="buttons" href="https://github.com/julianmendez/cel/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/julianmendez/cel/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/julianmendez/cel">View On GitHub</a></li>
         </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/julianmendez">julianmendez</a></p>
+
+
       </header>
       <section>
         <h1>
@@ -34,6 +37,10 @@
 
 <p>CEL is a lightweight Description Logic reasoner for large-scale biomedical ontologies. The CEL Plug-ing uses the <a href="http://owlcs.github.io/owlapi/">OWL API</a> and let CEL be used as a plug-in for <a href="http://protege.stanford.edu/">Protege</a>.</p>
 
+<p>Description logics (DLs) are an important family of formalisms for reasoning about ontologies. CEL is the first reasoner for the Description Logic EL+, supporting as its main reasoning task the computation of the subsumption hierarchy induced by EL+ ontologies. The Description Logic EL+ forms the core expressive features of <a href="http://www.w3.org/TR/owl2-profiles/#OWL_2_EL_2">OWL 2 EL Profile</a> -- which is a tractable fragment of the new Web Ontology Language OWL 2. The most distinguishing feature of CEL is that, unlike other modern DL reasoners, it implements a polynomial-time algorithm. The supported Description Logic EL+ offers a selected set of expressive means that are tailored toward the formulation of medical and biological ontologies.</p>
+
+<p>From version 1.0, CEL also supports supplemental reasoning features like incremental classification, modularization and axiom pinpointing. Moreover, the OWL API wrapper for CEL has eventually become available, so now you can use CEL as the backend reasoner from within Protege!</p>
+
 <p>Documentation: <a href="http://lat.inf.tu-dresden.de/systems/cel/">CEL home page</a></p>
 
 <p>Downloads: <a href="http://lat.inf.tu-dresden.de/systems/cel/downloads.html">CEL downloads</a></p>
@@ -42,12 +49,11 @@
 
 <p>Licenses: CEL: <a href="cel/LICENSE.txt">Apache 2.0</a>, CEL Plug-in: <a href="plugin/de.tudresden.inf.lat.cel/copying-lesser.txt">LGPL 3.0</a></p>
       </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/julianmendez">julianmendez</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+		
   </body>
 </html>
