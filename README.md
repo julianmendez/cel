@@ -1,4 +1,4 @@
-# CEL
+# [CEL](http://julianmendez.github.io/cel/)
 
 [![Build Status](https://travis-ci.org/julianmendez/cel.png?branch=master)](https://travis-ci.org/julianmendez/cel)
 
@@ -11,11 +11,17 @@ From version 1.0, CEL also supports supplemental reasoning features like increme
 
 Documentation: [CEL home page](http://lat.inf.tu-dresden.de/systems/cel/)
 
-Downloads: [CEL downloads](http://lat.inf.tu-dresden.de/systems/cel/downloads.html)
 
-Author: CEL: [Boontawee Suntisrivaraporn](http://www.siit.tu.ac.th/professor_en.php?id=322), CEL Plug-in: [Julian Mendez](http://lat.inf.tu-dresden.de/~mendez/)
+## Authors
+CEL: [Boontawee Suntisrivaraporn](http://www.siit.tu.ac.th/professor_en.php?id=322)
 
-Licenses: CEL: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt), CEL Plug-in: [LGPL 3.0](http://www.gnu.org/licenses/lgpl-3.0.txt)
+CEL Plug-in: [Julian Mendez](http://lat.inf.tu-dresden.de/~mendez/)
+
+
+## Licenses
+CEL: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+CEL Plug-in: [LGPL 3.0](http://www.gnu.org/licenses/lgpl-3.0.txt)
 
 
 ## CEL [Downloads](https://lat.inf.tu-dresden.de/systems/cel/downloads.html)
@@ -38,14 +44,14 @@ CEL comes with a very simple interactive interface that provides users with all 
 
 NEWS: A beta version of CEL 1.0 has now been released! A few minor bugs have been fixed and some interesting features have been integrated. New features include role domain and range constraints, role reflxivity, ABox, more powerful subsumption queries (no longer limited to named concepts), and a weak form of incremental classification. Refer to the CEL manual for the details.
 
-Build 6 of CEL 1.0 includes a prototype implementation of the algorithm for extracting the reachability-based modules (equivalent to the minimal locality-based modules modulo EL+). To modularize the ontology w.r.t. a concept or a signature, use the commands `(extract-c-module C)' or `(extract-module S)', respectively. For the details on this modularization approach and its promising experimental results on NCI, NOT-GALEN, FULL-GALEN, and SNOMED CT, take a look at this [technical report](http://lat.inf.tu-dresden.de/research/reports/2007/Sun-07-LTCS.pdf).
+Build 6 of CEL 1.0 includes a prototype implementation of the algorithm for extracting the reachability-based modules (equivalent to the minimal locality-based modules modulo EL+). To modularize the ontology w.r.t. a concept or a signature, use the commands `(extract-c-module C)` or `(extract-module S)`, respectively. For the details on this modularization approach and its promising experimental results on NCI, NOT-GALEN, FULL-GALEN, and SNOMED CT, take a look at this [technical report](http://lat.inf.tu-dresden.de/research/reports/2007/Sun-07-LTCS.pdf).
 
 
 ## Downloading CEL
 
 CEL's sources are open and can be downloaded from its [repository](https://github.com/julianmendez/cel) (formerly at [Google Code](http://code.google.com/p/cel/)).
 
-The **CEL plug-in** allows using CEL as a [Protégé](http://protege.stanford.edu/) plug-in, using the OWL API. This is a jar (a Java library) that can be downloaded from here or from the source code site. The installation is just copying the jar into the plugins directory. The **current releases** contain a version of CEL compiled for Linux (32-bit), and therefore they **run only on Linux systems**. It was compiled with [Allegro Common Lisp](http://franz.com/products/allegro-common-lisp/), and the sources can be compiled for other platforms.
+The **CEL plug-in** allows using CEL as a [Protégé](http://protege.stanford.edu/) plug-in, using the [OWL API](http://owlcs.github.io/owlapi/). This is a jar (a Java library) that can be downloaded from [here](https://lat.inf.tu-dresden.de/systems/cel/downloads/de.tudresden.inf.lat.cel.jar) or from the source code site. The installation is just copying the jar into the plugins directory. The **current releases** contain a version of CEL compiled for Linux (32-bit), and therefore they **run only on Linux systems**. It was compiled with [Allegro Common Lisp](http://franz.com/products/allegro-common-lisp/), and the sources can be compiled for other platforms.
 
 
 ## Using CEL
