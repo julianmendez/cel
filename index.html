@@ -1,35 +1,27 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="UTF-8">
     <title>CEL by julianmendez</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>CEL</h1>
-        <p>A lightweight Description Logic reasoner for large-scale biomedical ontologies</p>
+    <section class="page-header">
+      <h1 class="project-name">CEL</h1>
+      <h2 class="project-tagline">A lightweight Description Logic reasoner for large-scale biomedical ontologies</h2>
+      <a href="https://github.com/julianmendez/cel" class="btn">View on GitHub</a>
+      <a href="https://github.com/julianmendez/cel/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/julianmendez/cel/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-        <p class="view"><a href="https://github.com/julianmendez/cel">View the Project on GitHub <small>julianmendez/cel</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/julianmendez/cel/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/julianmendez/cel/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/julianmendez/cel">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
-<a id="cel" class="anchor" href="#cel" aria-hidden="true"><span class="octicon octicon-link"></span></a>CEL</h1>
+    <section class="main-content">
+      <h1>
+<a id="cel" class="anchor" href="#cel" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="http://julianmendez.github.io/cel/">CEL</a>
+</h1>
 
 <p><a href="https://travis-ci.org/julianmendez/cel"><img src="https://travis-ci.org/julianmendez/cel.png?branch=master" alt="Build Status"></a></p>
 
@@ -41,18 +33,125 @@
 
 <p>Documentation: <a href="http://lat.inf.tu-dresden.de/systems/cel/">CEL home page</a></p>
 
-<p>Downloads: <a href="http://lat.inf.tu-dresden.de/systems/cel/downloads.html">CEL downloads</a></p>
+<h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
 
-<p>Author: CEL: <a href="http://www.siit.tu.ac.th/professor_en.php?id=322">Boontawee Suntisrivaraporn</a>, CEL Plug-in: <a href="http://lat.inf.tu-dresden.de/%7Emendez/">Julian Mendez</a></p>
+<p>CEL: <a href="http://www.siit.tu.ac.th/professor_en.php?id=322">Boontawee Suntisrivaraporn</a></p>
 
-<p>Licenses: CEL: <a href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0</a>, CEL Plug-in: <a href="http://www.gnu.org/licenses/lgpl-3.0.txt">LGPL 3.0</a></p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/julianmendez">julianmendez</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+<p>CEL Plug-in: <a href="http://lat.inf.tu-dresden.de/%7Emendez/">Julian Mendez</a></p>
+
+<h2>
+<a id="licenses" class="anchor" href="#licenses" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licenses</h2>
+
+<p>CEL: <a href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0</a></p>
+
+<p>CEL Plug-in: <a href="http://www.gnu.org/licenses/lgpl-3.0.txt">LGPL 3.0</a></p>
+
+<h2>
+<a id="cel-downloads" class="anchor" href="#cel-downloads" aria-hidden="true"><span class="octicon octicon-link"></span></a>CEL <a href="https://lat.inf.tu-dresden.de/systems/cel/downloads.html">Downloads</a>
+</h2>
+
+<h2>
+<a id="cel-source-code" class="anchor" href="#cel-source-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>CEL <a href="http://github.com/julianmendez/cel">Source Code</a>
+</h2>
+
+<h2>
+<a id="introduction-to-cel" class="anchor" href="#introduction-to-cel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction to CEL</h2>
+
+<p>Description logics (DLs) are an important family of formalisms for reasoning about ontologies. CEL is the first reasoner for the description logic EL+, supporting as its main reasoning task the computation of the subsumption hierarchy induced by EL+ ontologies. The most distinguishing feature of CEL is that, unlike other modern DL reasoners, it implements a polynomial-time algorithm. The supported description logic EL+ offers a selected set of expressive means that are tailored towards the formulation of medical and biological ontologies.</p>
+
+<p><strong>CEL is an <a href="http://www.w3.org/tr/owl2-profiles/#OWL_2_EL">OWL 2 EL</a> <a href="http://www.w3.org/2007/OWL/wiki/Implementations">reasoner</a> (albeit currently with some limitations).</strong></p>
+
+<p>To get some idea about what logical aspects can be expressed in CEL ontologies, look at our <a href="http://lat.inf.tu-dresden.de/%7Emeng/toyont.html">toy ontologies</a> page.</p>
+
+<h2>
+<a id="the-cel-system" class="anchor" href="#the-cel-system" aria-hidden="true"><span class="octicon octicon-link"></span></a>The CEL System</h2>
+
+<p>CEL comes with a very simple interactive interface that provides users with all essential functionalities, including interactive help system. Developing CEL is ongoing work. We aim at pushing its expressive power to the logic EL++, with which one can express, among other things, disjoint concepts, concrete domains, and nominals.</p>
+
+<p>NEWS: A beta version of CEL 1.0 has now been released! A few minor bugs have been fixed and some interesting features have been integrated. New features include role domain and range constraints, role reflxivity, ABox, more powerful subsumption queries (no longer limited to named concepts), and a weak form of incremental classification. Refer to the CEL manual for the details.</p>
+
+<p>Build 6 of CEL 1.0 includes a prototype implementation of the algorithm for extracting the reachability-based modules (equivalent to the minimal locality-based modules modulo EL+). To modularize the ontology w.r.t. a concept or a signature, use the commands <code>(extract-c-module C)</code> or <code>(extract-module S)</code>, respectively. For the details on this modularization approach and its promising experimental results on NCI, NOT-GALEN, FULL-GALEN, and SNOMED CT, take a look at this <a href="http://lat.inf.tu-dresden.de/research/reports/2007/Sun-07-LTCS.pdf">technical report</a>.</p>
+
+<h2>
+<a id="downloading-cel" class="anchor" href="#downloading-cel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Downloading CEL</h2>
+
+<p>CEL's sources are open and can be downloaded from its <a href="https://github.com/julianmendez/cel">repository</a> (formerly at <a href="http://code.google.com/p/cel/">Google Code</a>).</p>
+
+<p>The <strong>CEL plug-in</strong> allows using CEL as a <a href="http://protege.stanford.edu/">Protégé</a> plug-in, using the <a href="http://owlcs.github.io/owlapi/">OWL API</a>. This is a jar (a Java library) that can be downloaded from <a href="https://lat.inf.tu-dresden.de/systems/cel/downloads/de.tudresden.inf.lat.cel.jar">here</a> or from the source code site. The installation is just copying the jar into the plugins directory. The <strong>current releases</strong> contain a version of CEL compiled for Linux (32-bit), and therefore they <strong>run only on Linux systems</strong>. It was compiled with <a href="http://franz.com/products/allegro-common-lisp/">Allegro Common Lisp</a>, and the sources can be compiled for other platforms.</p>
+
+<h2>
+<a id="using-cel" class="anchor" href="#using-cel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using CEL</h2>
+
+<p>The CEL <a href="http://cel.googlecode.com/files/cel-manual.pdf">manual</a> details how to use the interactive interface. Here are a few example ontologies, <a href="https://lat.inf.tu-dresden.de/systems/cel/med.tbox">med.tbox</a> and <a href="https://lat.inf.tu-dresden.de/systems/cel/forest.tbox">forest.tbox</a>, to help get an idea of what can be expressed in CEL. More toy ontologies can be found on the <a href="http://lat.inf.tu-dresden.de/%7Emeng/toyont.html">repository</a> page. CEL can work as a backend reasoner for a graphical ontology editor, such as Protégé. The following are the possible command line options and a couple of examples:</p>
+
+<pre><code>Usage: cel [options]
+
+If no options are given, CEL starts up and prompts for interactive commands.
+The following options can be used:
+   -loadOntology file  &lt;-l&gt;    Load and preprocess ontology from file
+   -classifyOntology &lt;-c&gt;      Classify the ontology
+   -outputSupers [file]        Output the sets of all super-classes
+   -outputTaxonomy [file]      Output the direct sub- and super-classes
+   -outputHierarchy [file]     Output the hierarchy as an indented tree
+   -quit &lt;-q&gt;                  Exit; Don't enter the interactive interface
+   -help &lt;-h&gt;                  Display this help message
+
+Examples:
+$ cel -loadOntology med.tbox -classifyOntology -outputTaxonomy med.dag -quit
+To load and classify the ontology "med.tbox", and to output the DAG to "med.dag"
+$ cel -loadOntology gene.tbox
+To start the interactive CEL interface with the initial ontology "gene.tbox"
+loaded and preprocessed
+</code></pre>
+
+<h2>
+<a id="publications-onrelated-to-cel" class="anchor" href="#publications-onrelated-to-cel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Publications on/related to CEL</h2>
+
+<p>F. Baader, C. Lutz, and B. Suntisrivaraporn. CEL—A Polynomial-time Reasoner for Life Science Ontologies. In U. Furbach and N. Shankar, editors, Proceedings of the 3rd International Joint Conference on Automated Reasoning (IJCAR'06), volume 4130 of Lecture Notes in Artificial Intelligence, pages 287–291. Springer-Verlag, 2006.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2006/BaaLutSun-IJCAR-06.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2006.html#BaaLutSun-IJCAR-06">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2006/BaaLutSun-IJCAR-06.ps.gz">Paper (PS)</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2006/BaaLutSun-IJCAR-06.pdf">Paper (PDF)</a>  <a href="http://www.springer.de/comp/lncs/index.html">©Springer-Verlag</a></p>
+
+<p>F. Baader, C. Lutz, and B. Suntisrivaraporn. <strong>Efficient Reasoning in EL+</strong>. In Proceedings of the 2006 International Workshop on Description Logics (DL2006), CEUR-WS, 2006.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2006/BaaLutSun-DL-06.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2006.html#BaaLutSun-DL-06">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2006/BaaLutSun-DL-06.ps.gz">Paper (PS)</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2006/BaaLutSun-DL-06.pdf">Paper (PDF)</a></p>
+
+<p>F. Baader, C. Lutz, and B. Suntisrivaraporn. <strong>Is Tractable Reasoning in Extensions of the Description Logic EL Useful in Practice?</strong>. In Proceedings of the Methods for Modalities Workshop (M4M-05), Berlin, Germany, 2005.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2005/BaaLutSun-M4M-05.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2005.html#BaaLutSun-M4M-05">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2005/BaaLutSun-M4M-05.ps.gs">Paper (PS)</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2005/BaaLutSun-M4M-05.pdf">Paper (PDF)</a></p>
+
+<p>F. Baader, S. Brandt, and C. Lutz. <strong>Pushing the EL Envelope</strong>. In Proceedings of the Nineteenth International Joint Conference on Artificial Intelligence IJCAI-05, Edinburgh, UK, 2005. Morgan-Kaufmann Publishers.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2005/BaaderBrandtLutz-IJCAI-05.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2005.html#BaaderBrandtLutz-IJCAI-05">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2005/BaaderBrandtLutz-IJCAI-05.pdf">Paper (PDF)</a></p>
+
+<p>Boontawee Suntisrivaraporn, Franz Baader, Stefan Schulz, and Kent Spackman. <strong>Replacing SEP-Triplets in SNOMED CT using Tractable Description Logic Operators</strong>. In Jim Hunter, Riccardo Bellazzi, Ameen Abu-Hanna, editor, Proceedings of the 11th Conference on Artificial Intelligence in Medicine (AIME'07), Lecture Notes in Computer Science. Springer-Verlag, 2007.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2007/SunBaaSchSpa-AIME-07.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2007.html#SunBaaSchSpa-AIME-07">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2007/SunBaaSchSpa-AIME-07.ps">Paper (PS)</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2007/SunBaaSchSpa-AIME-07.pdf">Paper (PDF)</a>  <a href="http://www.springer.de/comp/lncs/index.html">©Springer-Verlag</a></p>
+
+<p>Franz Baader, Rafael Peñaloza, and Boontawee Suntisrivaraporn. <strong>Pinpointing in the Description Logic EL+</strong>. In Proceedings of the 30th German Conference on Artificial Intelligence (KI2007), LNAI, Osnabrück, Germany, 2007. Springer.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2007/BaaPenSun-KI07.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2007.html#BaaPenSun-KI07">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2007/BaaPenSun-KI07.pdf">Paper (PDF)</a>  <a href="http://www.springer.de/comp/lncs/index.html">©Springer-Verlag</a></p>
+
+<p>Franz Baader, Carsten Lutz, and Boontawee Suntisrivaraporn. <strong>Is Tractable Reasoning in Extensions of the Description Logic EL Useful in Practice?</strong>. In Journal of Logic, Language and Information, Special Issue on Method for Modality (M4M), 2007. To appear.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2007/BaaLutSun-JoLLI-07.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2007.html#BaaLutSun-JoLLI-07">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2007/BaaLutSun-JoLLI-07.ps.gz">Paper (PS)</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2007/BaaLutSun-JoLLI-07.pdf">Paper (PDF)</a></p>
+
+<p>Boontawee Suntisrivaraporn. <strong>Module Extraction and Incremental Classification: A Pragmatic Approach for EL+ Ontologies</strong>. In Sean Bechhofer, Manfred Hauswirth, Joerg Hoffmann, and Manolis Koubarakis, editors, Proceedings of the 5th European Semantic Web Conference (ESWC'08), Lecture Notes in Computer Science. Springer-Verlag, 2008.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2008/Sun-ESWC-08.bib">Bibtex entry</a>  <a href="http://lat.inf.tu-dresden.de/research/papers-2008.html#Sun-ESWC-08">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2008/Sun-ESWC-08.pdf">Paper (PDF)</a>  <a href="http://www.springer.de/comp/lncs/index.html">©Springer-Verlag</a></p>
+
+<p>Boontawee Suntisrivaraporn. <strong>Empirical evaluation of reasoning in lightweight DLs on life science ontologies</strong>. In Proceedings of the 2nd Mahasarakham International Workshop on AI (MIWAI'08), 2008.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2008/Sun-MIWAI-08.bib">Bibtex entry</a>   <a href="https://lat.inf.tu-dresden.de/systems/cel/papers-2008.html#Sun-MIWAI-08">Abstract</a>  <a href="http://lat.inf.tu-dresden.de/research/papers/2008/Sun-MIWAI-08.pdf">Paper (PDF)</a></p>
+
+<p>Stefan Schulz, Boontawee Suntisrivaraporn, Franz Baader, and Martin Boeker. <strong>SNOMED reaching its adolescence: Ontologists' and logicians' health check</strong>. International Journal of Medical Informatics, 78(Supplement 1):S86–S94, 2009.
+<a href="http://lat.inf.tu-dresden.de/research/papers/2009/SchEtAl-JMI-09.bib">Bibtex entry</a>   <a href="https://lat.inf.tu-dresden.de/systems/cel/papers-2009.html#SchEtAl-JMI-09">Abstract</a>   <a href="http://lat.inf.tu-dresden.de/research/papers/2009/SchEtAl-JMI-09.pdf">Paper (PDF)</a></p>
+
+<h2>
+<a id="contacts" class="anchor" href="#contacts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contacts</h2>
+
+<p>Any questions or bug reports are truly welcome, please feel free to contact us by sending an email to { <a href="http://lat.inf.tu-dresden.de/%7Emeng">meng</a>, <a href="http://lat.inf.tu-dresden.de/%7Emendez">mendez</a>, <a href="http://lat.inf.tu-dresden.de/%7Elippmann">lippmann</a> } [at] tcs [dot] inf [dot] tu-dresden [dot] de.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/julianmendez/cel">CEL</a> is maintained by <a href="https://github.com/julianmendez">julianmendez</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+
+    </section>
+
+  
   </body>
 </html>
+
