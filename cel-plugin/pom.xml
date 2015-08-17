@@ -88,13 +88,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.3</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 				<configuration>
 					<finalName>${project.artifactId}-${project.version}</finalName>
 				</configuration>
@@ -112,7 +112,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>2.10.3</version>
 				<configuration>
 					<finalName>${project.artifactId}-${project.version}</finalName>
 				</configuration>
@@ -144,7 +144,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.5.5</version>
 				<executions>
 					<execution>
 						<id>classes</id>
@@ -164,9 +164,9 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>org.kuali.maven.plugins</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0-alpha-2</version>
+				<version>2.0.1</version>
 			</plugin>
 
 			<plugin>
