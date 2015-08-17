@@ -16,7 +16,7 @@
 		<dependency org="de.tudresden.inf.lat.jsexp" name="jsexp"
 			rev="0.2.1" conf="javadoc->javadoc;sources->sources;compile->default" />
 
-		<dependency org="junit" name="junit" rev="4.11" />
+		<dependency org="junit" name="junit" rev="4.12" />
 
 		<dependency org="net.sourceforge.owlapi" name="owlapi-distribution"
 			rev="3.5.1" conf="javadoc->javadoc;sources->sources;compile->default" />
