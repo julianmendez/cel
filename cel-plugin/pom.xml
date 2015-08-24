@@ -176,7 +176,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-SymbolicName>de.tudresden.inf.lat.cel;singleton:=true</Bundle-SymbolicName>
+						<Bundle-SymbolicName>${project.groupId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Name>CEL Plug-in</Bundle-Name>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Bundle-Activator>${bundle.activator}</Bundle-Activator>
