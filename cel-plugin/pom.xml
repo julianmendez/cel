@@ -34,9 +34,9 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>de.tudresden.inf.lat.jsexp</groupId>
+			<groupId>de.tu-dresden.inf.lat.jsexp</groupId>
 			<artifactId>jsexp</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2</version>
 		</dependency>
 
 		<dependency>
@@ -73,8 +73,8 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 
 		<bundle.activator>org.protege.editor.core.plugin.DefaultPluginActivator</bundle.activator>
-		<bundle.jars>lib/de/tudresden/inf/lat/jsexp/jsexp/0.2.1/jsexp-0.2.1.jar</bundle.jars>
-		<bundle.classpath>.,lib/de/tudresden/inf/lat/jsexp/jsexp/0.2.1/jsexp-0.2.1.jar</bundle.classpath>
+		<bundle.jars>lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar</bundle.jars>
+		<bundle.classpath>.,lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar</bundle.classpath>
 		<import.package>javax.accessibility,javax.swing,javax.swing.border,org.osgi.framework,org.protege.editor.core.ui.workspace,*</import.package>
 		<require.bundle>org.eclipse.equinox.registry,org.eclipse.equinox.common,org.protege.editor.core.application,org.protege.editor.owl,org.semanticweb.owl.owlapi</require.bundle>
 	</properties>
@@ -192,7 +192,7 @@
 							<Import-Package>${import.package}</Import-Package>
 							<Include-Resource>
 								{maven-resources}, {maven-dependencies},
-								lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.1/jsexp-0.2.1.jar=jsexp-0.2.1.jar
+								lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar=jsexp-0.2.2.jar
 							</Include-Resource>
 							<Require-Bundle>${require.bundle}</Require-Bundle>
 						</instructions>

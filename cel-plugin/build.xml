@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="de.tudresden.inf.lat.cel" default="dist" basedir=".">
+<project name="de.tu-dresden.inf.lat.cel" default="dist" basedir=".">
 
 	<!--
  *
