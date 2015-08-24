@@ -29,7 +29,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.tudresden.inf.lat.cel</groupId>
+	<groupId>de.tu-dresden.inf.lat.cel</groupId>
 	<artifactId>cel-parent</artifactId>
 	<version>0.5.3</version>
 	<packaging>pom</packaging>

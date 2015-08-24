@@ -26,8 +26,8 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.tudresden.inf.lat.cel</groupId>
-	<artifactId>de.tudresden.inf.lat.cel</artifactId>
+	<groupId>de.tu-dresden.inf.lat.cel</groupId>
+	<artifactId>de.tu-dresden.inf.lat.cel</artifactId>
 	<version>0.5.3</version>
 	<packaging>bundle</packaging>
 
