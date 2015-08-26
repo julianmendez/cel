@@ -76,7 +76,7 @@
 
 	<!-- Compiles this module. -->
 	<target name="dist">
-		<subant genericantfile="common.xml" buildpath=".">
+		<subant genericantfile="genericantfile.xml" buildpath=".">
 			<property name="project.groupId" value="${project.groupId}" />
 			<property name="project.artifactId" value="${project.artifactId}" />
 			<property name="project.version" value="${project.version}" />
