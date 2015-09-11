@@ -17,4 +17,6 @@ install:
 after_success:
   - cd cel-plugin ; mvn clean cobertura:cobertura coveralls:report
 
+sudo: false
+
 
