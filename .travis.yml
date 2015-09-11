@@ -11,6 +11,8 @@ jdk:
   - openjdk7
   - oraclejdk8
 
+install:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=false -B -V
 
 after_success:
   - cd cel-plugin ; mvn clean cobertura:cobertura coveralls:report
