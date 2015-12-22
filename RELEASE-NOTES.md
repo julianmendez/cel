@@ -31,7 +31,7 @@
 * for Protege 5.0.0-beta-17 and OWL API 3.5.1
 * compiled for Java 7
 * uses a generic Ant file taken from [GenericAntFile](https://github.com/julianmendez/genericantfile)
-* for the dependency to jsexp it uses [The Central Repository](https://repo1.maven.org/maven2/de/tu-dresden/inf/lat/jsexp/) instead of a local repository
+* uses jsexp 0.2.2 taken from [The Central Repository](https://repo1.maven.org/maven2/de/tu-dresden/inf/lat/jsexp/) instead of a local repository
 
 
 ### v0.5.2
