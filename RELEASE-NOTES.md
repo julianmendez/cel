@@ -5,7 +5,7 @@
 |:-----------|:-------------|:----:|:--------------|:----------------|
 | v0.5.4     | (unreleased) | 7    | 4.1.3         | 5.0.0-beta-21   |
 | v0.5.3     | (unreleased) | 7    | 3.5.1         | 5.0.0-beta-17   |
-| v0.5.2     | 2015-07      | 8    | 3.5.1         | 5.0.0-beta-17   |
+| v0.5.2     | 2015-07-07   | 8    | 3.5.1         | 5.0.0-beta-17   |
 | v0.5.1     | 2012-01      | 6    | 3.2.4         | 4.1.0           |
 | v0.5.0     | 2010-11      | 6    | 3.2.3         | 4.1.0           |
 | v0.4.1     | 2010-10      | 6    | 3.0.0         | 4.1.0-alpha-206 |
@@ -35,7 +35,7 @@
 
 
 ### v0.5.2
-*(2015-07)*
+*(2015-07-07)*
 * for Protege 5.0.0-beta-17 and OWL API 3.5.1
 * can be compiled with [Apache Maven](http://maven.apache.org/) or with [Apache Ant + Ivy](http://ant.apache.org/ivy/)
 * uses a generic Ant file taken from [jcel](https://github.com/julianmendez/jcel)
