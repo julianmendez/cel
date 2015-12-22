@@ -22,7 +22,7 @@
 
 
 ### v0.5.4
-*(2015-12-22)*
+*(unreleased)*
 * for Protege 5.0.0-beta-21 and OWL API 4.1.3
 
 
