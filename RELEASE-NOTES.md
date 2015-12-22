@@ -1,9 +1,10 @@
 
 ## Release Notes
 
-| version    | release date | Java | OWL API       | Protégé       |
+| version    | release date | Java | OWL API       | Protégé         |
 |:-----------|:-------------|:----:|:--------------|:----------------|
-| v0.5.3     | (unreleased) | 7    | 4.1.3         | 5.0.0-beta-21   |
+| v0.5.4     | (unreleased) | 7    | 4.1.3         | 5.0.0-beta-21   |
+| v0.5.3     | 2015-12-22   | 7    | 3.5.1         | 5.0.0-beta-17   |
 | v0.5.2     | 2015-07      | 8    | 3.5.1         | 5.0.0-beta-17   |
 | v0.5.1     | 2012-01      | 6    | 3.2.4         | 4.1.0           |
 | v0.5.0     | 2010-11      | 6    | 3.2.3         | 4.1.0           |
@@ -20,17 +21,24 @@
 
 
 
-### v0.5.3
-*(unreleased)*
+### v0.5.4
+*(2015-12-22)*
 * for Protege 5.0.0-beta-21 and OWL API 4.1.3
+
+
+### v0.5.3
+*(2015-12-22)*
+* for Protege 5.0.0-beta-17 and OWL API 3.5.1
 * compiled for Java 7
-* does not have a local repository for jsexp and uses [The Central Repository](https://repo1.maven.org/maven2/de/tu-dresden/inf/lat/jsexp/) directly
+* uses a generic Ant file taken from [GenericAntFile](https://github.com/julianmendez/genericantfile)
+* for the dependency to jsexp it uses [The Central Repository](https://repo1.maven.org/maven2/de/tu-dresden/inf/lat/jsexp/) instead of a local repository
 
 
 ### v0.5.2
 *(2015-07)*
 * for Protege 5.0.0-beta-17 and OWL API 3.5.1
-* uses Apache Maven to build the files
+* can be compiled with [Apache Maven](http://maven.apache.org/) or with [Apache Ant + Ivy](http://ant.apache.org/ivy/)
+* uses a generic Ant file taken from [jcel](https://github.com/julianmendez/jcel)
 * compiled for Java 8
 
 
@@ -76,6 +84,7 @@
 ### v0.3.0
 *(2009-06)*
 * for Protege 4.0 and OWL API 2.2.0
+* it is compiled using [Apache Ant](http://ant.apache.org/)
 
 
 ### CEL 1.1.2
