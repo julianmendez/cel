@@ -6,16 +6,16 @@
 | v0.5.4     | (unreleased) | 7    | 4.1.3         | 5.0.0-beta-21   |
 | v0.5.3     | (unreleased) | 7    | 3.5.1         | 5.0.0-beta-17   |
 | v0.5.2     | 2015-07-07   | 8    | 3.5.1         | 5.0.0-beta-17   |
-| v0.5.1     | 2012-01      | 6    | 3.2.4         | 4.1.0           |
-| v0.5.0     | 2010-11      | 6    | 3.2.3         | 4.1.0           |
-| v0.4.1     | 2010-10      | 6    | 3.0.0         | 4.1.0-alpha-206 |
-| v0.4.0     | 2010-06      | 6    | 3.0.0         | 4.1.0-alpha-206 |
-| v0.3.5     | 2010-04      | 6    | 2.2.0         | 4.0.0           |
-| v0.3.4     | 2010-01      | 6    | 2.2.0         | 4.0.0           |
-| v0.3.3     | 2009-07      | 6    | 2.2.0         | 4.0.0           |
-| v0.3.2     | 2009-07      | 6    | 2.2.0         | 4.0.0           |
-| v0.3.1     | 2009-06      | 6    | 2.2.0         | 4.0.0           |
-| v0.3.0     | 2009-06      | 6    | 2.2.0         | 4.0.0           |
+| v0.5.1     | 2012-01-03   | 6    | 3.2.4         | 4.1.0           |
+| v0.5.0     | 2010-11-01   | 6    | 3.2.3         | 4.1.0           |
+| v0.4.1     | 2010-10-27   | 6    | 3.0.0         | 4.1.0-alpha-206 |
+| v0.4.0     | 2010-06-08   | 6    | 3.0.0         | 4.1.0-alpha-206 |
+| v0.3.5     | 2010-04-30   | 6    | 2.2.0         | 4.0.0           |
+| v0.3.4     | 2010-01-15   | 6    | 2.2.0         | 4.0.0           |
+| v0.3.3     | 2009-07-08   | 6    | 2.2.0         | 4.0.0           |
+| v0.3.2     | 2009-07-06   | 6    | 2.2.0         | 4.0.0           |
+| v0.3.1     | 2009-06-26   | 6    | 2.2.0         | 4.0.0           |
+| v0.3.0     | 2009-06-10   | 6    | 2.2.0         | 4.0.0           |
 | CEL 1.1.2  | 2009-10      | -    | -             | -               |
 | CEL 1.0    | 2009-04      | -    | -             | -               |
 
@@ -28,7 +28,9 @@
 
 ### v0.5.3
 *(unreleased)*
+* POM files changed: the new `groupId` is `de.tu-dresden.inf.lat.cel` and the new `artifactId` is `cel-plugin`
 * for Protege 5.0.0-beta-17 and OWL API 3.5.1
+* the created Protege plug-in JAR contains the version number
 * compiled for Java 7
 * uses a generic Ant file taken from [GenericAntFile](https://github.com/julianmendez/genericantfile)
 * uses jsexp 0.2.2 taken from [The Central Repository](https://repo1.maven.org/maven2/de/tu-dresden/inf/lat/jsexp/) instead of a local repository
@@ -43,46 +45,46 @@
 
 
 ### v0.5.1
-*(2012-01)*
+*(2012-01-03)*
 * for Protege 4.1 and OWL API 3.2.4
 
 
 ### v0.5.0
-*(2010-11)*
+*(2010-11-01)*
 * for  Protege 4.1 and OWL API 3.2.3
 
 
 ### v0.4.1
-*(2010-10)*
+*(2010-10-27)*
 
 
 ### v0.4.0
-*(2010-06)*
+*(2010-06-08)*
 * for Protege 4.1 alpha (up to build 206) and OWL API 3.0.0
 
 
 ### v0.3.5
-*(2010-04)*
+*(2010-04-30)*
 
 
 ### v0.3.4
-*(2010-01)*
+*(2010-01-15)*
 
 
 ### v0.3.3
-*(2009-07)*
+*(2009-07-08)*
 
 
 ### v0.3.2
-*(2009-07)*
+*(2009-07-06)*
 
 
 ### v0.3.1
-*(2009-06)*
+*(2009-06-26)*
 
 
 ### v0.3.0
-*(2009-06)*
+*(2009-06-10)*
 * for Protege 4.0 and OWL API 2.2.0
 * it is compiled using [Apache Ant](http://ant.apache.org/)
 
