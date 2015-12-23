@@ -49,11 +49,19 @@
 		<delete dir="${project.build.directory}" />
 	</target>
 
+	<!-- Unzips the dependencies. -->
+	<target name="unzip">
+		<unzip dest="${project.build.directory}/classes">
+			<fileset dir="${_bundle.jars.directory}">
+				<include name="${project.properties.bundle.jars}"/>
+			</fileset>
+		</unzip>
+	</target>
+
 	<!-- Creates the bundle. -->
 	<target name="bundle">
-		<jar destfile="${project.build.directory}/${project.artifactId}.jar">
+		<jar destfile="${project.build.directory}/${project.groupId}-${project.version}.jar">
 			<fileset dir="${project.build.outputDirectory}" />
-			<fileset dir="${_bundle.jars.directory}" includes="${project.properties.bundle.jars}" />
 			<fileset dir="${_project.build.resourcesDirectory}" />
 			<manifest>
 				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
@@ -66,7 +74,7 @@
 				<attribute name="Bundle-Description" value="Plugin that connects to CEL Server." />
 				<attribute name="Bundle-Vendor" value="Chair of Automata Theory - TU Dresden" />
 				<attribute name="Bundle-DocURL" value="http://lat.inf.tu-dresden.de" />
-				<attribute name="Bundle-ClassPath" value="., ${project.properties.bundle.classpath}" />
+				<attribute name="Bundle-ClassPath" value="." />
 				<attribute name="Import-Package" value="${project.properties.import.package}" />
 				<attribute name="Bundle-Activator" value="${project.properties.bundle.activator}" />
 				<attribute name="Require-Bundle" value="${project.properties.require.bundle}" />
@@ -81,6 +89,7 @@
 			<property name="project.artifactId" value="${project.artifactId}" />
 			<property name="project.version" value="${project.version}" />
 		</subant>
+		<antcall target="unzip" />
 		<antcall target="bundle" />
 	</target>
 
