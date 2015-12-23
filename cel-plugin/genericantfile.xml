@@ -133,12 +133,8 @@
 	<target name="source" depends="clean">
 		<mkdir dir="${project.build.directory}" />
 		<jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-sources.jar">
-			<fileset dir="${project.directory}">
-				<include name="${_src.subdirectory}/**" />
-				<include name="*.xml" />
-				<include name="*.txt" />
-				<include name="*.md" />
-			</fileset>
+			<fileset dir="${project.directory}/src/main/java/" />
+			<fileset dir="${project.directory}/src/main/resources/" />
 			<manifest>
 				<attribute name="Implementation-Title" value="${project.groupId}-${project.artifactId}" />
 				<attribute name="Implementation-Version" value="${project.version}" />
