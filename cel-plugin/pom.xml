@@ -27,7 +27,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.tu-dresden.inf.lat.cel</groupId>
-	<artifactId>de.tu-dresden.inf.lat.cel</artifactId>
+	<artifactId>cel-plugin</artifactId>
 	<version>0.5.3</version>
 	<packaging>bundle</packaging>
 
@@ -74,7 +74,7 @@
 
 		<bundle.activator>org.protege.editor.core.plugin.DefaultPluginActivator</bundle.activator>
 		<bundle.jars>lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar</bundle.jars>
-		<bundle.classpath>.,lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar</bundle.classpath>
+		<bundle.classpath>.</bundle.classpath>
 		<import.package>javax.accessibility,javax.swing,javax.swing.border,org.osgi.framework,org.protege.editor.core.ui.workspace,*</import.package>
 		<require.bundle>org.eclipse.equinox.registry,org.eclipse.equinox.common,org.protege.editor.core.application,org.protege.editor.owl,org.semanticweb.owl.owlapi</require.bundle>
 	</properties>
@@ -93,9 +93,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
 					<version>2.4</version>
-					<configuration>
-						<finalName>${project.artifactId}-${project.version}</finalName>
-					</configuration>
 					<executions>
 						<execution>
 							<id>sources-jar</id>
@@ -111,9 +108,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.10.3</version>
-					<configuration>
-						<finalName>${project.artifactId}-${project.version}</finalName>
-					</configuration>
 					<executions>
 						<execution>
 							<id>javadoc-jar</id>
@@ -173,7 +167,6 @@
 								<goal>single</goal>
 							</goals>
 							<configuration>
-								<finalName>${project.artifactId}-${project.version}</finalName>
 								<appendAssemblyId>false</appendAssemblyId>
 								<descriptors>
 									<descriptor>${basedir}/src/assembly/classes.xml</descriptor>
@@ -184,17 +177,12 @@
 				</plugin>
 
 				<plugin>
-					<groupId>org.kuali.maven.plugins</groupId>
-					<artifactId>properties-maven-plugin</artifactId>
-					<version>2.0.1</version>
-				</plugin>
-
-				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
 					<version>2.5.4</version>
 					<extensions>true</extensions>
 					<configuration>
+						<finalName>${project.groupId}-${project.version}</finalName>
 						<instructions>
 							<Bundle-SymbolicName>${project.groupId};singleton:=true</Bundle-SymbolicName>
 							<Bundle-Name>CEL Plug-in</Bundle-Name>
@@ -208,7 +196,7 @@
 							<Import-Package>${import.package}</Import-Package>
 							<Include-Resource>
 								{maven-resources}, {maven-dependencies},
-								lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar=jsexp-0.2.2.jar
+								@jsexp-0.2.2.jar
 							</Include-Resource>
 							<Require-Bundle>${require.bundle}</Require-Bundle>
 						</instructions>
@@ -217,8 +205,6 @@
 
 			</plugins>
 		</pluginManagement>
-
-		<finalName>${project.artifactId}</finalName>
 
 		<plugins>
 
@@ -245,11 +231,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.kuali.maven.plugins</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
 			</plugin>
 
 			<plugin>
