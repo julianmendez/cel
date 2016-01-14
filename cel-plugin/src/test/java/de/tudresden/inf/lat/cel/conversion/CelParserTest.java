@@ -25,8 +25,8 @@ import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -39,27 +39,24 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
  * 
  * @author Julian Mendez
  */
-public class CelParserTest extends TestCase {
+public class CelParserTest {
 
+	@Test
 	public void testVal() throws CelParserException, URISyntaxException {
-		OWLOntologyManager ontologyManager = OWLManager
-				.createOWLOntologyManager();
+		OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
 		OWLDataFactory dataFactory = ontologyManager.getOWLDataFactory();
 		String concept = "(and Human (some has-child Human))";
 		CelParser parser = new CelParser();
 		OWLClassExpression desc1 = dataFactory.getOWLClass(IRI.create("Human"));
-		OWLObjectProperty role2_1 = dataFactory.getOWLObjectProperty(IRI
-				.create("has-child"));
-		OWLClassExpression desc2_2 = dataFactory.getOWLClass(IRI
-				.create("Human"));
-		OWLClassExpression desc2 = dataFactory.getOWLObjectSomeValuesFrom(
-				role2_1, desc2_2);
+		OWLObjectProperty role2_1 = dataFactory.getOWLObjectProperty(IRI.create("has-child"));
+		OWLClassExpression desc2_2 = dataFactory.getOWLClass(IRI.create("Human"));
+		OWLClassExpression desc2 = dataFactory.getOWLObjectSomeValuesFrom(role2_1, desc2_2);
 		Set<OWLClassExpression> set = new TreeSet<OWLClassExpression>();
 		set.add(desc1);
 		set.add(desc2);
-		OWLClassExpression expected = dataFactory
-				.getOWLObjectIntersectionOf(set);
+		OWLClassExpression expected = dataFactory.getOWLObjectIntersectionOf(set);
 		OWLClassExpression parsed = parser.parse(concept, dataFactory);
-		assertEquals(expected.toString(), parsed.toString());
+		Assert.assertEquals(expected.toString(), parsed.toString());
 	}
+
 }
