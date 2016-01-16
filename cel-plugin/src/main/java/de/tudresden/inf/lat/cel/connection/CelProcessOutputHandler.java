@@ -40,8 +40,7 @@ class CelProcessOutputHandler extends Thread {
 	/** Character sent by CEL to show progress. */
 	public static final char countingChar = '#';
 
-	private static final Logger logger = Logger
-			.getLogger(CelProcessOutputHandler.class.getName());
+	private static final Logger logger = Logger.getLogger(CelProcessOutputHandler.class.getName());
 
 	private static final int maxProgress = 100;
 
@@ -94,18 +93,14 @@ class CelProcessOutputHandler extends Thread {
 				if (this.input.available() > 0) {
 					StringBuffer sbuf = new StringBuffer();
 					int ch = ' ';
-					while (isActive() && (this.input.available() > 0)
-							&& (ch != -1)) {
+					while (isActive() && (this.input.available() > 0) && (ch != -1)) {
 						ch = this.input.read();
 						if (ch != -1) {
 							if (getReasonerConfiguration() != null
-									&& getReasonerConfiguration()
-											.getProgressMonitor() != null) {
+									&& getReasonerConfiguration().getProgressMonitor() != null) {
 								if (ch == countingChar) {
-									getReasonerConfiguration()
-											.getProgressMonitor()
-											.reasonerTaskProgressChanged(
-													progress, maxProgress);
+									getReasonerConfiguration().getProgressMonitor()
+											.reasonerTaskProgressChanged(progress, maxProgress);
 									progress++;
 								}
 							}

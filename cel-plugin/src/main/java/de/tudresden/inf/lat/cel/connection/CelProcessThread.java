@@ -58,8 +58,7 @@ class CelProcessThread extends Thread {
 	/** License for CEL binary. */
 	private static final String lispLicense = "cel.lic";
 
-	private static final Logger logger = Logger
-			.getLogger(CelProcessThread.class.getName());
+	private static final Logger logger = Logger.getLogger(CelProcessThread.class.getName());
 
 	/** Suffix to indicate logging mode. */
 	private static String loggingSuffix = "logging";
@@ -94,8 +93,7 @@ class CelProcessThread extends Thread {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	protected List<File> copyFiles(File tempDirectory) throws IOException,
-			InterruptedException {
+	protected List<File> copyFiles(File tempDirectory) throws IOException, InterruptedException {
 		List<File> ret = new ArrayList<File>();
 		ret.add(decompressFile(bundleLocation, celMain, tempDirectory));
 		ret.add(decompressFile(bundleLocation, celImage, tempDirectory));
@@ -130,15 +128,12 @@ class CelProcessThread extends Thread {
 	 *            destination directory.
 	 * @return the new file.
 	 */
-	protected File decompressFile(String location, String filename,
-			File directory) throws IOException {
+	protected File decompressFile(String location, String filename, File directory) throws IOException {
 		BufferedInputStream source = new BufferedInputStream(
-				CelProcessThread.class.getClassLoader().getResourceAsStream(
-						location + "/" + filename));
+				CelProcessThread.class.getClassLoader().getResourceAsStream(location + "/" + filename));
 		File ret = new File(directory, filename);
 		ret.deleteOnExit();
-		BufferedOutputStream out = new BufferedOutputStream(
-				new FileOutputStream(ret));
+		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(ret));
 		for (int ch = 0; ch != -1;) {
 			ch = source.read();
 			if (ch != -1) {
@@ -187,20 +182,17 @@ class CelProcessThread extends Thread {
 		try {
 			File celDirectory = createTemporaryDirectory();
 			this.temporaryFiles = copyFiles(celDirectory);
-			logger.fine("Creating CEL directory "
-					+ celDirectory.getAbsolutePath());
+			logger.fine("Creating CEL directory " + celDirectory.getAbsolutePath());
 			if (!isUnixlikePlatform()) {
 				throw new RuntimeException("CEL cannot run on this platform.");
 			}
-			String command = "chmod +x " + celDirectory.getAbsolutePath()
-					+ "/cel";
+			String command = "chmod +x " + celDirectory.getAbsolutePath() + "/cel";
 			logger.fine("Unix-like platform found, running '" + command + "'.");
 			Thread.sleep(timeGap);
 			Runtime.getRuntime().exec(command);
 			Thread.sleep(timeGap);
-			String message = nicePrefix + " " + celDirectory.getAbsolutePath()
-					+ System.getProperty("file.separator") + celCommandLine
-					+ " " + port;
+			String message = nicePrefix + " " + celDirectory.getAbsolutePath() + System.getProperty("file.separator")
+					+ celCommandLine + " " + port;
 			if (logger.isLoggable(Level.FINER)) {
 				message = message + " " + loggingSuffix;
 			}

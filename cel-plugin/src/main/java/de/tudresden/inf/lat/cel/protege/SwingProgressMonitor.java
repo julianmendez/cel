@@ -33,8 +33,8 @@ class SwingProgressMonitor implements ProgressMonitor {
 	private static final int MINIMUM = 0;
 
 	private String message = "";
-	private javax.swing.ProgressMonitor monitor = new javax.swing.ProgressMonitor(
-			null, "", "", MINIMUM, DEFAULT_MAXIMUM);
+	private javax.swing.ProgressMonitor monitor = new javax.swing.ProgressMonitor(null, "", "", MINIMUM,
+			DEFAULT_MAXIMUM);
 
 	private long progress = 0;
 
@@ -80,8 +80,6 @@ class SwingProgressMonitor implements ProgressMonitor {
 	}
 
 	protected void updateTitle() {
-		this.monitor.setNote(this.message + " "
-				+ (100 * progress / (this.monitor.getMaximum() - MINIMUM))
-				+ "%");
+		this.monitor.setNote(this.message + " " + (100 * progress / (this.monitor.getMaximum() - MINIMUM)) + "%");
 	}
 }

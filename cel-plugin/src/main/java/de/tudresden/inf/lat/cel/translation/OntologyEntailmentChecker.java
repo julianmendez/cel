@@ -173,19 +173,15 @@ public class OntologyEntailmentChecker implements OWLAxiomVisitorEx<Boolean> {
 		boolean ret = true;
 		Set<OWLClassExpression> set = axiom.getClassExpressions();
 		if (!set.isEmpty()) {
-			OWLClass representative = getReasoner().flattenClassExpression(
-					set.iterator().next());
+			OWLClass representative = getReasoner().flattenClassExpression(set.iterator().next());
 			Set<OWLClass> classSet = new HashSet<OWLClass>();
 			for (OWLClassExpression classExpr : set) {
 				classSet.add(getReasoner().flattenClassExpression(classExpr));
 			}
 			getReasoner().precomputeInferences();
-			for (Iterator<OWLClass> it = classSet.iterator(); ret
-					&& it.hasNext();) {
+			for (Iterator<OWLClass> it = classSet.iterator(); ret && it.hasNext();) {
 				OWLClass currentClass = it.next();
-				ret = ret
-						&& getReasoner().isEquivalentClass(representative,
-								currentClass);
+				ret = ret && getReasoner().isEquivalentClass(representative, currentClass);
 
 			}
 		}
@@ -277,8 +273,7 @@ public class OntologyEntailmentChecker implements OWLAxiomVisitorEx<Boolean> {
 		OWLClassExpression subClassExpr = axiom.getSubClass();
 		OWLClassExpression superClassExpr = axiom.getSuperClass();
 		OWLClass subClass = getReasoner().flattenClassExpression(subClassExpr);
-		OWLClass superClass = getReasoner().flattenClassExpression(
-				superClassExpr);
+		OWLClass superClass = getReasoner().flattenClassExpression(superClassExpr);
 		getReasoner().precomputeInferences();
 		boolean ret = getReasoner().isSubClassOf(subClass, superClass);
 		return ret;
@@ -299,8 +294,7 @@ public class OntologyEntailmentChecker implements OWLAxiomVisitorEx<Boolean> {
 		} catch (Exception e) {
 			throw new UnsupportedQueryException(errorMsg + axiom);
 		}
-		boolean ret = getReasoner().getSuperObjectProperties(subObjectProp,
-				false).containsEntity(superObjectProp);
+		boolean ret = getReasoner().getSuperObjectProperties(subObjectProp, false).containsEntity(superObjectProp);
 		return ret;
 	}
 

@@ -35,8 +35,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
  */
 public class CelProtegeReasonerFactory extends AbstractProtegeOWLReasonerInfo {
 
-	private static final Logger logger = Logger
-			.getLogger("de.tudresden.inf.lat.cel");
+	private static final Logger logger = Logger.getLogger("de.tudresden.inf.lat.cel");
 
 	@Override
 	public void dispose() throws Exception {

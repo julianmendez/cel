@@ -41,17 +41,14 @@ import de.tudresden.inf.lat.jsexp.Sexp;
 public class CelSocketManager implements CelOutputListener {
 
 	/** Greeting message presented when the program starts. */
-	public static final String greetingMessage = ""
-			+ "\nCEL: [C]lassifier for the Description Logic [E][L]+ "
+	public static final String greetingMessage = "" + "\nCEL: [C]lassifier for the Description Logic [E][L]+ "
 			+ "\nCopyright (C) 2005-2010: B. Suntisrivaraporn and TU Dresden."
 			+ "\nCEL Plug-in - Copyright (C) 2009-2015: Julian Mendez."
 			+ "\nCEL comes with ABSOLUTELY NO WARRANTY; use at your own risk."
 			+ "\nThis is free software for research and evaluation purposes."
-			+ "\nCommercial use is prohibited; please contact the author."
-			+ "\n";
+			+ "\nCommercial use is prohibited; please contact the author." + "\n";
 
-	private static final Logger logger = Logger
-			.getLogger(CelSocketManager.class.getName());
+	private static final Logger logger = Logger.getLogger(CelSocketManager.class.getName());
 
 	private CelSocket celSocket = null;
 
@@ -154,32 +151,26 @@ public class CelSocketManager implements CelOutputListener {
 			}
 		}
 		if (!found) {
-			throw new RuntimeException("No available ports between "
-					+ this.firstPort + " and " + this.lastPort + ".");
+			throw new RuntimeException("No available ports between " + this.firstPort + " and " + this.lastPort + ".");
 		}
 		try {
 			server.setSoTimeout(this.timeoutForServer);
-			logger.fine("Java CEL server waits for Lisp CEL clients on port "
-					+ port + " for " + this.timeoutForServer + " milliseconds.");
+			logger.fine("Java CEL server waits for Lisp CEL clients on port " + port + " for " + this.timeoutForServer
+					+ " milliseconds.");
 			this.processThread = new CelProcessThread(port);
 			this.processThread.start();
 			Socket connection = server.accept();
 			this.celSocket = new CelSocket(connection);
-			logger.fine("Java CEL server received a client on port " + port
-					+ ".");
+			logger.fine("Java CEL server received a client on port " + port + ".");
 			if (logger.isLoggable(Level.CONFIG)) {
 				System.out.println(greetingMessage);
 			}
-			this.outputHandler = new CelProcessOutputHandler(getProcess()
-					.getInputStream(), System.out);
-			getOutputHandler().setReasonerConfiguration(
-					getReasonerConfiguration());
+			this.outputHandler = new CelProcessOutputHandler(getProcess().getInputStream(), System.out);
+			getOutputHandler().setReasonerConfiguration(getReasonerConfiguration());
 			getOutputHandler().setOutputListener(this);
 			getOutputHandler().start();
 		} catch (IOException e) {
-			logger.log(Level.SEVERE,
-					"Java CEL server cannot open a client on port " + port
-							+ ".", e);
+			logger.log(Level.SEVERE, "Java CEL server cannot open a client on port " + port + ".", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -196,8 +187,7 @@ public class CelSocketManager implements CelOutputListener {
 				try {
 					send(endMessage);
 				} catch (CelConnectionException e) {
-					logger.log(Level.WARNING,
-							"CEL server rejected dispose command.", e);
+					logger.log(Level.WARNING, "CEL server rejected dispose command.", e);
 				}
 				Thread.sleep(this.closingConnectionTime);
 				getCelSocket().getSocket().close();

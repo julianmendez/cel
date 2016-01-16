@@ -22,8 +22,8 @@
 package de.tudresden.inf.lat.cel.connection;
 
 /**
- * This exception is thrown when there is a problem in the connection
- * with the CEL reasoner.
+ * This exception is thrown when there is a problem in the connection with the
+ * CEL reasoner.
  * 
  * @author Julian Mendez
  */

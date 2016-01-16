@@ -44,8 +44,7 @@ import de.tudresden.inf.lat.cel.owlapi.OWLReasonerXMLOutput;
  */
 public class ConsoleStarter {
 
-	private static final Logger logger = Logger
-			.getLogger("de.tudresden.inf.lat.cel");
+	private static final Logger logger = Logger.getLogger("de.tudresden.inf.lat.cel");
 
 	/**
 	 * Starts a classifier instance from the command line.
@@ -61,8 +60,8 @@ public class ConsoleStarter {
 	 * @throws FileNotFoundException
 	 *             if a file was not found
 	 */
-	public static void main(String[] args) throws OWLRendererException,
-	OWLOntologyCreationException, FileNotFoundException {
+	public static void main(String[] args)
+			throws OWLRendererException, OWLOntologyCreationException, FileNotFoundException {
 		boolean helpNeeded = true;
 		ConsoleStarter instance = new ConsoleStarter();
 		if (args.length > 1) {
@@ -80,8 +79,7 @@ public class ConsoleStarter {
 	}
 
 	/** A very small help about how to start a new instance. */
-	private final String minihelp = "\nUsage:\njava -cp .:<list of jars> "
-			+ this.getClass().getCanonicalName()
+	private final String minihelp = "\nUsage:\njava -cp .:<list of jars> " + this.getClass().getCanonicalName()
 			+ " <input ontology file name> <inferred data file name> [<log level>]\n";
 
 	private CelReasoner reasoner = null;
@@ -110,11 +108,9 @@ public class ConsoleStarter {
 	 *             if a file was not found
 	 */
 	public void start(File ontologyFile, File inferredFile, Level logLevel)
-			throws OWLOntologyCreationException, OWLRendererException,
-			FileNotFoundException {
+			throws OWLOntologyCreationException, OWLRendererException, FileNotFoundException {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology ontology = manager
-				.loadOntologyFromOntologyDocument(ontologyFile);
+		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(ontologyFile);
 
 		logger.setLevel(logLevel);
 		this.reasoner = new CelReasoner(ontology);

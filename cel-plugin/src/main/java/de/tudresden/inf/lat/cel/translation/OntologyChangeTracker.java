@@ -36,8 +36,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
  */
 class OntologyChangeTracker implements OWLOntologyChangeListener {
 
-	private static final Logger logger = Logger
-			.getLogger(OntologyChangeTracker.class.getName());
+	private static final Logger logger = Logger.getLogger(OntologyChangeTracker.class.getName());
 
 	/** Tells whether the ontology has changed. */
 	private boolean ontologyChanged = true;
@@ -56,8 +55,7 @@ class OntologyChangeTracker implements OWLOntologyChangeListener {
 	 * This is invoked when the ontology has changed.
 	 */
 	@Override
-	public void ontologiesChanged(List<? extends OWLOntologyChange> arg0)
-			throws OWLException {
+	public void ontologiesChanged(List<? extends OWLOntologyChange> arg0) throws OWLException {
 		logger.fine("The ontologies have changed.");
 		this.ontologyChanged = true;
 	}

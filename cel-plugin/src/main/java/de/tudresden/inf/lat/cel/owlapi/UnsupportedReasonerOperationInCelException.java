@@ -27,8 +27,7 @@ package de.tudresden.inf.lat.cel.owlapi;
  * 
  * @author Julian Mendez
  */
-public class UnsupportedReasonerOperationInCelException extends
-		RuntimeException {
+public class UnsupportedReasonerOperationInCelException extends RuntimeException {
 
 	private static final long serialVersionUID = 731968259094527192L;
 

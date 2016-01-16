@@ -34,7 +34,9 @@ import java.util.Set;
  */
 public class ReachabilityGraph<T> {
 
-	/** This map stores for each vertex s which vertices are reachable from s. */
+	/**
+	 * This map stores for each vertex s which vertices are reachable from s.
+	 */
 	private final Map<T, Set<T>> reachableMap = new HashMap<T, Set<T>>();
 
 	public ReachabilityGraph() {

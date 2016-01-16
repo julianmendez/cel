@@ -42,8 +42,7 @@ public class CelOWLReasonerFactory implements OWLReasonerFactory {
 	}
 
 	@Override
-	public OWLReasoner createNonBufferingReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration configuration)
+	public OWLReasoner createNonBufferingReasoner(OWLOntology ontology, OWLReasonerConfiguration configuration)
 			throws IllegalConfigurationException {
 		return new CelReasoner(ontology, configuration);
 	}
@@ -54,8 +53,7 @@ public class CelOWLReasonerFactory implements OWLReasonerFactory {
 	}
 
 	@Override
-	public OWLReasoner createReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration configuration)
+	public OWLReasoner createReasoner(OWLOntology ontology, OWLReasonerConfiguration configuration)
 			throws IllegalConfigurationException {
 		return new CelReasoner(ontology, configuration);
 	}

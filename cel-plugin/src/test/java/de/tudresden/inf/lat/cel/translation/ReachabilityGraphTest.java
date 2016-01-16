@@ -88,28 +88,28 @@ public class ReachabilityGraphTest extends TestCase {
 
 	protected ReachabilityGraph<String> createExtendedInstance() {
 		ReachabilityGraph<String> ret = createInstance();
-		ret.addReachable ("a10", "a1");
+		ret.addReachable("a10", "a1");
 		return ret;
 	}
 
 	protected ReachabilityGraph<String> createInstance() {
 		ReachabilityGraph<String> ret = new ReachabilityGraph<String>();
-		ret.addReachable ("a01", "a03");
-		ret.addReachable ("a02", "a03");
-		ret.addReachable ("a03", "a08");
-		ret.addReachable ("a04", "a06");
-		ret.addReachable ("a05", "a09");
-		ret.addReachable ("a05", "a10");
-		ret.addReachable ("a06", "a12");
-		ret.addReachable ("a07", "a08");
-		ret.addReachable ("a08", "a04");
-		ret.addReachable ("a08", "a05");
-		ret.addReachable ("a08", "a13");
-		ret.addReachable ("a09", "a14");
-		ret.addReachable ("a12", "a11");
-		ret.addReachable ("a13", "a04");
-		ret.addReachable ("a11", "a12");
-		ret.addReachable ("a14", "a05");
+		ret.addReachable("a01", "a03");
+		ret.addReachable("a02", "a03");
+		ret.addReachable("a03", "a08");
+		ret.addReachable("a04", "a06");
+		ret.addReachable("a05", "a09");
+		ret.addReachable("a05", "a10");
+		ret.addReachable("a06", "a12");
+		ret.addReachable("a07", "a08");
+		ret.addReachable("a08", "a04");
+		ret.addReachable("a08", "a05");
+		ret.addReachable("a08", "a13");
+		ret.addReachable("a09", "a14");
+		ret.addReachable("a12", "a11");
+		ret.addReachable("a13", "a04");
+		ret.addReachable("a11", "a12");
+		ret.addReachable("a14", "a05");
 		return ret;
 	}
 
@@ -162,8 +162,7 @@ public class ReachabilityGraphTest extends TestCase {
 		assertEquals(set2, graph.getEquivalentVertices("a12"));
 		for (String node : graph.getVertices()) {
 			if (!set1.contains(node) && !set2.contains(node)) {
-				assertEquals(Collections.singleton(node), graph
-						.getEquivalentVertices(node));
+				assertEquals(Collections.singleton(node), graph.getEquivalentVertices(node));
 			}
 		}
 	}

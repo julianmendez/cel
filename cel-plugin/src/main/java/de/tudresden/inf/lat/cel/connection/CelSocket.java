@@ -39,8 +39,7 @@ import de.tudresden.inf.lat.jsexp.SexpParserException;
  */
 class CelSocket {
 
-	private static final Logger logger = Logger.getLogger(CelSocket.class
-			.getName());
+	private static final Logger logger = Logger.getLogger(CelSocket.class.getName());
 
 	public static final String protError = ":ERROR";
 	public static final String protOther = ":OWLAPI-RETURN";
@@ -84,20 +83,16 @@ class CelSocket {
 				ret = original.get(1);
 			} else if (msgid.equalsIgnoreCase(protError)) {
 				logger.fine("error " + original.get(1) + "'.");
-				throw new CelConnectionException("Error received: '"
-						+ original.get(1) + "'.");
+				throw new CelConnectionException("Error received: '" + original.get(1) + "'.");
 			} else if (msgid.equalsIgnoreCase(protVoid)) {
 				ret = SexpFactory.newNonAtomicSexp();
 			} else if (msgid.equalsIgnoreCase(protOther)) {
 				ret = SexpFactory.newNonAtomicSexp();
 			} else {
-				throw new CelConnectionException(
-						"Message identification not recognized: '" + msgid
-								+ "'.");
+				throw new CelConnectionException("Message identification not recognized: '" + msgid + "'.");
 			}
 		} else {
-			throw new CelConnectionException("Unexpected response format: '"
-					+ original + "'.");
+			throw new CelConnectionException("Unexpected response format: '" + original + "'.");
 		}
 		return ret;
 	}
@@ -118,10 +113,8 @@ class CelSocket {
 			String request = expr.toString();
 			getSocket().getOutputStream().write(request.getBytes());
 			getSocket().getOutputStream().flush();
-			Sexp response = SexpFactory.parse(new BufferedInputStream(
-					getSocket().getInputStream()));
-			String str = "sent '" + expr + "'  received '" + response
-					+ "'     ";
+			Sexp response = SexpFactory.parse(new BufferedInputStream(getSocket().getInputStream()));
+			String str = "sent '" + expr + "'  received '" + response + "'     ";
 			logger.finer(str);
 			ret = process(response);
 		} catch (IOException e) {
