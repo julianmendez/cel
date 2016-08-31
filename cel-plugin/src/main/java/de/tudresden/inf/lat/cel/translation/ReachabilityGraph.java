@@ -31,6 +31,7 @@ import java.util.Set;
 /**
  * A reachability graph is a directed graph where for vertices 's' and 't',
  * there is an arc from 's' to 't' if and only if 't' is reachable from 's'.
+ * @param <T> vertex type
  */
 public class ReachabilityGraph<T> {
 
