@@ -13,12 +13,14 @@ Documentation: [CEL home page](http://lat.inf.tu-dresden.de/systems/cel/)
 
 
 ## Authors
+
 CEL: [Boontawee Suntisrivaraporn](http://www.siit.tu.ac.th/professor_en.php?id=322)
 
 CEL Plug-in: [Julian Mendez](http://lat.inf.tu-dresden.de/~mendez/)
 
 
 ## Licenses
+
 CEL: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 CEL Plug-in: [LGPL 3.0](http://www.gnu.org/licenses/lgpl-3.0.txt)
