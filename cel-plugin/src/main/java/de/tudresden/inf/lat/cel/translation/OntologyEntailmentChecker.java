@@ -174,7 +174,7 @@ public class OntologyEntailmentChecker implements OWLAxiomVisitorEx<Boolean> {
 		Set<OWLClassExpression> set = axiom.getClassExpressions();
 		if (!set.isEmpty()) {
 			OWLClass representative = getReasoner().flattenClassExpression(set.iterator().next());
-			Set<OWLClass> classSet = new HashSet<OWLClass>();
+			Set<OWLClass> classSet = new HashSet<>();
 			for (OWLClassExpression classExpr : set) {
 				classSet.add(getReasoner().flattenClassExpression(classExpr));
 			}

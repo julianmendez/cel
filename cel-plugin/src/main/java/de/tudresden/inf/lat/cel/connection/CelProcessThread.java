@@ -94,7 +94,7 @@ class CelProcessThread extends Thread {
 	 * @throws InterruptedException if the thread is interrupted
 	 */
 	protected List<File> copyFiles(File tempDirectory) throws IOException, InterruptedException {
-		List<File> ret = new ArrayList<File>();
+		List<File> ret = new ArrayList<>();
 		ret.add(decompressFile(bundleLocation, celMain, tempDirectory));
 		ret.add(decompressFile(bundleLocation, celImage, tempDirectory));
 		ret.add(decompressFile(bundleLocation, lispLicense, tempDirectory));

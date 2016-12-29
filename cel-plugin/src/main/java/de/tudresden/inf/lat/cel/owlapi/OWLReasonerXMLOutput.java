@@ -54,18 +54,18 @@ public class OWLReasonerXMLOutput {
 	}
 
 	private void render() {
-		Set<OWLClass> classSet = new TreeSet<OWLClass>();
+		Set<OWLClass> classSet = new TreeSet<>();
 		classSet.addAll(this.reasoner.getRootOntology().getClassesInSignature());
-		Set<OWLObjectProperty> propertySet = new TreeSet<OWLObjectProperty>();
+		Set<OWLObjectProperty> propertySet = new TreeSet<>();
 		propertySet.addAll(this.reasoner.getRootOntology().getObjectPropertiesInSignature());
-		Set<OWLNamedIndividual> individualSet = new TreeSet<OWLNamedIndividual>();
+		Set<OWLNamedIndividual> individualSet = new TreeSet<>();
 		individualSet.addAll(this.reasoner.getRootOntology().getIndividualsInSignature());
 
 		renderDeclaration(classSet);
 		renderDeclaration(propertySet);
 		renderDeclaration(individualSet);
 
-		Set<OWLClass> classesToVisit = new TreeSet<OWLClass>();
+		Set<OWLClass> classesToVisit = new TreeSet<>();
 		classesToVisit.addAll(classSet);
 		while (!classesToVisit.isEmpty()) {
 			OWLClass cls = classesToVisit.iterator().next();
@@ -77,7 +77,7 @@ public class OWLReasonerXMLOutput {
 			classesToVisit.removeAll(equivClasses);
 		}
 
-		Set<OWLObjectProperty> propertiesToVisit = new TreeSet<OWLObjectProperty>();
+		Set<OWLObjectProperty> propertiesToVisit = new TreeSet<>();
 		propertiesToVisit.addAll(propertySet);
 		while (!propertiesToVisit.isEmpty()) {
 			OWLObjectProperty property = propertiesToVisit.iterator().next();
@@ -91,7 +91,7 @@ public class OWLReasonerXMLOutput {
 		}
 
 		for (OWLClass subClass : classSet) {
-			Set<OWLClass> superClasses = new TreeSet<OWLClass>();
+			Set<OWLClass> superClasses = new TreeSet<>();
 			superClasses.addAll(this.reasoner.getSuperClasses(subClass, true).getFlattened());
 			for (OWLClass superClass : superClasses) {
 				renderSubClassOf(subClass, superClass);
@@ -99,7 +99,7 @@ public class OWLReasonerXMLOutput {
 		}
 
 		for (OWLObjectProperty subProperty : propertySet) {
-			Set<OWLObjectPropertyExpression> superProperties = new TreeSet<OWLObjectPropertyExpression>();
+			Set<OWLObjectPropertyExpression> superProperties = new TreeSet<>();
 			superProperties.addAll(this.reasoner.getSuperObjectProperties(subProperty, true).getFlattened());
 			for (OWLObjectPropertyExpression superProperty : superProperties) {
 				renderSubObjectPropertyOf(subProperty.asOWLObjectProperty(), superProperty.asOWLObjectProperty());
@@ -107,7 +107,7 @@ public class OWLReasonerXMLOutput {
 		}
 
 		for (OWLClass cls : classSet) {
-			Set<OWLNamedIndividual> instances = new TreeSet<OWLNamedIndividual>();
+			Set<OWLNamedIndividual> instances = new TreeSet<>();
 			instances.addAll(this.reasoner.getInstances(cls, true).getFlattened());
 			for (OWLNamedIndividual individual : instances) {
 				renderClassAssertion(cls, individual);
@@ -116,7 +116,7 @@ public class OWLReasonerXMLOutput {
 
 		for (OWLObjectProperty property : propertySet) {
 			for (OWLNamedIndividual individual : individualSet) {
-				Set<OWLNamedIndividual> propertyValues = new TreeSet<OWLNamedIndividual>();
+				Set<OWLNamedIndividual> propertyValues = new TreeSet<>();
 				propertyValues.addAll(this.reasoner.getObjectPropertyValues(individual, property.asOWLObjectProperty())
 						.getFlattened());
 				for (OWLNamedIndividual otherIndividual : propertyValues) {
@@ -157,7 +157,7 @@ public class OWLReasonerXMLOutput {
 	}
 
 	private void renderEntitySet(Set<? extends OWLEntity> entitySet) {
-		Set<OWLEntity> set = new TreeSet<OWLEntity>();
+		Set<OWLEntity> set = new TreeSet<>();
 		set.addAll(entitySet);
 		for (OWLEntity entity : set) {
 			renderEntity(entity);
@@ -172,7 +172,7 @@ public class OWLReasonerXMLOutput {
 
 	private void renderEquivalentObjectPropertyExpressions(Set<OWLObjectPropertyExpression> propertySet) {
 		this.writer.writeStartElement(OWLXMLVocabulary.EQUIVALENT_OBJECT_PROPERTIES);
-		Set<OWLObjectPropertyExpression> set = new TreeSet<OWLObjectPropertyExpression>();
+		Set<OWLObjectPropertyExpression> set = new TreeSet<>();
 		set.addAll(propertySet);
 		for (OWLObjectPropertyExpression propertyExpression : set) {
 			renderEntity(propertyExpression.asOWLObjectProperty());

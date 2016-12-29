@@ -51,7 +51,7 @@ public class CelParserTest {
 		OWLObjectProperty role2_1 = dataFactory.getOWLObjectProperty(IRI.create("has-child"));
 		OWLClassExpression desc2_2 = dataFactory.getOWLClass(IRI.create("Human"));
 		OWLClassExpression desc2 = dataFactory.getOWLObjectSomeValuesFrom(role2_1, desc2_2);
-		Set<OWLClassExpression> set = new TreeSet<OWLClassExpression>();
+		Set<OWLClassExpression> set = new TreeSet<>();
 		set.add(desc1);
 		set.add(desc2);
 		OWLClassExpression expected = dataFactory.getOWLObjectIntersectionOf(set);

@@ -353,7 +353,7 @@ public class CelReasoner implements OWLReasoner {
 	}
 
 	private Set<AxiomType<?>> getSupportedTypes() {
-		Set<AxiomType<?>> ret = new HashSet<AxiomType<?>>();
+		Set<AxiomType<?>> ret = new HashSet<>();
 		ret.add(AxiomType.EQUIVALENT_CLASSES);
 		ret.add(AxiomType.SUBCLASS_OF);
 		ret.add(AxiomType.SUB_OBJECT_PROPERTY);
@@ -423,7 +423,7 @@ public class CelReasoner implements OWLReasoner {
 	public boolean isEntailed(Set<? extends OWLAxiom> axiomSet) throws ReasonerInterruptedException,
 			UnsupportedEntailmentTypeException, TimeOutException, AxiomNotInProfileException, FreshEntitiesException {
 		logger.finer("isEntailed((Set<? extends OWLAxiom>) " + axiomSet + ")");
-		Set<OWLAxiom> set = new HashSet<OWLAxiom>();
+		Set<OWLAxiom> set = new HashSet<>();
 		for (OWLAxiom axiom : axiomSet) {
 			set.add(axiom);
 		}

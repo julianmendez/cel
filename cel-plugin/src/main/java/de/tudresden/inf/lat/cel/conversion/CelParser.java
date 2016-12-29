@@ -107,7 +107,7 @@ public class CelParser {
 	}
 
 	public Set<OWLClass> parseSetOfClasses(Sexp expr, OWLDataFactory dataFactory) {
-		Set<OWLClass> ret = new HashSet<OWLClass>();
+		Set<OWLClass> ret = new HashSet<>();
 		for (Sexp elem : expr) {
 			ret.add(parseClass(elem, dataFactory));
 		}
@@ -116,7 +116,7 @@ public class CelParser {
 
 	public Set<OWLClassExpression> parseSetOfDescriptions(Sexp expr, OWLDataFactory dataFactory)
 			throws CelParserException {
-		Set<OWLClassExpression> ret = new HashSet<OWLClassExpression>();
+		Set<OWLClassExpression> ret = new HashSet<>();
 		for (Sexp elem : expr) {
 			ret.add(parseDescription(elem, dataFactory));
 		}
@@ -124,7 +124,7 @@ public class CelParser {
 	}
 
 	public Set<OWLNamedIndividual> parseSetOfIndividuals(Sexp expr, OWLDataFactory dataFactory) {
-		Set<OWLNamedIndividual> ret = new HashSet<OWLNamedIndividual>();
+		Set<OWLNamedIndividual> ret = new HashSet<>();
 		for (Sexp elem : expr) {
 			Sexp cleanexpr = removeVbars(elem);
 			ret.add(dataFactory.getOWLNamedIndividual(IRI.create(cleanexpr.toString())));
@@ -133,7 +133,7 @@ public class CelParser {
 	}
 
 	public Set<OWLObjectProperty> parseSetOfProperties(Sexp expr, OWLDataFactory dataFactory) {
-		Set<OWLObjectProperty> ret = new HashSet<OWLObjectProperty>();
+		Set<OWLObjectProperty> ret = new HashSet<>();
 		for (Sexp elem : expr) {
 			Sexp cleanexpr = removeVbars(elem);
 			ret.add(dataFactory.getOWLObjectProperty(IRI.create(cleanexpr.toString())));
@@ -142,9 +142,9 @@ public class CelParser {
 	}
 
 	public Set<Set<OWLClass>> parseSetOfSetOfClasses(Sexp expr, OWLDataFactory dataFactory) {
-		Set<Set<OWLClass>> ret = new HashSet<Set<OWLClass>>();
+		Set<Set<OWLClass>> ret = new HashSet<>();
 		for (Sexp subexpr : expr) {
-			Set<OWLClass> part = new HashSet<OWLClass>();
+			Set<OWLClass> part = new HashSet<>();
 			for (Sexp elem : subexpr) {
 				part.add(parseClass(elem, dataFactory));
 			}
@@ -155,9 +155,9 @@ public class CelParser {
 
 	public Set<Set<OWLClassExpression>> parseSetOfSetOfDescriptions(Sexp expr, OWLDataFactory dataFactory)
 			throws CelParserException {
-		Set<Set<OWLClassExpression>> ret = new HashSet<Set<OWLClassExpression>>();
+		Set<Set<OWLClassExpression>> ret = new HashSet<>();
 		for (Sexp subexpr : expr) {
-			Set<OWLClassExpression> part = new HashSet<OWLClassExpression>();
+			Set<OWLClassExpression> part = new HashSet<>();
 			for (Sexp elem : subexpr) {
 				part.add(parseDescription(elem, dataFactory));
 			}
@@ -167,9 +167,9 @@ public class CelParser {
 	}
 
 	public Set<Set<OWLObjectProperty>> parseSetOfSetOfProperties(Sexp expr, OWLDataFactory dataFactory) {
-		Set<Set<OWLObjectProperty>> ret = new HashSet<Set<OWLObjectProperty>>();
+		Set<Set<OWLObjectProperty>> ret = new HashSet<>();
 		for (Sexp subexpr : expr) {
-			Set<OWLObjectProperty> part = new HashSet<OWLObjectProperty>();
+			Set<OWLObjectProperty> part = new HashSet<>();
 			for (Sexp elem : subexpr) {
 				Sexp cleanexpr = removeVbars(elem);
 				part.add(dataFactory.getOWLObjectProperty(IRI.create(cleanexpr.toString())));
@@ -197,7 +197,7 @@ public class CelParser {
 			Iterator<Sexp> it = expr.iterator();
 			Sexp current = it.next();
 			if (current.isAtomic() && current.toString().equalsIgnoreCase(CelKeyword.keyAnd)) {
-				Set<OWLClassExpression> set = new HashSet<OWLClassExpression>();
+				Set<OWLClassExpression> set = new HashSet<>();
 				while (it.hasNext()) {
 					current = it.next();
 					set.add(parseDescription(current, dataFactory));

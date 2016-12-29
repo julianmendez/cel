@@ -37,7 +37,7 @@ import junit.framework.TestCase;
 public class ReachabilityGraphTest extends TestCase {
 
 	protected Map<String, Set<String>> createDirectlyConnected() {
-		Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> ret = new HashMap<>();
 		ret.put("a10", new HashSet<String>());
 		ret.put("a11", new HashSet<String>());
 		ret.put("a12", new HashSet<String>());
@@ -50,11 +50,11 @@ public class ReachabilityGraphTest extends TestCase {
 		ret.put("a09", Collections.singleton("a10"));
 		ret.put("a13", Collections.singleton("a04"));
 		ret.put("a14", Collections.singleton("a10"));
-		Set<String> set1 = new HashSet<String>();
+		Set<String> set1 = new HashSet<>();
 		set1.add("a11");
 		set1.add("a12");
 		ret.put("a06", set1);
-		Set<String> set2 = new HashSet<String>();
+		Set<String> set2 = new HashSet<>();
 		set2.add("a05");
 		set2.add("a09");
 		set2.add("a13");
@@ -64,7 +64,7 @@ public class ReachabilityGraphTest extends TestCase {
 	}
 
 	protected Set<Set<String>> createEquivalentClasses() {
-		Set<Set<String>> ret = new HashSet<Set<String>>();
+		Set<Set<String>> ret = new HashSet<>();
 		ret.add(Collections.singleton("a01"));
 		ret.add(Collections.singleton("a02"));
 		ret.add(Collections.singleton("a03"));
@@ -74,12 +74,12 @@ public class ReachabilityGraphTest extends TestCase {
 		ret.add(Collections.singleton("a08"));
 		ret.add(Collections.singleton("a10"));
 		ret.add(Collections.singleton("a13"));
-		Set<String> set1 = new HashSet<String>();
+		Set<String> set1 = new HashSet<>();
 		set1.add("a05");
 		set1.add("a09");
 		set1.add("a14");
 		ret.add(set1);
-		Set<String> set2 = new HashSet<String>();
+		Set<String> set2 = new HashSet<>();
 		set2.add("a11");
 		set2.add("a12");
 		ret.add(set2);
@@ -93,7 +93,7 @@ public class ReachabilityGraphTest extends TestCase {
 	}
 
 	protected ReachabilityGraph<String> createInstance() {
-		ReachabilityGraph<String> ret = new ReachabilityGraph<String>();
+		ReachabilityGraph<String> ret = new ReachabilityGraph<>();
 		ret.addReachable("a01", "a03");
 		ret.addReachable("a02", "a03");
 		ret.addReachable("a03", "a08");
@@ -114,7 +114,7 @@ public class ReachabilityGraphTest extends TestCase {
 	}
 
 	protected Set<String> createNodeSet() {
-		Set<String> ret = new HashSet<String>();
+		Set<String> ret = new HashSet<>();
 		ret.add("a01");
 		ret.add("a02");
 		ret.add("a03");
@@ -148,14 +148,14 @@ public class ReachabilityGraphTest extends TestCase {
 
 	public void testEquivalentVertices() {
 		ReachabilityGraph<String> graph = createInstance();
-		Set<String> set1 = new HashSet<String>();
+		Set<String> set1 = new HashSet<>();
 		set1.add("a05");
 		set1.add("a09");
 		set1.add("a14");
 		assertEquals(set1, graph.getEquivalentVertices("a05"));
 		assertEquals(set1, graph.getEquivalentVertices("a09"));
 		assertEquals(set1, graph.getEquivalentVertices("a14"));
-		Set<String> set2 = new HashSet<String>();
+		Set<String> set2 = new HashSet<>();
 		set2.add("a11");
 		set2.add("a12");
 		assertEquals(set2, graph.getEquivalentVertices("a11"));

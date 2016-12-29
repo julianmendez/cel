@@ -74,8 +74,8 @@ public class CelReasonerInterface {
 	private static final String thing = "Thing";
 
 	private int auxClassCount = 0;
-	private final Map<OWLClassExpression, OWLClass> auxClassInvMap = new HashMap<OWLClassExpression, OWLClass>();
-	private final Map<OWLClass, OWLClassExpression> auxClassMap = new HashMap<OWLClass, OWLClassExpression>();
+	private final Map<OWLClassExpression, OWLClass> auxClassInvMap = new HashMap<>();
+	private final Map<OWLClass, OWLClassExpression> auxClassMap = new HashMap<>();
 	private final OntologyChangeTracker changeTracker = new OntologyChangeTracker();
 	private final OntologyEntailmentChecker entailmentChecker = new OntologyEntailmentChecker(this);
 	private OWLOntology ontology = null;
@@ -125,7 +125,7 @@ public class CelReasonerInterface {
 	}
 
 	protected NodeSet<OWLClass> convertToNodeSetOfOWLClass(Set<Set<OWLClass>> setOfSets) {
-		Set<Node<OWLClass>> nodeSet = new HashSet<Node<OWLClass>>();
+		Set<Node<OWLClass>> nodeSet = new HashSet<>();
 		for (Set<OWLClass> elem : setOfSets) {
 			nodeSet.add(NodeFactory.getOWLClassNode(elem));
 		}
@@ -134,7 +134,7 @@ public class CelReasonerInterface {
 
 	protected NodeSet<OWLNamedIndividual> convertToNodeSetOfOWLNamedIndividual(Set<OWLNamedIndividual> individualSet) {
 
-		Set<Node<OWLNamedIndividual>> nodeSet = new HashSet<Node<OWLNamedIndividual>>();
+		Set<Node<OWLNamedIndividual>> nodeSet = new HashSet<>();
 		for (OWLNamedIndividual individual : individualSet) {
 			nodeSet.add(NodeFactory.getOWLNamedIndividualNode(individual));
 		}
@@ -143,7 +143,7 @@ public class CelReasonerInterface {
 
 	protected NodeSet<OWLObjectPropertyExpression> convertToNodeSetOfOWLObjectPropertyExpression(
 			Set<Set<OWLObjectPropertyExpression>> setOfSets) {
-		Set<Node<OWLObjectPropertyExpression>> nodeSet = new HashSet<Node<OWLObjectPropertyExpression>>();
+		Set<Node<OWLObjectPropertyExpression>> nodeSet = new HashSet<>();
 		for (Set<OWLObjectPropertyExpression> elem : setOfSets) {
 			nodeSet.add(NodeFactory.getOWLObjectPropertyNode(elem));
 		}
@@ -151,7 +151,7 @@ public class CelReasonerInterface {
 	}
 
 	protected Set<OWLObjectPropertyExpression> convertToOWLObjectPropertyExpression(Set<OWLObjectProperty> set) {
-		Set<OWLObjectPropertyExpression> ret = new HashSet<OWLObjectPropertyExpression>();
+		Set<OWLObjectPropertyExpression> ret = new HashSet<>();
 		ret.addAll(set);
 		return ret;
 	}
@@ -181,7 +181,7 @@ public class CelReasonerInterface {
 				ret = createAuxiliaryClass();
 				this.auxClassMap.put(ret, ce);
 				this.auxClassInvMap.put(ce, ret);
-				Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+				Set<OWLClassExpression> classExpressions = new HashSet<>();
 				classExpressions.add(ce);
 				classExpressions.add(ret);
 				OWLAxiom newAxiom = getRootOntology().getOWLOntologyManager().getOWLDataFactory()
@@ -238,7 +238,7 @@ public class CelReasonerInterface {
 
 	public NodeSet<OWLNamedIndividual> getInstances(OWLClassExpression expression, boolean direct)
 			throws CelReasonerException {
-		Set<OWLNamedIndividual> ret = new HashSet<OWLNamedIndividual>();
+		Set<OWLNamedIndividual> ret = new HashSet<>();
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyGetIndividuals));
 		try {
@@ -467,7 +467,7 @@ public class CelReasonerInterface {
 	 *             if a CEL reasoner error occurs
 	 */
 	public Node<OWLClass> getUnsatisfiableClasses() throws CelReasonerException {
-		Set<OWLClass> ret = new HashSet<OWLClass>();
+		Set<OWLClass> ret = new HashSet<>();
 		Sexp message = SexpFactory.newNonAtomicSexp();
 		message.add(SexpFactory.newAtomicSexp(CelOwlApiKeyword.keyGetInconsistentClasses));
 		Sexp expr = sendAndConvert(message);
@@ -673,8 +673,8 @@ public class CelReasonerInterface {
 
 	protected Set<Set<OWLObjectPropertyExpression>> makeEquivalentClasses(Set<OWLObjectPropertyExpression> flattenedSet)
 			throws CelReasonerException {
-		Set<Set<OWLObjectPropertyExpression>> ret = new HashSet<Set<OWLObjectPropertyExpression>>();
-		Set<OWLObjectPropertyExpression> visited = new HashSet<OWLObjectPropertyExpression>();
+		Set<Set<OWLObjectPropertyExpression>> ret = new HashSet<>();
+		Set<OWLObjectPropertyExpression> visited = new HashSet<>();
 		for (OWLObjectPropertyExpression property : flattenedSet) {
 			if (!visited.contains(property)) {
 				Set<OWLObjectPropertyExpression> equivalentProperties = getEquivalentObjectProperties(property)

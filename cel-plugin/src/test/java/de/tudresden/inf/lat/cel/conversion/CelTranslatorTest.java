@@ -54,7 +54,7 @@ public class CelTranslatorTest {
 		OWLClassExpression desc1 = dataFactory.getOWLClass(IRI.create("Friendly"));
 		OWLClassExpression desc2 = dataFactory.getOWLClass(IRI.create("Intelligent"));
 		OWLClassExpression desc3 = dataFactory.getOWLClass(IRI.create("Person"));
-		Set<OWLClassExpression> set = new TreeSet<OWLClassExpression>();
+		Set<OWLClassExpression> set = new TreeSet<>();
 		set.add(desc1);
 		set.add(desc2);
 		set.add(desc3);
@@ -75,14 +75,14 @@ public class CelTranslatorTest {
 		OWLClassExpression desc2_1_1 = dataFactory.getOWLClass(IRI.create("Friendly"));
 		OWLClassExpression desc2_1_2 = dataFactory.getOWLClass(IRI.create("Intelligent"));
 		OWLClassExpression desc2_1_3 = dataFactory.getOWLClass(IRI.create("Person"));
-		Set<OWLClassExpression> set2_1 = new TreeSet<OWLClassExpression>();
+		Set<OWLClassExpression> set2_1 = new TreeSet<>();
 		set2_1.add(desc2_1_1);
 		set2_1.add(desc2_1_2);
 		set2_1.add(desc2_1_3);
 		OWLClassExpression desc2_1 = dataFactory.getOWLObjectIntersectionOf(set2_1);
 
 		OWLClassExpression desc2 = dataFactory.getOWLObjectSomeValuesFrom(role, desc2_1);
-		Set<OWLClassExpression> set = new TreeSet<OWLClassExpression>();
+		Set<OWLClassExpression> set = new TreeSet<>();
 		set.add(desc1);
 		set.add(desc2);
 		OWLClassExpression description = dataFactory.getOWLObjectIntersectionOf(set);

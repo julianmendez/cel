@@ -38,7 +38,7 @@ public class ReachabilityGraph<T> {
 	/**
 	 * This map stores for each vertex s which vertices are reachable from s.
 	 */
-	private final Map<T, Set<T>> reachableMap = new HashMap<T, Set<T>>();
+	private final Map<T, Set<T>> reachableMap = new HashMap<>();
 
 	public ReachabilityGraph() {
 	}
@@ -101,11 +101,11 @@ public class ReachabilityGraph<T> {
 	}
 
 	public Set<T> getDirectSuccessors(T vertex) {
-		Set<T> ret = new HashSet<T>();
+		Set<T> ret = new HashSet<>();
 		Map<T, Set<T>> map = makeMapWithoutEquivalentVertices();
-		Set<T> connectedVertices = new HashSet<T>();
+		Set<T> connectedVertices = new HashSet<>();
 		connectedVertices.addAll(map.get(vertex));
-		Map<T, Integer> count = new HashMap<T, Integer>();
+		Map<T, Integer> count = new HashMap<>();
 		for (T elem : connectedVertices) {
 			count.put(elem, map.get(elem).size());
 		}
@@ -146,8 +146,8 @@ public class ReachabilityGraph<T> {
 	 * @return equivalent classes of vertices
 	 */
 	public Set<Set<T>> getEquivalentClasses() {
-		Set<Set<T>> ret = new HashSet<Set<T>>();
-		Set<T> visited = new HashSet<T>();
+		Set<Set<T>> ret = new HashSet<>();
+		Set<T> visited = new HashSet<>();
 		for (T elem : getVertices()) {
 			if (!visited.contains(elem)) {
 				Set<T> equivVertices = getEquivalentVertices(elem);
@@ -166,7 +166,7 @@ public class ReachabilityGraph<T> {
 	 * @return the equivalent vertices of a particular vertex
 	 */
 	public Set<T> getEquivalentVertices(T orig) {
-		Set<T> ret = new HashSet<T>();
+		Set<T> ret = new HashSet<>();
 		ret.add(orig);
 		for (T otherElem : this.reachableMap.get(orig)) {
 			if (this.reachableMap.get(otherElem).contains(orig)) {
@@ -185,9 +185,9 @@ public class ReachabilityGraph<T> {
 	}
 
 	protected Map<T, Set<T>> makeMapWithoutEquivalentVertices() {
-		Map<T, Set<T>> ret = new HashMap<T, Set<T>>();
+		Map<T, Set<T>> ret = new HashMap<>();
 		for (T elem : getVertices()) {
-			Set<T> otherSet = new HashSet<T>();
+			Set<T> otherSet = new HashSet<>();
 			otherSet.addAll(this.reachableMap.get(elem));
 			if (otherSet.contains(elem)) {
 				otherSet.removeAll(getEquivalentVertices(elem));
