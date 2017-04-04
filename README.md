@@ -14,7 +14,7 @@ Documentation: [CEL home page](https://lat.inf.tu-dresden.de/systems/cel/)
 
 ## Authors
 
-CEL: [Boontawee Suntisrivaraporn](http://www.siit.tu.ac.th/professor_en.php?id=322)
+CEL: [Boontawee Suntisrivaraporn](https://meng234.blogspot.com)
 
 CEL Plug-in: [Julian Mendez](https://lat.inf.tu-dresden.de/~mendez/)
 
