@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<!--
  *
@@ -124,7 +124,7 @@
 							<Bundle-Category>protege</Bundle-Category>
 							<Bundle-Description>Plugin that connects to CEL Server.</Bundle-Description>
 							<Bundle-Vendor>Chair of Automata Theory - TU Dresden</Bundle-Vendor>
-							<Bundle-DocURL>http://lat.inf.tu-dresden.de</Bundle-DocURL>
+							<Bundle-DocURL>https://lat.inf.tu-dresden.de</Bundle-DocURL>
 							<Bundle-ClassPath>${bundle.classpath}</Bundle-ClassPath>
 							<Import-Package>${import.package}</Import-Package>
 							<Include-Resource>
@@ -203,7 +203,7 @@
 
 	<organization>
 		<name>Chair of Automata Theory - TU Dresden</name>
-		<url>http://lat.inf.tu-dresden.de</url>
+		<url>https://lat.inf.tu-dresden.de</url>
 	</organization>
 
 	<developers>

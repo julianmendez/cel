@@ -48,7 +48,7 @@
  *
 -->
 
-	<!-- For more information about this file, see http://ant.apache.org -->
+	<!-- For more information about this file, see https://ant.apache.org -->
 
 	<!-- Project-specific properties. -->
 	<fail unless="project.groupId">Error: 'project.groupId' is undefined. This property is the group identifier.</fail>
@@ -80,7 +80,7 @@
 
 	<!-- Properties for Ivy. -->
 	<property name="project.build.ivyReportDirectory" location="${project.build.directory}/ivy-reports" />
-	<property name="maven.repository" value="http://repo.maven.apache.org/maven2" />
+	<property name="maven.repository" value="https://repo.maven.apache.org/maven2" />
 	<property name="ivy.install.version" value="2.3.0" />
 	<condition property="ivy.home" value="${env.IVY_HOME}">
 		<isset property="env.IVY_HOME" />

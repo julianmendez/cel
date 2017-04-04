@@ -39,7 +39,7 @@
 ### v0.5.2
 *(2015-07-07)*
 * for Protege 5.0.0-beta-17 and OWL API 3.5.1
-* can be compiled with [Apache Maven](http://maven.apache.org/) or with [Apache Ant + Ivy](http://ant.apache.org/ivy/)
+* can be compiled with [Apache Maven](https://maven.apache.org/) or with [Apache Ant + Ivy](https://ant.apache.org/ivy/)
 * uses a generic Ant file taken from [jcel](https://github.com/julianmendez/jcel)
 * compiled for Java 8
 
@@ -86,7 +86,7 @@
 ### v0.3.0
 *(2009-06-10)*
 * for Protege 4.0 and OWL API 2.2.0
-* it is compiled using [Apache Ant](http://ant.apache.org/)
+* it is compiled using [Apache Ant](https://ant.apache.org/)
 
 
 ### CEL 1.1.2

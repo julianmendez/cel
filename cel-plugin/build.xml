@@ -24,7 +24,7 @@
  *
 -->
 
-	<!-- For more information about this file, see http://ant.apache.org -->
+	<!-- For more information about this file, see https://ant.apache.org -->
 
 	<!-- Imports 'project.groupId', 'project.artifactId', and 'project.version' properties. -->
 	<xmlproperty file="pom.xml" />
@@ -73,7 +73,7 @@
 				<attribute name="Bundle-Category" value="protege" />
 				<attribute name="Bundle-Description" value="Plugin that connects to CEL Server." />
 				<attribute name="Bundle-Vendor" value="Chair of Automata Theory - TU Dresden" />
-				<attribute name="Bundle-DocURL" value="http://lat.inf.tu-dresden.de" />
+				<attribute name="Bundle-DocURL" value="https://lat.inf.tu-dresden.de" />
 				<attribute name="Bundle-ClassPath" value="." />
 				<attribute name="Import-Package" value="${project.properties.import.package}" />
 				<attribute name="Bundle-Activator" value="${project.properties.bundle.activator}" />
