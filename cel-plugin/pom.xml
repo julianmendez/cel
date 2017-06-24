@@ -34,34 +34,33 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>de.tu-dresden.inf.lat.util</groupId>
+			<artifactId>util-map</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>de.tu-dresden.inf.lat.jsexp</groupId>
 			<artifactId>jsexp</artifactId>
-			<version>0.2.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>4.2.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>edu.stanford.protege</groupId>
 			<artifactId>protege-editor-owl</artifactId>
-			<version>5.0.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>edu.stanford.protege</groupId>
 			<artifactId>protege-editor-core</artifactId>
-			<version>5.0.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
@@ -73,12 +72,66 @@
 		<relativePath></relativePath>
 	</parent>
 
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>de.tu-dresden.inf.lat.util</groupId>
+				<artifactId>util-map</artifactId>
+				<version>${util.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>de.tu-dresden.inf.lat.jsexp</groupId>
+				<artifactId>jsexp</artifactId>
+				<version>${jsexp.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sourceforge.owlapi</groupId>
+				<artifactId>owlapi-distribution</artifactId>
+				<version>${owlapi.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sourceforge.owlapi</groupId>
+				<artifactId>owlapi-osgidistribution</artifactId>
+				<version>${owlapi.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>edu.stanford.protege</groupId>
+				<artifactId>protege-editor-owl</artifactId>
+				<version>${protege.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>edu.stanford.protege</groupId>
+				<artifactId>protege-editor-core</artifactId>
+				<version>${protege.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+				<scope>test</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<util.version>0.1.0</util.version>
+		<jsexp.version>0.2.2</jsexp.version>
+		<owlapi.version>4.2.8</owlapi.version>
+		<protege.version>5.2.0</protege.version>
 
 		<bundle.activator>org.protege.editor.core.plugin.DefaultPluginActivator</bundle.activator>
-		<bundle.jars>lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar</bundle.jars>
 		<bundle.classpath>.</bundle.classpath>
 		<import.package>javax.accessibility,javax.swing,javax.swing.border,org.osgi.framework,org.protege.editor.core.ui.workspace,*</import.package>
 		<require.bundle>org.eclipse.equinox.registry,org.eclipse.equinox.common,org.protege.editor.core.application,org.protege.editor.owl,org.semanticweb.owl.owlapi</require.bundle>
@@ -129,7 +182,8 @@
 							<Import-Package>${import.package}</Import-Package>
 							<Include-Resource>
 								{maven-resources}, {maven-dependencies},
-								@jsexp-0.2.2.jar
+								@util-map-${util.version}.jar,
+								@jsexp-${jsexp.version}.jar
 							</Include-Resource>
 							<Require-Bundle>${require.bundle}</Require-Bundle>
 						</instructions>
