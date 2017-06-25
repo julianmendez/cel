@@ -162,11 +162,12 @@ public class ReachabilityGraphTest extends TestCase {
 		set2.add("a12");
 		assertEquals(set2, graph.getEquivalentVertices("a11"));
 		assertEquals(set2, graph.getEquivalentVertices("a12"));
-		graph.getVertices().forEach(node -> {
-			if (!set1.contains(node) && !set2.contains(node)) {
-				assertEquals(Collections.singleton(node), graph.getEquivalentVertices(node));
-			}
-		});
+		graph.getVertices() //
+				.stream() //
+				.filter(node -> (!set1.contains(node) && !set2.contains(node))) //
+				.forEach(node -> {
+					assertEquals(Collections.singleton(node), graph.getEquivalentVertices(node));
+				});
 	}
 
 	public void testGetVertices() {

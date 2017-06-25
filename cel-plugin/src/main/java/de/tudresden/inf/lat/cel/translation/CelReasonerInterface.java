@@ -679,14 +679,15 @@ public class CelReasonerInterface {
 			throws CelReasonerException {
 		Set<Set<OWLObjectPropertyExpression>> ret = new HashSet<>();
 		Set<OWLObjectPropertyExpression> visited = new HashSet<>();
-		flattenedSet.forEach(property -> {
-			if (!visited.contains(property)) {
-				Set<OWLObjectPropertyExpression> equivalentProperties = getEquivalentObjectProperties(property)
-						.getEntities();
-				ret.add(equivalentProperties);
-				visited.addAll(equivalentProperties);
-			}
-		});
+		flattenedSet //
+				.stream() //
+				.filter(property -> !visited.contains(property)) //
+				.forEach(property -> {
+					Set<OWLObjectPropertyExpression> equivalentProperties = getEquivalentObjectProperties(property)
+							.getEntities();
+					ret.add(equivalentProperties);
+					visited.addAll(equivalentProperties);
+				});
 		return ret;
 	}
 

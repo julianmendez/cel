@@ -163,11 +163,12 @@ public class CelTranslator {
 	public Sexp translate(OWLOntology ontology, OWLOntologyManager ontologyManager) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		Set<OWLAxiom> axioms = ontology.getAxioms();
-		axioms.forEach(axiom -> {
-			if (!isIgnoredAxiom(axiom)) {
-				ret.add(translate(axiom));
-			}
-		});
+		axioms //
+				.stream() //
+				.filter(axiom -> !isIgnoredAxiom(axiom)) //
+				.forEach(axiom -> {
+					ret.add(translate(axiom));
+				});
 		return ret;
 	}
 

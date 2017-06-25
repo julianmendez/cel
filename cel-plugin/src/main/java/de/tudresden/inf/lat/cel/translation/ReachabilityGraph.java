@@ -104,11 +104,12 @@ public class ReachabilityGraph<T> {
 	 *            vertices to be added.
 	 */
 	public void addVertices(Set<T> newVertices) {
-		newVertices.forEach(elem -> {
-			if (!this.reachableMap.get(elem).isPresent()) {
-				this.reachableMap.put(elem, new HashSet<T>());
-			}
-		});
+		newVertices //
+				.stream() //
+				.filter(elem -> !this.reachableMap.get(elem).isPresent()) //
+				.forEach(elem -> {
+					this.reachableMap.put(elem, new HashSet<T>());
+				});
 	}
 
 	public Set<T> getDirectSuccessors(T vertex) {
@@ -172,13 +173,14 @@ public class ReachabilityGraph<T> {
 	public Set<Set<T>> getEquivalentClasses() {
 		Set<Set<T>> ret = new HashSet<>();
 		Set<T> visited = new HashSet<>();
-		getVertices().forEach(elem -> {
-			if (!visited.contains(elem)) {
-				Set<T> equivVertices = getEquivalentVertices(elem);
-				ret.add(equivVertices);
-				visited.addAll(equivVertices);
-			}
-		});
+		getVertices() //
+				.stream() //
+				.filter(elem -> !visited.contains(elem)) //
+				.forEach(elem -> {
+					Set<T> equivVertices = getEquivalentVertices(elem);
+					ret.add(equivVertices);
+					visited.addAll(equivVertices);
+				});
 		return ret;
 	}
 
