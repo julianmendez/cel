@@ -24,9 +24,10 @@ package de.tudresden.inf.lat.cel.translation;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
+import de.tudresden.inf.lat.util.map.OptMap;
+import de.tudresden.inf.lat.util.map.OptMapImpl;
 import junit.framework.TestCase;
 
 /**
@@ -36,8 +37,8 @@ import junit.framework.TestCase;
  */
 public class ReachabilityGraphTest extends TestCase {
 
-	protected Map<String, Set<String>> createDirectlyConnected() {
-		Map<String, Set<String>> ret = new HashMap<>();
+	protected OptMap<String, Set<String>> createDirectlyConnected() {
+		OptMap<String, Set<String>> ret = new OptMapImpl<>(new HashMap<>());
 		ret.put("a10", new HashSet<String>());
 		ret.put("a11", new HashSet<String>());
 		ret.put("a12", new HashSet<String>());
@@ -134,9 +135,10 @@ public class ReachabilityGraphTest extends TestCase {
 
 	public void testDirectSuccessor() {
 		ReachabilityGraph<String> graph = createInstance();
-		Map<String, Set<String>> map = createDirectlyConnected();
+		OptMap<String, Set<String>> map = createDirectlyConnected();
 		for (String elem : graph.getVertices()) {
-			assertEquals(map.get(elem), graph.getDirectSuccessors(elem));
+			assertTrue(map.get(elem).isPresent());
+			assertEquals(map.get(elem).get(), graph.getDirectSuccessors(elem));
 		}
 		assertTrue(true);
 	}
