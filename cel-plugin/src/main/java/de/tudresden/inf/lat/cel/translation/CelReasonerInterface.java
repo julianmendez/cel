@@ -128,27 +128,27 @@ public class CelReasonerInterface {
 
 	protected NodeSet<OWLClass> convertToNodeSetOfOWLClass(Set<Set<OWLClass>> setOfSets) {
 		Set<Node<OWLClass>> nodeSet = new HashSet<>();
-		for (Set<OWLClass> elem : setOfSets) {
+		setOfSets.forEach(elem -> {
 			nodeSet.add(NodeFactory.getOWLClassNode(elem));
-		}
+		});
 		return new OWLClassNodeSet(nodeSet);
 	}
 
 	protected NodeSet<OWLNamedIndividual> convertToNodeSetOfOWLNamedIndividual(Set<OWLNamedIndividual> individualSet) {
 
 		Set<Node<OWLNamedIndividual>> nodeSet = new HashSet<>();
-		for (OWLNamedIndividual individual : individualSet) {
+		individualSet.forEach(individual -> {
 			nodeSet.add(NodeFactory.getOWLNamedIndividualNode(individual));
-		}
+		});
 		return new OWLNamedIndividualNodeSet(nodeSet);
 	}
 
 	protected NodeSet<OWLObjectPropertyExpression> convertToNodeSetOfOWLObjectPropertyExpression(
 			Set<Set<OWLObjectPropertyExpression>> setOfSets) {
 		Set<Node<OWLObjectPropertyExpression>> nodeSet = new HashSet<>();
-		for (Set<OWLObjectPropertyExpression> elem : setOfSets) {
+		setOfSets.forEach(elem -> {
 			nodeSet.add(NodeFactory.getOWLObjectPropertyNode(elem));
-		}
+		});
 		return new OWLObjectPropertyNodeSet(nodeSet);
 	}
 
@@ -389,9 +389,9 @@ public class CelReasonerInterface {
 			Set<OWLObjectProperty> reachableVertices = getFlattenedDescendantProperties(
 					propertyExpression.asOWLObjectProperty());
 			graph.addReachable(propertyExpression.asOWLObjectProperty(), reachableVertices);
-			for (OWLObjectProperty vertex : reachableVertices) {
+			reachableVertices.forEach(vertex -> {
 				graph.addReachable(vertex, getFlattenedDescendantProperties(vertex));
-			}
+			});
 			ret = convertToNodeSetOfOWLObjectPropertyExpression(
 					makeEquivalentClasses(convertToOWLObjectPropertyExpression(
 							graph.getDirectSuccessors(propertyExpression.asOWLObjectProperty()))));
@@ -423,9 +423,9 @@ public class CelReasonerInterface {
 			Set<OWLObjectProperty> reachableVertices = getFlattenedAncestorProperties(
 					propertyExpression.asOWLObjectProperty());
 			graph.addReachable(propertyExpression.asOWLObjectProperty(), reachableVertices);
-			for (OWLObjectProperty vertex : reachableVertices) {
+			reachableVertices.forEach(vertex -> {
 				graph.addReachable(vertex, getFlattenedAncestorProperties(vertex));
-			}
+			});
 			ret = convertToNodeSetOfOWLObjectPropertyExpression(
 					makeEquivalentClasses(convertToOWLObjectPropertyExpression(
 							graph.getDirectSuccessors(propertyExpression.asOWLObjectProperty()))));
@@ -679,14 +679,14 @@ public class CelReasonerInterface {
 			throws CelReasonerException {
 		Set<Set<OWLObjectPropertyExpression>> ret = new HashSet<>();
 		Set<OWLObjectPropertyExpression> visited = new HashSet<>();
-		for (OWLObjectPropertyExpression property : flattenedSet) {
+		flattenedSet.forEach(property -> {
 			if (!visited.contains(property)) {
 				Set<OWLObjectPropertyExpression> equivalentProperties = getEquivalentObjectProperties(property)
 						.getEntities();
 				ret.add(equivalentProperties);
 				visited.addAll(equivalentProperties);
 			}
-		}
+		});
 		return ret;
 	}
 

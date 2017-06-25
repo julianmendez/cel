@@ -108,74 +108,74 @@ public class CelParser {
 
 	public Set<OWLClass> parseSetOfClasses(Sexp expr, OWLDataFactory dataFactory) {
 		Set<OWLClass> ret = new HashSet<>();
-		for (Sexp elem : expr) {
+		expr.forEach(elem -> {
 			ret.add(parseClass(elem, dataFactory));
-		}
+		});
 		return ret;
 	}
 
 	public Set<OWLClassExpression> parseSetOfDescriptions(Sexp expr, OWLDataFactory dataFactory)
 			throws CelParserException {
 		Set<OWLClassExpression> ret = new HashSet<>();
-		for (Sexp elem : expr) {
+		expr.forEach(elem -> {
 			ret.add(parseDescription(elem, dataFactory));
-		}
+		});
 		return ret;
 	}
 
 	public Set<OWLNamedIndividual> parseSetOfIndividuals(Sexp expr, OWLDataFactory dataFactory) {
 		Set<OWLNamedIndividual> ret = new HashSet<>();
-		for (Sexp elem : expr) {
+		expr.forEach(elem -> {
 			Sexp cleanexpr = removeVbars(elem);
 			ret.add(dataFactory.getOWLNamedIndividual(IRI.create(cleanexpr.toString())));
-		}
+		});
 		return ret;
 	}
 
 	public Set<OWLObjectProperty> parseSetOfProperties(Sexp expr, OWLDataFactory dataFactory) {
 		Set<OWLObjectProperty> ret = new HashSet<>();
-		for (Sexp elem : expr) {
+		expr.forEach(elem -> {
 			Sexp cleanexpr = removeVbars(elem);
 			ret.add(dataFactory.getOWLObjectProperty(IRI.create(cleanexpr.toString())));
-		}
+		});
 		return ret;
 	}
 
 	public Set<Set<OWLClass>> parseSetOfSetOfClasses(Sexp expr, OWLDataFactory dataFactory) {
 		Set<Set<OWLClass>> ret = new HashSet<>();
-		for (Sexp subexpr : expr) {
+		expr.forEach(subexpr -> {
 			Set<OWLClass> part = new HashSet<>();
-			for (Sexp elem : subexpr) {
+			subexpr.forEach(elem -> {
 				part.add(parseClass(elem, dataFactory));
-			}
+			});
 			ret.add(part);
-		}
+		});
 		return ret;
 	}
 
 	public Set<Set<OWLClassExpression>> parseSetOfSetOfDescriptions(Sexp expr, OWLDataFactory dataFactory)
 			throws CelParserException {
 		Set<Set<OWLClassExpression>> ret = new HashSet<>();
-		for (Sexp subexpr : expr) {
+		expr.forEach(subexpr -> {
 			Set<OWLClassExpression> part = new HashSet<>();
-			for (Sexp elem : subexpr) {
+			subexpr.forEach(elem -> {
 				part.add(parseDescription(elem, dataFactory));
-			}
+			});
 			ret.add(part);
-		}
+		});
 		return ret;
 	}
 
 	public Set<Set<OWLObjectProperty>> parseSetOfSetOfProperties(Sexp expr, OWLDataFactory dataFactory) {
 		Set<Set<OWLObjectProperty>> ret = new HashSet<>();
-		for (Sexp subexpr : expr) {
+		expr.forEach(subexpr -> {
 			Set<OWLObjectProperty> part = new HashSet<>();
-			for (Sexp elem : subexpr) {
+			subexpr.forEach(elem -> {
 				Sexp cleanexpr = removeVbars(elem);
 				part.add(dataFactory.getOWLObjectProperty(IRI.create(cleanexpr.toString())));
-			}
+			});
 			ret.add(part);
-		}
+		});
 		return ret;
 	}
 
@@ -247,4 +247,5 @@ public class CelParser {
 		}
 		return ret;
 	}
+
 }

@@ -173,7 +173,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
 			OWLObjectPropertyExpression objectPropertyExpression) throws InconsistentOntologyException,
-					FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		logger.finer("getDisjointObjectProperties(" + objectPropertyExpression + ")");
 		throw new UnsupportedReasonerOperationInCelException();
 	}
@@ -195,7 +195,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
 			OWLObjectPropertyExpression objectPropertyExpression) throws InconsistentOntologyException,
-					FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		logger.finer("getEquivalentObjectProperties(" + objectPropertyExpression + ")");
 		return getCelInterface().getEquivalentObjectProperties(objectPropertyExpression);
 	}
@@ -223,7 +223,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
 			OWLObjectPropertyExpression objectPropertyExpression) throws InconsistentOntologyException,
-					FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		logger.finer("getInverseObjectProperties(" + objectPropertyExpression + ")");
 		throw new UnsupportedReasonerOperationInCelException();
 	}
@@ -231,7 +231,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public NodeSet<OWLClass> getObjectPropertyDomains(OWLObjectPropertyExpression objectPropertyExpression,
 			boolean direct) throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-					TimeOutException {
+			TimeOutException {
 		logger.finer("getObjectPropertyDomains(" + objectPropertyExpression + ", " + direct + ")");
 		throw new UnsupportedReasonerOperationInCelException();
 	}
@@ -239,7 +239,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public NodeSet<OWLClass> getObjectPropertyRanges(OWLObjectPropertyExpression objectPropertyExpression,
 			boolean direct) throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-					TimeOutException {
+			TimeOutException {
 		logger.finer("getObjectPropertyRanges(" + objectPropertyExpression + ", " + direct + ")");
 		throw new UnsupportedReasonerOperationInCelException();
 	}
@@ -247,7 +247,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public NodeSet<OWLNamedIndividual> getObjectPropertyValues(OWLNamedIndividual individual,
 			OWLObjectPropertyExpression objectPropertyExpression) throws InconsistentOntologyException,
-					FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		logger.finer("getObjectPropertyValues(" + individual + ", " + objectPropertyExpression + ")");
 		throw new UnsupportedReasonerOperationInCelException();
 	}
@@ -323,7 +323,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
 			OWLObjectPropertyExpression objectPropertyExpression, boolean direct) throws InconsistentOntologyException,
-					FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		logger.finer("getSubObjectProperties(" + objectPropertyExpression + ", " + direct + ")");
 		return getCelInterface().getSubObjectProperties(objectPropertyExpression, direct);
 	}
@@ -347,7 +347,7 @@ public class CelReasoner implements OWLReasoner {
 	@Override
 	public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
 			OWLObjectPropertyExpression objectPropertyExpression, boolean direct) throws InconsistentOntologyException,
-					FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		logger.finer("getSuperObjectProperties(" + objectPropertyExpression + ", " + direct + ")");
 		return getCelInterface().getSuperObjectProperties(objectPropertyExpression, direct);
 	}
@@ -424,9 +424,9 @@ public class CelReasoner implements OWLReasoner {
 			UnsupportedEntailmentTypeException, TimeOutException, AxiomNotInProfileException, FreshEntitiesException {
 		logger.finer("isEntailed((Set<? extends OWLAxiom>) " + axiomSet + ")");
 		Set<OWLAxiom> set = new HashSet<>();
-		for (OWLAxiom axiom : axiomSet) {
+		axiomSet.forEach(axiom -> {
 			set.add(axiom);
-		}
+		});
 		boolean ret = getCelInterface().isEntailed(set);
 		logger.finer("" + ret);
 		return ret;

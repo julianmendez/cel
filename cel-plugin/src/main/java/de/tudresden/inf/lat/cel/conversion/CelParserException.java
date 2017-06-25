@@ -26,7 +26,7 @@ package de.tudresden.inf.lat.cel.conversion;
  * 
  * @author Julian Mendez
  */
-public class CelParserException extends Exception {
+public class CelParserException extends RuntimeException {
 
 	private static final long serialVersionUID = 6423406487886936422L;
 
@@ -37,4 +37,5 @@ public class CelParserException extends Exception {
 	public CelParserException(Throwable t) {
 		super(t);
 	}
+
 }

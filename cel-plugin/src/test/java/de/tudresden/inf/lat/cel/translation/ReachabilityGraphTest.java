@@ -136,10 +136,10 @@ public class ReachabilityGraphTest extends TestCase {
 	public void testDirectSuccessor() {
 		ReachabilityGraph<String> graph = createInstance();
 		OptMap<String, Set<String>> map = createDirectlyConnected();
-		for (String elem : graph.getVertices()) {
+		graph.getVertices().forEach(elem -> {
 			assertTrue(map.get(elem).isPresent());
 			assertEquals(map.get(elem).get(), graph.getDirectSuccessors(elem));
-		}
+		});
 		assertTrue(true);
 	}
 
@@ -162,15 +162,16 @@ public class ReachabilityGraphTest extends TestCase {
 		set2.add("a12");
 		assertEquals(set2, graph.getEquivalentVertices("a11"));
 		assertEquals(set2, graph.getEquivalentVertices("a12"));
-		for (String node : graph.getVertices()) {
+		graph.getVertices().forEach(node -> {
 			if (!set1.contains(node) && !set2.contains(node)) {
 				assertEquals(Collections.singleton(node), graph.getEquivalentVertices(node));
 			}
-		}
+		});
 	}
 
 	public void testGetVertices() {
 		ReachabilityGraph<String> graph = createInstance();
 		assertEquals(createNodeSet(), graph.getVertices());
 	}
+
 }

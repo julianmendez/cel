@@ -26,7 +26,7 @@ package de.tudresden.inf.lat.cel.conversion;
  * 
  * @author Julian Mendez
  */
-public class CelTranslatorException extends Exception {
+public class CelTranslatorException extends RuntimeException {
 
 	private static final long serialVersionUID = -1140911404774564339L;
 
@@ -37,4 +37,5 @@ public class CelTranslatorException extends Exception {
 	public CelTranslatorException(Throwable t) {
 		super(t);
 	}
+
 }

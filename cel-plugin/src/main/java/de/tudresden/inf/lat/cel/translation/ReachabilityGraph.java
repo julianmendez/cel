@@ -67,22 +67,22 @@ public class ReachabilityGraph<T> {
 		allReachableVertices.addAll(dest);
 
 		// include all the reachable vertices according to the new vertices
-		for (T elem : dest) {
+		dest.forEach(elem -> {
 			Optional<Set<T>> optVertices = this.reachableMap.get(elem);
 			assert (optVertices.isPresent());
 			allReachableVertices.addAll(optVertices.get());
-		}
+		});
 
 		// update the reachable vertices for the vertices such that orig is
 		// reachable
-		for (T elem : getVertices()) {
+		getVertices().forEach(elem -> {
 			Optional<Set<T>> optAccVertices = this.reachableMap.get(elem);
 			assert (optAccVertices.isPresent());
 			Set<T> accVertices = optAccVertices.get();
 			if (accVertices.contains(orig)) {
 				accVertices.addAll(allReachableVertices);
 			}
-		}
+		});
 	}
 
 	/**
@@ -104,11 +104,11 @@ public class ReachabilityGraph<T> {
 	 *            vertices to be added.
 	 */
 	public void addVertices(Set<T> newVertices) {
-		for (T elem : newVertices) {
+		newVertices.forEach(elem -> {
 			if (!this.reachableMap.get(elem).isPresent()) {
 				this.reachableMap.put(elem, new HashSet<T>());
 			}
-		}
+		});
 	}
 
 	public Set<T> getDirectSuccessors(T vertex) {
@@ -120,11 +120,11 @@ public class ReachabilityGraph<T> {
 			connectedVertices.addAll(optVertices.get());
 		}
 		OptMap<T, Integer> count = new OptMapImpl<>(new HashMap<>());
-		for (T elem : connectedVertices) {
+		connectedVertices.forEach(elem -> {
 			Optional<Set<T>> optVerticesOfElem = map.get(elem);
 			assert (optVerticesOfElem.isPresent());
 			count.put(elem, optVerticesOfElem.get().size());
-		}
+		});
 
 		boolean changed = true;
 		while (changed) {
@@ -141,18 +141,20 @@ public class ReachabilityGraph<T> {
 			}
 			if (otherVertex != null) {
 				changed = true;
-				boolean directlyConnected = true;
-				for (T elem : connectedVertices) {
+				boolean[] directlyConnected = new boolean[1];
+				directlyConnected[0] = true;
+				T otherVertex0 = otherVertex;
+				connectedVertices.forEach(elem -> {
 					Optional<Set<T>> optVerticesOfElem = map.get(elem);
 					assert (optVerticesOfElem.isPresent());
-					if (optVerticesOfElem.get().contains(otherVertex)) {
+					if (optVerticesOfElem.get().contains(otherVertex0)) {
 						Optional<Integer> optCountOfElem = count.get(elem);
 						assert (optCountOfElem.isPresent());
 						count.put(elem, optCountOfElem.get() - 1);
-						directlyConnected = false;
+						directlyConnected[0] = false;
 					}
-				}
-				if (directlyConnected) {
+				});
+				if (directlyConnected[0]) {
 					ret.add(otherVertex);
 				}
 				connectedVertices.remove(otherVertex);
@@ -170,13 +172,13 @@ public class ReachabilityGraph<T> {
 	public Set<Set<T>> getEquivalentClasses() {
 		Set<Set<T>> ret = new HashSet<>();
 		Set<T> visited = new HashSet<>();
-		for (T elem : getVertices()) {
+		getVertices().forEach(elem -> {
 			if (!visited.contains(elem)) {
 				Set<T> equivVertices = getEquivalentVertices(elem);
 				ret.add(equivVertices);
 				visited.addAll(equivVertices);
 			}
-		}
+		});
 		return ret;
 	}
 
@@ -192,13 +194,13 @@ public class ReachabilityGraph<T> {
 		ret.add(orig);
 		Optional<Set<T>> optVertices = this.reachableMap.get(orig);
 		if (optVertices.isPresent()) {
-			for (T otherElem : optVertices.get()) {
+			optVertices.get().forEach(otherElem -> {
 				Optional<Set<T>> optOtherVertices = this.reachableMap.get(otherElem);
 				assert (optOtherVertices.isPresent());
 				if (optOtherVertices.get().contains(orig)) {
 					ret.add(otherElem);
 				}
-			}
+			});
 		}
 		return ret;
 	}
@@ -218,7 +220,7 @@ public class ReachabilityGraph<T> {
 
 	protected OptMap<T, Set<T>> makeMapWithoutEquivalentVertices() {
 		OptMap<T, Set<T>> ret = new OptMapImpl<>(new HashMap<>());
-		for (T elem : getVertices()) {
+		getVertices().forEach(elem -> {
 			Set<T> otherSet = new HashSet<>();
 			Optional<Set<T>> optVertices = this.reachableMap.get(elem);
 			assert optVertices.isPresent();
@@ -227,22 +229,22 @@ public class ReachabilityGraph<T> {
 				otherSet.removeAll(getEquivalentVertices(elem));
 			}
 			ret.put(elem, otherSet);
-		}
+		});
 		return ret;
 	}
 
 	@Override
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
-		for (T vertex : getVertices()) {
+		getVertices().forEach(vertex -> {
 			ret.append("(" + vertex.toString() + ") > (");
 			Optional<Set<T>> optVertices = this.reachableMap.get(vertex);
 			assert (optVertices.isPresent());
-			for (T otherVertex : optVertices.get()) {
+			optVertices.get().forEach(otherVertex -> {
 				ret.append(" (" + otherVertex.toString() + ") ");
-			}
+			});
 			ret.append(")\n");
-		}
+		});
 		return ret.toString();
 	}
 
