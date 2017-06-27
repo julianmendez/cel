@@ -3,7 +3,7 @@
 
 | version    | release date | Java | OWL API       | Protégé         |
 |:-----------|:-------------|:----:|:--------------|:----------------|
-| v0.5.3     | (unreleased) | 7    | 3.5.1         | 5.0.0-beta-17   |
+| v0.5.3     | 2017-06-27   | 7    | 3.5.1         | 5.0.0-beta-17   |
 | v0.5.2     | 2015-07-07   | 8    | 3.5.1         | 5.0.0-beta-17   |
 | v0.5.1     | 2012-01-03   | 6    | 3.2.4         | 4.1.0           |
 | v0.5.0     | 2010-11-01   | 6    | 3.2.3         | 4.1.0           |
@@ -21,7 +21,7 @@
 
 
 ### v0.5.3
-*(unreleased)*
+*(2017-06-27)*
 * POM files changed: the new `groupId` is `de.tu-dresden.inf.lat.cel` and the new `artifactId` is `cel-plugin`
 * for Protege 5.0.0-beta-17 and OWL API 3.5.1
 * the created Protege plug-in JAR contains the version number
