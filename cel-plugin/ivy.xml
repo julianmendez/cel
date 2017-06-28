@@ -19,13 +19,13 @@
 		<dependency org="junit" name="junit" rev="4.12" />
 
 		<dependency org="net.sourceforge.owlapi" name="owlapi-distribution"
-			rev="3.5.1" conf="javadoc->javadoc;sources->sources;compile->default" />
+			rev="4.2.5" conf="javadoc->javadoc;sources->sources;compile->default" />
 
-		<dependency org="edu.stanford.protege" name="org.protege.editor.owl"
-			rev="5.0.0-beta-17" conf="javadoc->javadoc;sources->sources;compile->default" />
+		<dependency org="edu.stanford.protege" name="protege-editor-owl"
+			rev="5.0.0" conf="javadoc->javadoc;sources->sources;compile->default" />
 
-		<dependency org="edu.stanford.protege" name="org.protege.editor.core.application"
-			rev="5.0.0-beta-17" conf="javadoc->javadoc;sources->sources;compile->default" />
+		<dependency org="edu.stanford.protege" name="protege-editor-core"
+			rev="5.0.0" conf="javadoc->javadoc;sources->sources;compile->default" />
 
 	</dependencies>
 
