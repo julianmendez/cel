@@ -26,7 +26,7 @@ CEL: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 CEL Plug-in: [LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.txt)
 
 
-## CEL [Downloads](https://lat.inf.tu-dresden.de/systems/cel/downloads.html)
+## CEL [Downloads](https://julianmendez.github.io/cel/docs/downloads.html)
 
 
 ## CEL [Source Code](https://github.com/julianmendez/cel)
