@@ -16,7 +16,7 @@ Documentation: [CEL home page](https://lat.inf.tu-dresden.de/systems/cel/)
 
 CEL: [Boontawee Suntisrivaraporn](https://meng234.blogspot.com)
 
-CEL Plug-in: [Julian Mendez](https://lat.inf.tu-dresden.de/~mendez/)
+CEL Plug-in: [Julian Mendez](https://julianmendez.github.io)
 
 
 ## Licenses
