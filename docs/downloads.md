@@ -2,7 +2,8 @@
 
 | Filename | Summary + Labels | Uploaded / Release Date | Size |
 |:---------|:-----------------|:------------------------|:----:|
-| [de.tu-dresden.inf.lat.cel.jar-0.5.3.zip](https://sourceforge.net/projects/latitude/files/cel/0.5.3/de.tu-dresden.inf.lat.cel.jar-0.5.3.zip/download) |  CEL Plug-in 0.5.3 for Protege 5.0.0 and OWL API 4.2.5 **Featured** |  30 Jun 2017 |  2.9 MB |
+| [de.tu-dresden.inf.lat.cel.jar-0.6.0.zip](https://sourceforge.net/projects/latitude/files/cel/0.6.0/de.tu-dresden.inf.lat.cel.jar-0.6.0.zip/download) | CEL Plug-in 0.6.0 for Protege 5.2.0 and OWL API 4.2.8 **Featured** | 1 Jul 2017 | 2.9 MB |
+| [de.tu-dresden.inf.lat.cel.jar-0.5.3.zip](https://sourceforge.net/projects/latitude/files/cel/0.5.3/de.tu-dresden.inf.lat.cel.jar-0.5.3.zip/download) | CEL Plug-in 0.5.3 for Protege 5.0.0 and OWL API 4.2.5 | 30 Jun 2017 |  2.9 MB |
 | [de.tudresden.inf.lat.cel.jar-0.5.2.zip](https://sourceforge.net/projects/latitude/files/cel/0.5.2/de.tudresden.inf.lat.cel.jar-0.5.2.zip/download) | CEL Plug-in 0.5.2 for Protege 5.0.0-beta-17 and OWL API 3.5.1 | Jul 2015 | 2.9 MB |
 | [de.tudresden.inf.lat.cel.jar-0.5.1.zip](https://sourceforge.net/projects/latitude/files/cel/0.5.1/de.tudresden.inf.lat.cel.jar-0.5.1.zip/download) | CEL Plug-in 0.5.1 for Protege 4.1 and OWL API 3.2.4 | Jan 2012 | 2.9 MB |
 | [de.tudresden.inf.lat.cel.jar-0.5.0.zip](https://sourceforge.net/projects/latitude/files/cel/0.5.0/de.tudresden.inf.lat.cel.jar-0.5.0.zip/download) | CEL Plug-in 0.5.0 for Protege 4.1 and OWL API 3.2.3 | Nov 2010 | 2.9 MB |

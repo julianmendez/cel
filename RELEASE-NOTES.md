@@ -3,7 +3,7 @@
 
 | version    | release date | Java | OWL API       | Protégé         |
 |:-----------|:-------------|:----:|:--------------|:----------------|
-| v0.6.0     | (unreleased) | 8    | 4.2.8         | 5.2.0           |
+| v0.6.0     | 2017-07-01   | 8    | 4.2.8         | 5.2.0           |
 | v0.5.3     | 2017-06-30   | 7    | 4.2.5         | 5.0.0           |
 | v0.5.2     | 2015-07-07   | 8    | 3.5.1         | 5.0.0-beta-17   |
 | v0.5.1     | 2012-01-03   | 6    | 3.2.4         | 4.1.0           |
@@ -22,7 +22,7 @@
 
 
 ### v0.6.0
-*(unreleased)*
+*2017-07-01*
 * for Protege 5.2.0 and OWL API 4.2.8
 * compiled for Java 8
 * uses util-map 0.1.0 which contains maps with optional values, available at [util](https://github.com/julianmendez/util)
