@@ -32,6 +32,9 @@ CEL Plug-in: [LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.txt)
 ## CEL [Source Code](https://github.com/julianmendez/cel)
 
 
+## CEL [Release Notes](https://julianmendez.github.io/cel/RELEASE-NOTES.html)
+
+
 ## Introduction to CEL
 
 Description logics (DLs) are an important family of formalisms for reasoning about ontologies. CEL is the first reasoner for the description logic EL+, supporting as its main reasoning task the computation of the subsumption hierarchy induced by EL+ ontologies. The most distinguishing feature of CEL is that, unlike other modern DL reasoners, it implements a polynomial-time algorithm. The supported description logic EL+ offers a selected set of expressive means that are tailored towards the formulation of medical and biological ontologies.
