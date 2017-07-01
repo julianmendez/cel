@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/julianmendez/cel.png?branch=master)](https://travis-ci.org/julianmendez/cel)
 
 
-CEL is a lightweight Description Logic reasoner for large-scale biomedical ontologies. The CEL Plug-ing uses the [OWL API](https://owlcs.github.io/owlapi/) and let CEL be used as a plug-in for [Protege](https://protege.stanford.edu/).
+CEL is a lightweight Description Logic reasoner for large-scale biomedical ontologies. The CEL Plug-ing uses the [OWL API](https://owlcs.github.io/owlapi/) and lets CEL be used as a plug-in for [Protege](https://protege.stanford.edu/).
 
 Description logics (DLs) are an important family of formalisms for reasoning about ontologies. CEL is the first reasoner for the Description Logic EL+, supporting as its main reasoning task the computation of the subsumption hierarchy induced by EL+ ontologies. The Description Logic EL+ forms the core expressive features of [OWL 2 EL Profile](https://www.w3.org/TR/owl2-profiles/#OWL_2_EL_2) -- which is a tractable fragment of the new Web Ontology Language OWL 2. The most distinguishing feature of CEL is that, unlike other modern DL reasoners, it implements a polynomial-time algorithm. The supported Description Logic EL+ offers a selected set of expressive means that are tailored toward the formulation of medical and biological ontologies.
 
