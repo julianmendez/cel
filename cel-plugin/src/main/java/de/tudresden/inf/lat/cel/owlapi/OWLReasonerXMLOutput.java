@@ -90,40 +90,40 @@ public class OWLReasonerXMLOutput {
 			propertiesToVisit.removeAll(equivProperties);
 		}
 
-		for (OWLClass subClass : classSet) {
+		classSet.forEach(subClass -> {
 			Set<OWLClass> superClasses = new TreeSet<>();
 			superClasses.addAll(this.reasoner.getSuperClasses(subClass, true).getFlattened());
-			for (OWLClass superClass : superClasses) {
+			superClasses.forEach(superClass -> {
 				renderSubClassOf(subClass, superClass);
-			}
-		}
+			});
+		});
 
-		for (OWLObjectProperty subProperty : propertySet) {
+		propertySet.forEach(subProperty -> {
 			Set<OWLObjectPropertyExpression> superProperties = new TreeSet<>();
 			superProperties.addAll(this.reasoner.getSuperObjectProperties(subProperty, true).getFlattened());
-			for (OWLObjectPropertyExpression superProperty : superProperties) {
+			superProperties.forEach(superProperty -> {
 				renderSubObjectPropertyOf(subProperty.asOWLObjectProperty(), superProperty.asOWLObjectProperty());
-			}
-		}
+			});
+		});
 
-		for (OWLClass cls : classSet) {
+		classSet.forEach(cls -> {
 			Set<OWLNamedIndividual> instances = new TreeSet<>();
 			instances.addAll(this.reasoner.getInstances(cls, true).getFlattened());
-			for (OWLNamedIndividual individual : instances) {
+			instances.forEach(individual -> {
 				renderClassAssertion(cls, individual);
-			}
-		}
+			});
+		});
 
-		for (OWLObjectProperty property : propertySet) {
-			for (OWLNamedIndividual individual : individualSet) {
+		propertySet.forEach(property -> {
+			individualSet.forEach(individual -> {
 				Set<OWLNamedIndividual> propertyValues = new TreeSet<>();
 				propertyValues.addAll(this.reasoner.getObjectPropertyValues(individual, property.asOWLObjectProperty())
 						.getFlattened());
-				for (OWLNamedIndividual otherIndividual : propertyValues) {
+				propertyValues.forEach(otherIndividual -> {
 					renderObjectPropertyAssertion(property, individual, otherIndividual);
-				}
-			}
-		}
+				});
+			});
+		});
 	}
 
 	private void renderClassAssertion(OWLClass cls, OWLNamedIndividual individual) {
@@ -135,11 +135,11 @@ public class OWLReasonerXMLOutput {
 	}
 
 	private void renderDeclaration(Set<? extends OWLEntity> entities) {
-		for (OWLEntity elem : entities) {
+		entities.forEach(elem -> {
 			this.writer.writeStartElement(OWLXMLVocabulary.DECLARATION);
 			renderEntity(elem);
 			this.writer.writeEndElement();
-		}
+		});
 	}
 
 	private void renderEntity(OWLEntity entity) {
@@ -159,9 +159,9 @@ public class OWLReasonerXMLOutput {
 	private void renderEntitySet(Set<? extends OWLEntity> entitySet) {
 		Set<OWLEntity> set = new TreeSet<>();
 		set.addAll(entitySet);
-		for (OWLEntity entity : set) {
+		set.forEach(entity -> {
 			renderEntity(entity);
-		}
+		});
 	}
 
 	private void renderEquivalentClasses(Set<OWLClass> classSet) {
@@ -174,9 +174,9 @@ public class OWLReasonerXMLOutput {
 		this.writer.writeStartElement(OWLXMLVocabulary.EQUIVALENT_OBJECT_PROPERTIES);
 		Set<OWLObjectPropertyExpression> set = new TreeSet<>();
 		set.addAll(propertySet);
-		for (OWLObjectPropertyExpression propertyExpression : set) {
+		set.forEach(propertyExpression -> {
 			renderEntity(propertyExpression.asOWLObjectProperty());
-		}
+		});
 		this.writer.writeEndElement();
 	}
 
@@ -211,4 +211,5 @@ public class OWLReasonerXMLOutput {
 		render();
 		this.writer.endDocument();
 	}
+
 }

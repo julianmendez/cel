@@ -65,7 +65,8 @@ class CelSocket {
 	/**
 	 * Closes the connection to the CEL reasoner in Lisp.
 	 * 
-	 * @throws IOException if something goes wrong with I/O
+	 * @throws IOException
+	 *             if something goes wrong with I/O
 	 */
 	public void close() throws IOException {
 		getSocket().close();
@@ -124,4 +125,5 @@ class CelSocket {
 		}
 		return ret;
 	}
+
 }

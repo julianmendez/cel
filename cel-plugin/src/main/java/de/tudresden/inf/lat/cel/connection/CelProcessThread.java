@@ -88,10 +88,13 @@ class CelProcessThread extends Thread {
 	/**
 	 * Copies the CEL binary files into a temporary directory.
 	 * 
-	 * @param tempDirectory temporary directory
+	 * @param tempDirectory
+	 *            temporary directory
 	 * @return a list of the copied files.
-	 * @throws IOException if something goes wrong with I/O
-	 * @throws InterruptedException if the thread is interrupted
+	 * @throws IOException
+	 *             if something goes wrong with I/O
+	 * @throws InterruptedException
+	 *             if the thread is interrupted
 	 */
 	protected List<File> copyFiles(File tempDirectory) throws IOException, InterruptedException {
 		List<File> ret = new ArrayList<>();
@@ -108,7 +111,8 @@ class CelProcessThread extends Thread {
 	 * using deleteOnExit().
 	 * 
 	 * @return a new temporary directory where the files were decompressed.
-	 * @throws IOException if something goes wrong with I/O
+	 * @throws IOException
+	 *             if something goes wrong with I/O
 	 */
 	protected File createTemporaryDirectory() throws IOException {
 		File ret = File.createTempFile(celMain, "");
@@ -128,7 +132,8 @@ class CelProcessThread extends Thread {
 	 * @param directory
 	 *            destination directory.
 	 * @return the new file.
-	 * @throws IOException if something goes wrong with I/O
+	 * @throws IOException
+	 *             if something goes wrong with I/O
 	 */
 	protected File decompressFile(String location, String filename, File directory) throws IOException {
 		BufferedInputStream source = new BufferedInputStream(
@@ -216,10 +221,11 @@ class CelProcessThread extends Thread {
 			this.process = null;
 		}
 		if (getFiles() != null) {
-			for (File tempFile : getFiles()) {
+			getFiles().forEach(tempFile -> {
 				tempFile.delete();
-			}
+			});
 			this.temporaryFiles = null;
 		}
 	}
+
 }

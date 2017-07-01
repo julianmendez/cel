@@ -35,7 +35,6 @@ import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -164,11 +163,12 @@ public class CelTranslator {
 	public Sexp translate(OWLOntology ontology, OWLOntologyManager ontologyManager) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		Set<OWLAxiom> axioms = ontology.getAxioms();
-		for (OWLAxiom axiom : axioms) {
-			if (!isIgnoredAxiom(axiom)) {
-				ret.add(translate(axiom));
-			}
-		}
+		axioms //
+				.stream() //
+				.filter(axiom -> !isIgnoredAxiom(axiom)) //
+				.forEach(axiom -> {
+					ret.add(translate(axiom));
+				});
 		return ret;
 	}
 
@@ -183,38 +183,38 @@ public class CelTranslator {
 	protected Sexp translateAxiom(OWLDifferentIndividualsAxiom axiom) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyDifferentIndividuals));
-		for (OWLIndividual elem : axiom.getIndividuals()) {
+		axiom.getIndividuals().forEach(elem -> {
 			ret.add(translate(elem.asOWLNamedIndividual()));
-		}
+		});
 		return ret;
 	}
 
 	protected Sexp translateAxiom(OWLDisjointClassesAxiom axiom) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyDisjoint));
-		for (OWLClassExpression elem : axiom.getClassExpressions()) {
+		axiom.getClassExpressions().forEach(elem -> {
 			ret.add(translate(elem));
-		}
+		});
 		return ret;
 	}
 
 	protected Sexp translateAxiom(OWLEquivalentClassesAxiom axiom) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyEquivalent));
-		for (OWLClassExpression desc : axiom.getClassExpressions()) {
+		axiom.getClassExpressions().forEach(desc -> {
 			Sexp expr = translate(desc);
 			ret.add(expr);
-		}
+		});
 		return ret;
 	}
 
 	protected Sexp translateAxiom(OWLEquivalentObjectPropertiesAxiom axiom) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyRoleEquivalent));
-		for (OWLObjectPropertyExpression desc : axiom.getProperties()) {
+		axiom.getProperties().forEach(desc -> {
 			Sexp expr = translate(desc);
 			ret.add(expr);
-		}
+		});
 		return ret;
 	}
 
@@ -253,9 +253,9 @@ public class CelTranslator {
 	protected Sexp translateAxiom(OWLSameIndividualAxiom axiom) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keySameIndividuals));
-		for (OWLIndividual elem : axiom.getIndividuals()) {
+		axiom.getIndividuals().forEach(elem -> {
 			ret.add(translate(elem.asOWLNamedIndividual()));
-		}
+		});
 		return ret;
 	}
 
@@ -279,9 +279,9 @@ public class CelTranslator {
 		List<OWLObjectPropertyExpression> propertyList = axiom.getPropertyChain();
 		Sexp translatedList = SexpFactory.newNonAtomicSexp();
 		translatedList.add(SexpFactory.newAtomicSexp(CelKeyword.keyCompose));
-		for (OWLObjectPropertyExpression expr : propertyList) {
+		propertyList.forEach(expr -> {
 			translatedList.add(translate(expr));
-		}
+		});
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyRoleInclusion));
 		ret.add(translatedList);
@@ -304,9 +304,9 @@ public class CelTranslator {
 	protected Sexp translateDescription(OWLObjectIntersectionOf description) throws CelTranslatorException {
 		Sexp ret = SexpFactory.newNonAtomicSexp();
 		ret.add(SexpFactory.newAtomicSexp(CelKeyword.keyAnd));
-		for (OWLClassExpression elem : description.getOperands()) {
+		description.getOperands().forEach(elem -> {
 			ret.add(translate(elem));
-		}
+		});
 		return ret;
 	}
 
@@ -322,4 +322,5 @@ public class CelTranslator {
 		Sexp ret = createAtomicSymbol(property.getIRI());
 		return ret;
 	}
+
 }

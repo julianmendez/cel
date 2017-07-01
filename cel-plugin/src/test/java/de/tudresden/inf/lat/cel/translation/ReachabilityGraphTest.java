@@ -24,20 +24,23 @@ package de.tudresden.inf.lat.cel.translation;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
+
+import de.tudresden.inf.lat.util.map.OptMap;
+import de.tudresden.inf.lat.util.map.OptMapImpl;
 
 /**
  * This class tests a saturated directed graph.
  * 
  * @author Julian Mendez
  */
-public class ReachabilityGraphTest extends TestCase {
+public class ReachabilityGraphTest {
 
-	protected Map<String, Set<String>> createDirectlyConnected() {
-		Map<String, Set<String>> ret = new HashMap<>();
+	protected OptMap<String, Set<String>> createDirectlyConnected() {
+		OptMap<String, Set<String>> ret = new OptMapImpl<>(new HashMap<>());
 		ret.put("a10", new HashSet<String>());
 		ret.put("a11", new HashSet<String>());
 		ret.put("a12", new HashSet<String>());
@@ -132,43 +135,50 @@ public class ReachabilityGraphTest extends TestCase {
 		return ret;
 	}
 
+	@Test
 	public void testDirectSuccessor() {
 		ReachabilityGraph<String> graph = createInstance();
-		Map<String, Set<String>> map = createDirectlyConnected();
-		for (String elem : graph.getVertices()) {
-			assertEquals(map.get(elem), graph.getDirectSuccessors(elem));
-		}
-		assertTrue(true);
+		OptMap<String, Set<String>> map = createDirectlyConnected();
+		graph.getVertices().forEach(elem -> {
+			Assert.assertTrue(map.get(elem).isPresent());
+			Assert.assertEquals(map.get(elem).get(), graph.getDirectSuccessors(elem));
+		});
+		Assert.assertTrue(true);
 	}
 
+	@Test
 	public void testEquivalentClasses() {
 		ReachabilityGraph<String> graph = createInstance();
-		assertEquals(createEquivalentClasses(), graph.getEquivalentClasses());
+		Assert.assertEquals(createEquivalentClasses(), graph.getEquivalentClasses());
 	}
 
+	@Test
 	public void testEquivalentVertices() {
 		ReachabilityGraph<String> graph = createInstance();
 		Set<String> set1 = new HashSet<>();
 		set1.add("a05");
 		set1.add("a09");
 		set1.add("a14");
-		assertEquals(set1, graph.getEquivalentVertices("a05"));
-		assertEquals(set1, graph.getEquivalentVertices("a09"));
-		assertEquals(set1, graph.getEquivalentVertices("a14"));
+		Assert.assertEquals(set1, graph.getEquivalentVertices("a05"));
+		Assert.assertEquals(set1, graph.getEquivalentVertices("a09"));
+		Assert.assertEquals(set1, graph.getEquivalentVertices("a14"));
 		Set<String> set2 = new HashSet<>();
 		set2.add("a11");
 		set2.add("a12");
-		assertEquals(set2, graph.getEquivalentVertices("a11"));
-		assertEquals(set2, graph.getEquivalentVertices("a12"));
-		for (String node : graph.getVertices()) {
-			if (!set1.contains(node) && !set2.contains(node)) {
-				assertEquals(Collections.singleton(node), graph.getEquivalentVertices(node));
-			}
-		}
+		Assert.assertEquals(set2, graph.getEquivalentVertices("a11"));
+		Assert.assertEquals(set2, graph.getEquivalentVertices("a12"));
+		graph.getVertices() //
+				.stream() //
+				.filter(node -> (!set1.contains(node) && !set2.contains(node))) //
+				.forEach(node -> {
+					Assert.assertEquals(Collections.singleton(node), graph.getEquivalentVertices(node));
+				});
 	}
 
+	@Test
 	public void testGetVertices() {
 		ReachabilityGraph<String> graph = createInstance();
-		assertEquals(createNodeSet(), graph.getVertices());
+		Assert.assertEquals(createNodeSet(), graph.getVertices());
 	}
+
 }

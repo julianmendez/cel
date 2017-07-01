@@ -29,6 +29,8 @@
 	<!-- Imports 'project.groupId', 'project.artifactId', and 'project.version' properties. -->
 	<xmlproperty file="pom.xml" />
 
+	<property name="project.properties.bundle.jars" value="lib/de/tu-dresden/inf/lat/util/util-map/0.1.0/util-map-0.1.0.jar,lib/de/tu-dresden/inf/lat/jsexp/jsexp/0.2.2/jsexp-0.2.2.jar"/>
+
 	<!-- Project-specific properties. -->
 	<fail unless="project.groupId">Error: 'project.groupId' is undefined. This property is the group identifier.</fail>
 	<fail unless="project.artifactId">Error: 'project.artifactId' is undefined. This property is the artifact identifier.</fail>

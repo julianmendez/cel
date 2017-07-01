@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -59,6 +59,8 @@ import de.tudresden.inf.lat.cel.conversion.CelTranslatorException;
 import de.tudresden.inf.lat.cel.conversion.LispKeyword;
 import de.tudresden.inf.lat.jsexp.Sexp;
 import de.tudresden.inf.lat.jsexp.SexpFactory;
+import de.tudresden.inf.lat.util.map.OptMap;
+import de.tudresden.inf.lat.util.map.OptMapImpl;
 
 /**
  * This class provides all the implemented methods for using the CEL reasoner.
@@ -74,8 +76,8 @@ public class CelReasonerInterface {
 	private static final String thing = "Thing";
 
 	private int auxClassCount = 0;
-	private final Map<OWLClassExpression, OWLClass> auxClassInvMap = new HashMap<>();
-	private final Map<OWLClass, OWLClassExpression> auxClassMap = new HashMap<>();
+	private final OptMap<OWLClassExpression, OWLClass> auxClassInvMap = new OptMapImpl<>(new HashMap<>());
+	private final OptMap<OWLClass, OWLClassExpression> auxClassMap = new OptMapImpl<>(new HashMap<>());
 	private final OntologyChangeTracker changeTracker = new OntologyChangeTracker();
 	private final OntologyEntailmentChecker entailmentChecker = new OntologyEntailmentChecker(this);
 	private OWLOntology ontology = null;
@@ -126,27 +128,27 @@ public class CelReasonerInterface {
 
 	protected NodeSet<OWLClass> convertToNodeSetOfOWLClass(Set<Set<OWLClass>> setOfSets) {
 		Set<Node<OWLClass>> nodeSet = new HashSet<>();
-		for (Set<OWLClass> elem : setOfSets) {
+		setOfSets.forEach(elem -> {
 			nodeSet.add(NodeFactory.getOWLClassNode(elem));
-		}
+		});
 		return new OWLClassNodeSet(nodeSet);
 	}
 
 	protected NodeSet<OWLNamedIndividual> convertToNodeSetOfOWLNamedIndividual(Set<OWLNamedIndividual> individualSet) {
 
 		Set<Node<OWLNamedIndividual>> nodeSet = new HashSet<>();
-		for (OWLNamedIndividual individual : individualSet) {
+		individualSet.forEach(individual -> {
 			nodeSet.add(NodeFactory.getOWLNamedIndividualNode(individual));
-		}
+		});
 		return new OWLNamedIndividualNodeSet(nodeSet);
 	}
 
 	protected NodeSet<OWLObjectPropertyExpression> convertToNodeSetOfOWLObjectPropertyExpression(
 			Set<Set<OWLObjectPropertyExpression>> setOfSets) {
 		Set<Node<OWLObjectPropertyExpression>> nodeSet = new HashSet<>();
-		for (Set<OWLObjectPropertyExpression> elem : setOfSets) {
+		setOfSets.forEach(elem -> {
 			nodeSet.add(NodeFactory.getOWLObjectPropertyNode(elem));
-		}
+		});
 		return new OWLObjectPropertyNodeSet(nodeSet);
 	}
 
@@ -176,8 +178,10 @@ public class CelReasonerInterface {
 		if (ce instanceof OWLClass) {
 			ret = (OWLClass) ce;
 		} else {
-			ret = this.auxClassInvMap.get(ce);
-			if (ret == null) {
+			Optional<OWLClass> optClass = this.auxClassInvMap.get(ce);
+			if (optClass.isPresent()) {
+				ret = optClass.get();
+			} else {
 				ret = createAuxiliaryClass();
 				this.auxClassMap.put(ret, ce);
 				this.auxClassInvMap.put(ce, ret);
@@ -385,9 +389,9 @@ public class CelReasonerInterface {
 			Set<OWLObjectProperty> reachableVertices = getFlattenedDescendantProperties(
 					propertyExpression.asOWLObjectProperty());
 			graph.addReachable(propertyExpression.asOWLObjectProperty(), reachableVertices);
-			for (OWLObjectProperty vertex : reachableVertices) {
+			reachableVertices.forEach(vertex -> {
 				graph.addReachable(vertex, getFlattenedDescendantProperties(vertex));
-			}
+			});
 			ret = convertToNodeSetOfOWLObjectPropertyExpression(
 					makeEquivalentClasses(convertToOWLObjectPropertyExpression(
 							graph.getDirectSuccessors(propertyExpression.asOWLObjectProperty()))));
@@ -419,9 +423,9 @@ public class CelReasonerInterface {
 			Set<OWLObjectProperty> reachableVertices = getFlattenedAncestorProperties(
 					propertyExpression.asOWLObjectProperty());
 			graph.addReachable(propertyExpression.asOWLObjectProperty(), reachableVertices);
-			for (OWLObjectProperty vertex : reachableVertices) {
+			reachableVertices.forEach(vertex -> {
 				graph.addReachable(vertex, getFlattenedAncestorProperties(vertex));
-			}
+			});
 			ret = convertToNodeSetOfOWLObjectPropertyExpression(
 					makeEquivalentClasses(convertToOWLObjectPropertyExpression(
 							graph.getDirectSuccessors(propertyExpression.asOWLObjectProperty()))));
@@ -675,14 +679,15 @@ public class CelReasonerInterface {
 			throws CelReasonerException {
 		Set<Set<OWLObjectPropertyExpression>> ret = new HashSet<>();
 		Set<OWLObjectPropertyExpression> visited = new HashSet<>();
-		for (OWLObjectPropertyExpression property : flattenedSet) {
-			if (!visited.contains(property)) {
-				Set<OWLObjectPropertyExpression> equivalentProperties = getEquivalentObjectProperties(property)
-						.getEntities();
-				ret.add(equivalentProperties);
-				visited.addAll(equivalentProperties);
-			}
-		}
+		flattenedSet //
+				.stream() //
+				.filter(property -> !visited.contains(property)) //
+				.forEach(property -> {
+					Set<OWLObjectPropertyExpression> equivalentProperties = getEquivalentObjectProperties(property)
+							.getEntities();
+					ret.add(equivalentProperties);
+					visited.addAll(equivalentProperties);
+				});
 		return ret;
 	}
 
