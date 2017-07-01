@@ -16,7 +16,7 @@ Documentation: [CEL home page](https://lat.inf.tu-dresden.de/systems/cel/)
 
 CEL: [Boontawee Suntisrivaraporn](https://meng234.blogspot.com)
 
-CEL Plug-in: [Julian Mendez](https://lat.inf.tu-dresden.de/~mendez/)
+CEL Plug-in: [Julian Mendez](https://julianmendez.github.io)
 
 
 ## Licenses
@@ -26,10 +26,13 @@ CEL: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 CEL Plug-in: [LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.txt)
 
 
-## CEL [Downloads](https://lat.inf.tu-dresden.de/systems/cel/downloads.html)
+## CEL [Downloads](https://julianmendez.github.io/cel/docs/downloads.html)
 
 
 ## CEL [Source Code](https://github.com/julianmendez/cel)
+
+
+## CEL [Release Notes](https://julianmendez.github.io/cel/RELEASE-NOTES.html)
 
 
 ## Introduction to CEL
@@ -117,6 +120,6 @@ Stefan Schulz, Boontawee Suntisrivaraporn, Franz Baader, and Martin Boeker. **SN
 
 ## Contacts
 
-Any questions or bug reports are truly welcome, please feel free to contact us by sending an email to { [meng](https://lat.inf.tu-dresden.de/~meng), [mendez](https://lat.inf.tu-dresden.de/~mendez), [lippmann](https://lat.inf.tu-dresden.de/~lippmann) } [at] tcs [dot] inf [dot] tu-dresden [dot] de.
+Any questions or bug reports are truly welcome, please feel free to contact us by sending an email to the authors.
 
 
