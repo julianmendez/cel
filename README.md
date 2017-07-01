@@ -120,6 +120,6 @@ Stefan Schulz, Boontawee Suntisrivaraporn, Franz Baader, and Martin Boeker. **SN
 
 ## Contacts
 
-Any questions or bug reports are truly welcome, please feel free to contact us by sending an email to { [meng](https://lat.inf.tu-dresden.de/~meng), [mendez](https://lat.inf.tu-dresden.de/~mendez), [lippmann](https://lat.inf.tu-dresden.de/~lippmann) } [at] tcs [dot] inf [dot] tu-dresden [dot] de.
+Any questions or bug reports are truly welcome, please feel free to contact us by sending an email to the authors.
 
 
