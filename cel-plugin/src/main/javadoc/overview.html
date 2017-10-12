@@ -47,8 +47,8 @@ This program is organized in layers. They are:
 <li>OWL API CEL translator</li>
 <li>Connection manager + S-expression parser</li>
 </ul>
-They are organized according to the following diagram.<br />
-<br />
+They are organized according to the following diagram.
+
 <table border="0" cellspacing="0" cellpadding="0" width="100%"
 summary="main diagram">
 <tr>
@@ -56,7 +56,7 @@ summary="main diagram">
 <table border="1" cellspacing="0" cellpadding="8" width="100%"
 summary="protege">
 <tr>
-<td><a href="#protege">Protege</a></td>
+<td>Protege</td>
 </tr>
 </table>
 </td>
@@ -83,7 +83,7 @@ summary="protege">
 <table border="1" cellspacing="0" cellpadding="4" width="100%"
 summary="main interface">
 <tr>
-<td><a href="#owlapiinterface">OWL API interface</a></td>
+<td>OWL API interface</td>
 </tr>
 </table>
 </td>
@@ -92,7 +92,7 @@ summary="main interface">
 <table border="1" cellspacing="0" cellpadding="4" width="100%"
 summary="translator">
 <tr>
-<td><a href="#owlceltranslator">OWL-CEL CEL-OWL translator</a></td>
+<td>OWL-CEL CEL-OWL translator</td>
 </tr>
 </table>
 </td>
@@ -101,7 +101,7 @@ summary="translator">
 <table border="1" cellspacing="0" cellpadding="4" width="100%"
 summary="connection manager">
 <tr>
-<td><a href="#connman">Connection manager</a></td>
+<td>Connection manager</td>
 </tr>
 </table>
 </td>
@@ -117,7 +117,7 @@ summary="connection manager">
 <table border="1" cellspacing="0" cellpadding="4" width="100%"
 summary="S-expression parser">
 <tr>
-<td><a href="#sexpparser">S-expression parser</a></td>
+<td>S-expression parser</td>
 </tr>
 </table>
 </td>
@@ -133,35 +133,35 @@ summary="S-expression parser">
 <table border="1" cellspacing="0" cellpadding="8" width="100%"
 summary="reasoner">
 <tr>
-<td><a href="#celreasoner">CEL reasoner</a></td>
+<td>CEL reasoner</td>
 </tr>
 </table>
 </td>
 </tr>
 </table>
-<br />
+
 <h2>Components</h2>
 <ul>
-<li><a name="owlapiinterface" id="owlapiinterface"></a><big>OWL API
+<li><big>OWL API
 interface</big>: Its main function is to filter all the
 unimplemented functions. Only the supported ones are forwarded to
 the next layer. This is implemented by package
 <code>de.tudresden.inf.lat.cel.protege</code> and package
 <code>de.tudresden.inf.lat.cel.owlapi</code> .</li>
-<li><a name="owlceltranslator" id="owlceltranslator"></a><big>OWL
+<li><big>OWL
 API CEL translator</big>: This is composed by two parts: a
 translator from OWL API into CEL S-expressions and a translator in
 the opposite direction. This is implemented by package
 <code>de.tudresden.inf.lat.cel.translation</code> and package
 <code>de.tudresden.inf.lat.cel.conversion</code> .</li>
-<li><a name="connman" id="connman"></a><big>Connection
+<li><big>Connection
 manager</big>: This layer manages the connection with the CEL
 reasoner. This is implemented by package
 <code>de.tudresden.inf.lat.cel.connection</code> .</li>
-<li><a name="celreasoner" id="celreasoner"></a><big>CEL
+<li><big>CEL
 reasoner</big>: Compiled version of the CEL system. This is
 included as compiled Lisp program.</li>
-<li><a name="sexpparser" id="sexpparser"></a><big>S-expression
+<li><big>S-expression
 parser</big>: Parses and writes Lisp S-expressions in Java. This is
 included as a library (project jsexp).</li>
 </ul>
@@ -170,38 +170,39 @@ packages as a directed edge, the structure of package dependency
 should be a directed acyclic graph (DAG). The packages should only
 make public those classes that are or could be used by another
 package preserving the DAG structure.
-<h2><a name="references" id="references"></a>References</h2>
+<h2>References</h2>
 For more information about the referred projects, follow the links
 below.
 <ul>
-<li><a name="cel" id="cel"></a><big>CEL</big>: <a href=
+<li><big>CEL</big>: <a href=
 "https://lat.inf.tu-dresden.de/systems/cel">main page</a> &mdash;
 <a href="https://github.com/julianmendez/cel">source code</a></li>
-<li><a name="jsexp" id="jsexp"></a><big>jsexp</big> (S-expression
+<li><big>jsexp</big> (S-expression
 parser): <a href="https://julianmendez.github.io/jsexp/">main
 page</a> &mdash; <a href=
 "https://github.com/julianmendez/jsexp">source
 code</a></li>
-<li><a name="protege" id="protege"></a><big>Protege</big>: <a href=
+<li><big>Protege</big>: <a href=
 "https://protege.stanford.edu/">main page</a> &mdash; <a href=
 "https://protegewiki.stanford.edu/index.php/Main_Page">wiki</a>
 &mdash; <a href=
 "https://protegewiki.stanford.edu/index.php/Protege4DevDocs">developer
 documentation</a> &mdash; <a href=
 "https://protegewiki.stanford.edu/index.php/PluginTypes">plugin
-types</a><br />
+types</a>
+
 <a href=
 "https://smi-protege.stanford.edu/repos/protege/protege4/">repository</a>
 &mdash; <a href=
 "https://smi-protege.stanford.edu/svn/protege4/">source code</a>
 &mdash; <a href=
 "https://protegewiki.stanford.edu/wiki/Protege_Desktop_Old_Versions">download</a></li>
-<li><a name="owlapi" id="owlapi"></a><big>OWL API</big>: <a href=
+<li><big>OWL API</big>: <a href=
 "http://owlapi.sourceforge.net/">main page</a> &mdash; <a href=
 "https://github.com/owlcs/owlapi/wiki/Documentation">examples</a>
 &mdash; <a href=
 "http://owl.cs.manchester.ac.uk/research/co-ode/">tutorials</a></li>
-<li><a name="owltwo" id="owltwo"></a><big>OWL 2</big>: <a href=
+<li><big>OWL 2</big>: <a href=
 "https://www.w3.org/2007/OWL/wiki/OWL_Working_Group">OWL Working
 Group</a> &mdash; <a href=
 "https://www.w3.org/TR/owl2-manchester-syntax/">manchester
@@ -210,3 +211,4 @@ syntax</a></li>
 </div>
 </body>
 </html>
+
