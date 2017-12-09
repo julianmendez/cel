@@ -68,7 +68,7 @@
 	<parent>
 		<groupId>de.tu-dresden.inf.lat</groupId>
 		<artifactId>lat-parent</artifactId>
-		<version>0.1.1</version>
+		<version>0.1.2</version>
 		<relativePath></relativePath>
 	</parent>
 
@@ -143,12 +143,6 @@
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.0.0-M1</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<executions>
 						<execution>
@@ -170,7 +164,6 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>3.3.0</version>
 					<extensions>true</extensions>
 					<configuration>
 						<finalName>${project.groupId}-${project.version}</finalName>
