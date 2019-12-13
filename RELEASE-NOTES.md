@@ -1,4 +1,5 @@
 
+
 ## Release Notes
 
 | version    | release date | Java | OWL API       | Protégé         |
@@ -18,7 +19,6 @@
 | v0.3.0     | 2009-06-10   | 6    | 2.2.0         | 4.0.0           |
 | CEL 1.1.2  | 2009-10      | -    | -             | -               |
 | CEL 1.0    | 2009-04      | -    | -             | -               |
-
 
 
 ### v0.6.0
@@ -98,6 +98,5 @@
 ### CEL 1.0
 *(2009-04)*
 * includes sources, binaries, and reference manual
-
 
 

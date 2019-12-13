@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/julianmendez/cel.png?branch=master)](https://travis-ci.org/julianmendez/cel)
 
-
 CEL is a lightweight Description Logic reasoner for large-scale biomedical ontologies. The CEL Plug-ing uses the [OWL API](https://owlcs.github.io/owlapi/) and lets CEL be used as a plug-in for [Protege](https://protege.stanford.edu/).
 
 Description logics (DLs) are an important family of formalisms for reasoning about ontologies. CEL is the first reasoner for the Description Logic EL+, supporting as its main reasoning task the computation of the subsumption hierarchy induced by EL+ ontologies. The Description Logic EL+ forms the core expressive features of [OWL 2 EL Profile](https://www.w3.org/TR/owl2-profiles/#OWL_2_EL_2) -- which is a tractable fragment of the new Web Ontology Language OWL 2. The most distinguishing feature of CEL is that, unlike other modern DL reasoners, it implements a polynomial-time algorithm. The supported Description Logic EL+ offers a selected set of expressive means that are tailored toward the formulation of medical and biological ontologies.
@@ -43,6 +42,7 @@ Description logics (DLs) are an important family of formalisms for reasoning abo
 
 To get some idea about what logical aspects can be expressed in CEL ontologies, look at our [toy ontologies](https://lat.inf.tu-dresden.de/~meng/toyont.html) page.
 
+
 ## The CEL System
 
 CEL comes with a very simple interactive interface that provides users with all essential functionalities, including interactive help system. Developing CEL is ongoing work. We aim at pushing its expressive power to the logic EL++, with which one can express, among other things, disjoint concepts, concrete domains, and nominals.
@@ -82,7 +82,7 @@ To load and classify the ontology "med.tbox", and to output the DAG to "med.dag"
 $ cel -loadOntology gene.tbox
 To start the interactive CEL interface with the initial ontology "gene.tbox"
 loaded and preprocessed
-```		
+```
 
 
 ## Publications on/related to CEL
