@@ -255,7 +255,7 @@
 
 	<organization>
 		<name>Chair of Automata Theory - TU Dresden</name>
-		<url>https://lat.inf.tu-dresden.de</url>
+		<url>https://tu-dresden.de/ing/informatik/thi/lat<url>
 	</organization>
 
 	<developers>
@@ -263,7 +263,7 @@
 		<developer>
 			<id>julianmendez</id>
 			<name>Julian Mendez</name>
-			<email>julian.mendez@tu-dresden.de</email>
+			<email>julian.mendez@gmail.com</email>
 		</developer>
 
 	</developers>
