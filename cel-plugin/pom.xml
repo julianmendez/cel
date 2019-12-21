@@ -68,7 +68,7 @@
 	<parent>
 		<groupId>de.tu-dresden.inf.lat</groupId>
 		<artifactId>lat-parent</artifactId>
-		<version>0.1.3</version>
+		<version>0.1.4</version>
 		<relativePath></relativePath>
 	</parent>
 
