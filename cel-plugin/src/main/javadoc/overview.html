@@ -31,7 +31,7 @@
 </head>
 <body>
 <div>
-<h2>Overview</h2>
+<h1>Overview</h1>
 This program provides an implementation of the OWL API for the CEL
 system. The CEL system is known for its scalability of reasoning in
 the lightweight description logic EL<sup>++</sup>. This logic has
@@ -49,12 +49,10 @@ This program is organized in layers. They are:
 </ul>
 They are organized according to the following diagram.
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%"
-summary="main diagram">
+<table border="0" summary="main diagram">
 <tr>
 <td>
-<table border="1" cellspacing="0" cellpadding="8" width="100%"
-summary="protege">
+<table border="1" summary="protege">
 <tr>
 <td>Protege</td>
 </tr>
@@ -62,12 +60,10 @@ summary="protege">
 </td>
 <td>==</td>
 <td>
-<table border="1" cellspacing="0" cellpadding="8" width="100%"
-summary="CEL plug-in">
+<table border="1" summary="CEL plug-in">
 <tr>
 <td>
-<table border="0" cellspacing="0" cellpadding="4" width="100%"
-summary="protege">
+<table border="0" summary="protege">
 <tr>
 <td></td>
 <td>CEL plug-in</td>
@@ -80,8 +76,7 @@ summary="protege">
 <tr>
 <td>==</td>
 <td>
-<table border="1" cellspacing="0" cellpadding="4" width="100%"
-summary="main interface">
+<table border="1" summary="main interface">
 <tr>
 <td>OWL API interface</td>
 </tr>
@@ -89,8 +84,7 @@ summary="main interface">
 </td>
 <td>==</td>
 <td>
-<table border="1" cellspacing="0" cellpadding="4" width="100%"
-summary="translator">
+<table border="1" summary="translator">
 <tr>
 <td>OWL-CEL CEL-OWL translator</td>
 </tr>
@@ -98,8 +92,7 @@ summary="translator">
 </td>
 <td>==</td>
 <td>
-<table border="1" cellspacing="0" cellpadding="4" width="100%"
-summary="connection manager">
+<table border="1" summary="connection manager">
 <tr>
 <td>Connection manager</td>
 </tr>
@@ -114,8 +107,7 @@ summary="connection manager">
 <td></td>
 <td></td>
 <td>
-<table border="1" cellspacing="0" cellpadding="4" width="100%"
-summary="S-expression parser">
+<table border="1" summary="S-expression parser">
 <tr>
 <td>S-expression parser</td>
 </tr>
@@ -130,8 +122,7 @@ summary="S-expression parser">
 </td>
 <td>==</td>
 <td>
-<table border="1" cellspacing="0" cellpadding="8" width="100%"
-summary="reasoner">
+<table border="1" summary="reasoner">
 <tr>
 <td>CEL reasoner</td>
 </tr>
@@ -142,27 +133,27 @@ summary="reasoner">
 
 <h2>Components</h2>
 <ul>
-<li><big>OWL API
-interface</big>: Its main function is to filter all the
+<li><b>OWL API
+interface</b>: Its main function is to filter all the
 unimplemented functions. Only the supported ones are forwarded to
 the next layer. This is implemented by package
 <code>de.tudresden.inf.lat.cel.protege</code> and package
 <code>de.tudresden.inf.lat.cel.owlapi</code> .</li>
-<li><big>OWL
-API CEL translator</big>: This is composed by two parts: a
+<li><b>OWL
+API CEL translator</b>: This is composed by two parts: a
 translator from OWL API into CEL S-expressions and a translator in
 the opposite direction. This is implemented by package
 <code>de.tudresden.inf.lat.cel.translation</code> and package
 <code>de.tudresden.inf.lat.cel.conversion</code> .</li>
-<li><big>Connection
-manager</big>: This layer manages the connection with the CEL
+<li><b>Connection
+manager</b>: This layer manages the connection with the CEL
 reasoner. This is implemented by package
 <code>de.tudresden.inf.lat.cel.connection</code> .</li>
-<li><big>CEL
-reasoner</big>: Compiled version of the CEL system. This is
+<li><b>CEL
+reasoner</b>: Compiled version of the CEL system. This is
 included as compiled Lisp program.</li>
-<li><big>S-expression
-parser</big>: Parses and writes Lisp S-expressions in Java. This is
+<li><b>S-expression
+parser</b>: Parses and writes Lisp S-expressions in Java. This is
 included as a library (project jsexp).</li>
 </ul>
 If we think each package as a node, and each dependency between two
@@ -174,15 +165,15 @@ package preserving the DAG structure.
 For more information about the referred projects, follow the links
 below.
 <ul>
-<li><big>CEL</big>: <a href=
+<li><b>CEL</b>: <a href=
 "https://lat.inf.tu-dresden.de/systems/cel">main page</a> &mdash;
 <a href="https://github.com/julianmendez/cel">source code</a></li>
-<li><big>jsexp</big> (S-expression
+<li><b>jsexp</b> (S-expression
 parser): <a href="https://julianmendez.github.io/jsexp/">main
 page</a> &mdash; <a href=
 "https://github.com/julianmendez/jsexp">source
 code</a></li>
-<li><big>Protege</big>: <a href=
+<li><b>Protege</b>: <a href=
 "https://protege.stanford.edu/">main page</a> &mdash; <a href=
 "https://protegewiki.stanford.edu/index.php/Main_Page">wiki</a>
 &mdash; <a href=
@@ -197,12 +188,12 @@ types</a>
 "https://smi-protege.stanford.edu/svn/protege4/">source code</a>
 &mdash; <a href=
 "https://protegewiki.stanford.edu/wiki/Protege_Desktop_Old_Versions">download</a></li>
-<li><big>OWL API</big>: <a href=
+<li><b>OWL API</b>: <a href=
 "http://owlapi.sourceforge.net/">main page</a> &mdash; <a href=
 "https://github.com/owlcs/owlapi/wiki/Documentation">examples</a>
 &mdash; <a href=
 "http://owl.cs.manchester.ac.uk/research/co-ode/">tutorials</a></li>
-<li><big>OWL 2</big>: <a href=
+<li><b>OWL 2</b>: <a href=
 "https://www.w3.org/2007/OWL/wiki/OWL_Working_Group">OWL Working
 Group</a> &mdash; <a href=
 "https://www.w3.org/TR/owl2-manchester-syntax/">manchester
