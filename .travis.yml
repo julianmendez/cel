@@ -4,14 +4,20 @@
 # https://travis-ci.org/
 #
 
+---
+
 language: java
+
+os: linux
+
+dist: bionic
 
 jdk:
   - openjdk11
-  - openjdk13
+  - openjdk14
   - openjdk15
   - oraclejdk11
-  - oraclejdk13
+  - oraclejdk14
   - oraclejdk15
 
 install:
@@ -19,7 +25,5 @@ install:
 
 after_success:
   - cd cel-plugin ; mvn clean cobertura:cobertura coveralls:report
-
-sudo: false
 
 
