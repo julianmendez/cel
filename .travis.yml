@@ -1,10 +1,5 @@
-
-#
-# Configuration file for Travis CI
-# https://travis-ci.org/
-#
-
 ---
+# Configuration file for Travis CI [[https://travis-ci.com]]
 
 language: java
 
@@ -14,16 +9,11 @@ dist: bionic
 
 jdk:
   - openjdk11
-  - openjdk14
   - openjdk15
   - oraclejdk11
-  - oraclejdk14
   - oraclejdk15
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=false -B -V
-
-after_success:
-  - cd cel-plugin ; mvn clean cobertura:cobertura coveralls:report
 
 
