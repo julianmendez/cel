@@ -217,8 +217,8 @@
 		</jar>
 	</target>
 
-	<!-- Executes all the tasks. -->
-	<target name="dist" depends="clean, source, retrieve, compile, checktestsources, compiletests, test, jar, javadoc, javadocjar" />
+	<!-- Executes all the tasks except the tests. -->
+	<target name="dist" depends="clean, source, retrieve, compile, checktestsources, compiletests, jar, javadoc, javadocjar" />
 
 </project>
 
