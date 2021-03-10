@@ -19,7 +19,7 @@
 		<dependency org="de.tu-dresden.inf.lat.jsexp" name="jsexp"
 			rev="0.2.2" conf="javadoc->javadoc;sources->sources;compile->default" />
 
-		<dependency org="junit" name="junit" rev="4.12" />
+		<dependency org="org.junit.jupiter" name="junit-jupiter-api" rev="5.7.1" />
 
 		<dependency org="net.sourceforge.owlapi" name="owlapi-distribution"
 			rev="4.2.8" conf="javadoc->javadoc;sources->sources;compile->default" />

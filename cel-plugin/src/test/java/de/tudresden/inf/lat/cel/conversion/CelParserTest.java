@@ -25,8 +25,8 @@ import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -56,7 +56,7 @@ public class CelParserTest {
 		set.add(desc2);
 		OWLClassExpression expected = dataFactory.getOWLObjectIntersectionOf(set);
 		OWLClassExpression parsed = parser.parse(concept, dataFactory);
-		Assert.assertEquals(expected.toString(), parsed.toString());
+		Assertions.assertEquals(expected.toString(), parsed.toString());
 	}
 
 }

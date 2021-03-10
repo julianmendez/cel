@@ -26,8 +26,8 @@ import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -61,7 +61,7 @@ public class CelTranslatorTest {
 		OWLClassExpression description = dataFactory.getOWLObjectIntersectionOf(set);
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory.parse("(and |Friendly| |Intelligent| |Person|)");
-		Assert.assertEquals(expected, translated);
+		Assertions.assertEquals(expected, translated);
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class CelTranslatorTest {
 		OWLClassExpression description = dataFactory.getOWLObjectIntersectionOf(set);
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory.parse("(and |Person| (some |has-child| (and |Friendly| |Intelligent| |Person|)))");
-		Assert.assertEquals(expected, translated);
+		Assertions.assertEquals(expected, translated);
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class CelTranslatorTest {
 		OWLClassExpression description = dataFactory.getOWLObjectSomeValuesFrom(role, desc1);
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory.parse("(some |has-child| |Person|)");
-		Assert.assertEquals(expected, translated);
+		Assertions.assertEquals(expected, translated);
 	}
 
 	@Test
@@ -112,11 +112,11 @@ public class CelTranslatorTest {
 		OWLClassExpression description = dataFactory.getOWLThing();
 		Sexp translated = translator.translate(description);
 		Sexp expected = SexpFactory.newAtomicSexp("top");
-		Assert.assertEquals(expected, translated);
+		Assertions.assertEquals(expected, translated);
 		description = dataFactory.getOWLNothing();
 		translated = translator.translate(description);
 		expected = SexpFactory.newAtomicSexp("bottom");
-		Assert.assertEquals(expected, translated);
+		Assertions.assertEquals(expected, translated);
 	}
 
 }

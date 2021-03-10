@@ -59,8 +59,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 		</dependency>
 
 	</dependencies>
@@ -112,9 +112,15 @@
 			</dependency>
 
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
+				<!--
+                JUnit 5
+                [[https://junit.org/junit5]]
+                [[https://github.com/junit-team/junit5]]
+                [[https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api]]
+                -->
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>5.7.1</version>
 				<scope>test</scope>
 			</dependency>
 
