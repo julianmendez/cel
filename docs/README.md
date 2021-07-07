@@ -8,7 +8,7 @@ Description logics (DLs) are an important family of formalisms for reasoning abo
 
 From version 1.0, CEL also supports supplemental reasoning features like incremental classification, modularization and axiom pinpointing. Moreover, the OWL API wrapper for CEL has eventually become available, so now you can use CEL as the backend reasoner from within Protege!
 
-Documentation: [CEL home page](https://lat.inf.tu-dresden.de/systems/cel/)
+Documentation: [CEL home page](https://tu-dresden.de/ing/informatik/thi/lat/forschung/software/cel)
 
 
 ## Authors
@@ -25,7 +25,7 @@ CEL: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 CEL Plug-in: [LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.txt)
 
 
-## CEL [Downloads](https://julianmendez.github.io/cel/docs/downloads.html)
+## CEL [Downloads](https://julianmendez.github.io/cel/downloads.html)
 
 
 ## CEL [Source Code](https://github.com/julianmendez/cel)
@@ -40,7 +40,7 @@ Description logics (DLs) are an important family of formalisms for reasoning abo
 
 **CEL is an [OWL 2 EL](https://www.w3.org/tr/owl2-profiles/#OWL_2_EL) [reasoner](https://www.w3.org/2007/OWL/wiki/Implementations) (albeit currently with some limitations).**
 
-To get some idea about what logical aspects can be expressed in CEL ontologies, look at our [toy ontologies](https://lat.inf.tu-dresden.de/~meng/toyont.html) page.
+To get some idea about what logical aspects can be expressed in CEL ontologies, look at our [toy ontologies](https://julianmendez.github.io/cel/toyont.html) page.
 
 
 ## The CEL System
@@ -56,12 +56,12 @@ Build 6 of CEL 1.0 includes a prototype implementation of the algorithm for extr
 
 CEL's sources are open and can be downloaded from its [repository](https://github.com/julianmendez/cel) (formerly at [Google Code](https://code.google.com/p/cel/)).
 
-The **CEL plug-in** allows using CEL as a [Protégé](https://protege.stanford.edu/) plug-in, using the [OWL API](https://owlcs.github.io/owlapi/). This is a jar (a Java library) that can be downloaded from [here](https://lat.inf.tu-dresden.de/systems/cel/downloads/de.tudresden.inf.lat.cel.jar) or from the source code site. The installation is just copying the jar into the plugins directory. The **current releases** contain a version of CEL compiled for Linux (32-bit), and therefore they **run only on Linux systems**. It was compiled with [Allegro Common Lisp](https://franz.com/products/allegro-common-lisp/), and the sources can be compiled for other platforms.
+The **CEL plug-in** allows using CEL as a [Protégé](https://protege.stanford.edu/) plug-in, using the [OWL API](https://owlcs.github.io/owlapi/). This is a jar (a Java library) that can be downloaded from [the download site](https://sourceforge.net/projects/latitude/files/cel/). The installation is just copying the jar into the plugins directory. The **current releases** contain a version of CEL compiled for Linux (32-bit), and therefore they **run only on Linux systems**. It was compiled with [Allegro Common Lisp](https://franz.com/products/allegro-common-lisp/), and the sources can be compiled for other platforms.
 
 
 ## Using CEL
 
-The CEL [manual](https://cel.googlecode.com/files/cel-manual.pdf) details how to use the interactive interface. Here are a few example ontologies, [med.tbox](https://lat.inf.tu-dresden.de/systems/cel/med.tbox) and [forest.tbox](https://lat.inf.tu-dresden.de/systems/cel/forest.tbox), to help get an idea of what can be expressed in CEL. More toy ontologies can be found on the [repository](https://lat.inf.tu-dresden.de/~meng/toyont.html) page. CEL can work as a backend reasoner for a graphical ontology editor, such as Protégé. The following are the possible command line options and a couple of examples:
+The CEL [manual](https://sourceforge.net/projects/latitude/files/cel/cel/cel-manual.pdf) details how to use the interactive interface. Here are a few example ontologies, [med.tbox](https://sourceforge.net/projects/latitude/files/cel/ontologies/med.tbox) and [forest.tbox](https://sourceforge.net/projects/latitude/files/cel/ontologies/forest.tbox), to help get an idea of what can be expressed in CEL. More toy ontologies can be found on the [repository](https://julianmendez.github.io/cel/toyont.html) page. CEL can work as a backend reasoner for a graphical ontology editor, such as Protégé. The following are the possible command line options and a couple of examples:
 
 ```
 Usage: cel [options]
