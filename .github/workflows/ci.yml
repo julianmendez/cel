@@ -1,0 +1,29 @@
+---
+# CI configuration
+# https://docs.github.com/en/actions/guides/building-and-testing-java-with-maven
+
+name: Java CI
+
+on:
+- push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java:
+        - 11
+        - 15
+    steps:
+    - name: Check out
+      uses: actions/checkout@v2
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: adopt
+    - name: Build
+      run: mvn --batch-mode --update-snapshots --show-version install
+
+
