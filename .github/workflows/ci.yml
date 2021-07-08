@@ -23,7 +23,9 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
         distribution: adopt
-    - name: Build
+    - name: Build with Maven
       run: mvn --batch-mode --update-snapshots --show-version install
+    - name: Build with Ant
+      run: cd cel-plugin ; ant
 
 
