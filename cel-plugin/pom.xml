@@ -68,7 +68,7 @@
 	<parent>
 		<groupId>de.tu-dresden.inf.lat</groupId>
 		<artifactId>lat-parent</artifactId>
-		<version>0.1.4</version>
+		<version>0.1.5</version>
 		<relativePath></relativePath>
 	</parent>
 
@@ -109,19 +109,6 @@
 				<groupId>edu.stanford.protege</groupId>
 				<artifactId>protege-editor-core</artifactId>
 				<version>${protege.version}</version>
-			</dependency>
-
-			<dependency>
-				<!--
-				JUnit 5
-				[[https://junit.org/junit5]]
-				[[https://github.com/junit-team/junit5]]
-				[[https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api]]
-				-->
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>5.7.1</version>
-				<scope>test</scope>
 			</dependency>
 
 		</dependencies>
@@ -168,9 +155,15 @@
 				</plugin>
 
 				<plugin>
+					<!--
+					Apache Felix Maven Bundle Plugin
+					[[https://felix.apache.org/documentation/_attachments/components/bundle-plugin/index.html]]
+					[[https://github.com/apache/felix-dev]]
+					[[https://repo1.maven.org/maven2/org/apache/felix/maven-bundle-plugin/]]
+					-->
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>5.1.1</version>
+					<version>5.1.3</version>
 					<extensions>true</extensions>
 					<configuration>
 						<finalName>${project.groupId}-${project.version}</finalName>
