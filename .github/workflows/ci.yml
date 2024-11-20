@@ -1,6 +1,7 @@
 ---
 # CI configuration
 # https://docs.github.com/en/actions/guides/building-and-testing-java-with-maven
+# https://github.com/actions/setup-java
 
 name: Java CI
 
@@ -13,9 +14,8 @@ jobs:
     strategy:
       matrix:
         java:
-        - 11.0.21
-        - 17.0.9
-        - 21.0.1
+        - 11.0.24
+        - 21.0.5
     steps:
     - name: Check out
       uses: actions/checkout@v4
