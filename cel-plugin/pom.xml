@@ -122,7 +122,7 @@
 		<util.version>0.1.0</util.version>
 		<jsexp.version>0.2.2</jsexp.version>
 		<owlapi.version>4.5.9</owlapi.version>
-		<protege.version>5.5.0</protege.version>
+		<protege.version>5.6.5</protege.version>
 
 		<bundle.activator>org.protege.editor.core.plugin.DefaultPluginActivator</bundle.activator>
 		<bundle.classpath>.</bundle.classpath>
