@@ -23,6 +23,7 @@ package de.tudresden.inf.lat.cel.owlapi;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Set;
 import java.util.TreeSet;
@@ -206,7 +207,8 @@ public class OWLReasonerXMLOutput {
 	public void toXML(OutputStream out) throws OWLRendererException {
 		OWLOntology ontology = this.reasoner.getRootOntology();
 		Writer writer = new OutputStreamWriter(out);
-		this.writer = new OWLXMLWriter(writer, ontology);
+		PrintWriter printWriter = new PrintWriter(writer);
+		this.writer = new OWLXMLWriter(printWriter, ontology);
 		this.writer.startDocument(ontology);
 		render();
 		this.writer.endDocument();
