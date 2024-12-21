@@ -7,23 +7,14 @@ version: 2
 
 updates:
 
-- package-ecosystem: maven
-  directory: /
+- package-ecosystem: "github-actions"
+  directory: "/"
   schedule:
-    interval: weekly
-  open-pull-requests-limit: 10
-  groups:
-    maven:
-      patterns:
-      - '*'
+    interval: "weekly"
 
-- package-ecosystem: github-actions
-  directory: /
+- package-ecosystem: "maven"
+  directory: "/"
   schedule:
-    interval: weekly
-  groups:
-    gh_actions:
-      patterns:
-      - '*'
+    interval: "weekly"
 
 
