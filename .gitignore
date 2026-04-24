@@ -6,6 +6,7 @@ out/
 .classpath
 .idea/
 .bsp/
+.lake/
 *.iml
 .DS_Store
 Thumbs.db
